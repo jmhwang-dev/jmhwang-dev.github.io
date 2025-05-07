@@ -1,6 +1,7 @@
 ---
 title: Ubuntu dir description
 date: 2025-05-07 12:44 +0900
+author: <author_id>
 
 categories: [study]
 tags: [ubuntu]     # TAG names should always be lowercase
