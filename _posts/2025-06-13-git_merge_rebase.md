@@ -4,7 +4,7 @@ date: 2025-06-13 23:30 +0900
 author: <author_id>
 categories: [study]
 tags: [git]
-description: 작업 취소 관련 정리
+description: Git Merge & Rebase 정리
 mermaid: true
 ---
 
