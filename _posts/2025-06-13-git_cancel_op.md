@@ -1,6 +1,6 @@
 ---
 title: Git 작업 취소 완벽 가이드
-date: 2025-06-13 23:01 +0900
+date: 2025-06-13 23:20 +0900
 author: <author_id>
 categories: [study]
 tags: [git]
