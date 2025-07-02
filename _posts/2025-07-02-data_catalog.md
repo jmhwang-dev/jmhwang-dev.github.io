@@ -4,7 +4,7 @@ date: 2025-07-02 10:20 +0900
 author: <author_id>
 categories: [study]
 tags: [iceberg]
-description: 
+description: 카탈로그 정의, 결정 시 요구사항, 종류
 mermaid: true
 ---
 
