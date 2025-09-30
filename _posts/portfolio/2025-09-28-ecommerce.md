@@ -2,7 +2,7 @@
 title: 포트폴리오 정리 - ecommerce
 date: 2025-09-28 15:15 +0900
 categories: [portfolio]
-tags: [kafka, confluent, spark, iceberg, minio, superset, pandas]
+tags: [kafka, confluent, spark, iceberg, minio, superset, datahub, pandas]
 author: <author_id>
 description: 프로젝트 개요
 mermaid: true
@@ -100,7 +100,7 @@ _high_rate_review_
 ### 최종 목표
 - 위 분석 결과로부터, `많이 팔리는 제품을 더 많이 파는 전략`라는 대주제를 `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`이라는 구체적인 주제로 재정의하고 전체적인 아키텍쳐를 설계하였습니다.
 
-## 프로젝트 아키텍쳐
+## 파이프라인 아키텍쳐
 - `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`이라는 목표로 부터 아키텍쳐의 기본 요구사항을 아래와 같이 설정할 수 있었습니다.
     1. 모니터링을 위한 실시간 스트림 처리 필요
     2. BCG Matrix를 계산하기 위한 `평균 판매액`과 `주문 수` 집계 필요
@@ -113,48 +113,93 @@ _high_rate_review_
     - timestamp가 포함된 wide type을 long type으로 변환하여 실시간 스트림 mocking: 결과물 `order_status.tsv`
 
 ### CDC Mocking
-- 비즈니스 목표에 실시간이라는 특성이 있으므로, 데이터 주입 시 Kafka를 사용했습니다.
-- 그러나 데이터느 실시간 스트림으로 발행을 해야하는 작업이 필요했습니다.
+- 비즈니스 목표에는 실시간이라는 특성이 있으므로, 데이터 주입 시 Kafka를 사용했습니다.
+- 그러나 데이터 주입 시, 실시간 스트림으로 메시지를 발행하기 위해선 시계열 특성을 갖는 데이터 형식이 필요했습니다.
+- 또한, 중복되는 데이터에 대한 통합, 제거, 수정 작업이 필요했습니다.
+- 데이터가 갖는 의미를 최대한 유지하되, 무결성을 보장하지 않는 최소한의 [전처리](https://github.com/jmhwang-dev/e-commerce/tree/develop/scripts/olist_redefined) 내용은 아래와 같습니다.
+    
+| 파일 이름                       | 전처리 주요 내용                     | 상세 |
+|------------------------------|-----------------------------------|----------------------------------------------|
+| geolocation.ipynb            | 지리 위치 데이터 처리 | 중복되는 `zip_code`의 각기 다른 위도, 경도 값을 평균으로 대체 |
+| order_status.ipynb           | 주문 상태 데이터 처리 | 주문 상태별 시간을 long type으로 시간 기준 오름차순 정렬 |
+| estimated_delivery_date.ipynb | 주문 예상 배송 날짜 처리 | 주문 예상 배송 날짜 추출 및 시간순으로 정렬 |
+| customer.ipynb               | 고객 데이터 처리 | 기록된 고객 고유 ID로 재정의, 불필요한 컬럼 제거(`city`, `state`)  |
+| order_item.ipynb             | 주문 제품 데이터 처리 | 주문 ID와 아이템 ID 기준 정렬|
+| product.ipynb                | 제품 데이터 처리 | 카테고리 영어 번역 매핑, 누락된 영어 번역 값 추가|
+| review.ipynb                 | 리뷰 데이터 처리 | 리뷰 생성 날짜 기준 정렬|
+| payment.ipynb                | 결제 데이터 처리 | 고객 ID 매핑, mock 타임스탬프 생성(분할 결제 시 랜덤 지연), 시간 기준 오름차순 정렬 |
+| seller.ipynb                 | 판매자 데이터 처리 | 불필요한 컬럼 제거(`city`, `state`) |
+
+- 전처리 후 스키마는 아래와 같이 변경됩니다.
+
+![img-description](../assets/img/portfolio/erd_redefined.svg)
+_전처리 후 스키마_
+        
 - CDC를 mocking하기 위한 데이터 주입의 선택지로 크게 FastAPI와 파이썬 스크립트를 고려했고, 최종적으로 스크립트 작성으로 결정했습니다. 그 이유는 아래와 같습니다.
     - CDC mocking이 주요 개발 사항이 아니므로, 최대한 프레임워크를 제외하고 가볍게 구현하기 위함
-- 위와 같은 결정으로 `BronzeProducer()`라는 클래스로 메시지 발행을 구현하였습니다.
+- 위와 같은 결정으로 [PandasProducer 클래스](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/service/producer/base/pandas.py)를 상속받아 메시지 발행하도록 구현하였습니다.
+
 - 데이터의 시작 기준은 `order_status.tsv`의 시간 순서대로 fk로 연결된 모든 데이터들이 순차적으로 발행되도록 했습니다.
 - 좀 더 현실적인 메시지 발행을 모사하기 위해서 이전 로그와 현재 로그의 시간 차이만큼 간격을 두어 메시지를 발행하도록 했습니다.
-    - 이 때, `base_interval`이라는 기준 간격보다, 실제 데이터에서 시간 차이 간격이 너무 큰 경우 `base_interval` 만큼 간격을 두어 메시지를 발행하도록 하여, 시간 간격을 효율적으로 mocking 했습니다.
+    - 이 때, [base_interval](https://github.com/jmhwang-dev/e-commerce/blob/develop/simulator/run.py)이라는 기준 간격보다, 실제 데이터에서 시간 차이 간격이 너무 큰 경우 `base_interval` 만큼 간격을 두어 메시지를 발행하도록 하여, 시간 간격을 효율적으로 mocking 했습니다.
 - 메시지는 총 9개의 토픽에 시간순으로 연관된 데이터들이 발행됩니다.
-- 메시지 발행시, confluent schema registry에서 스키마를 받아 역직렬화를 수행합니다.
+- 메시지 발행시, confluent schema registry에 등록한 [스키마](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas/bronze)를 기반으로 역직렬화를 수행합니다.
 
 ### 데이터 저장소
-- 클라우드 비용으로 인해 데이터 저장소로 s3 object storage의 api와 동일하게 on-premise에서 사용할 수 있는 minio를 사용하였습니다.
+
+![img-description](../assets/img/portfolio/medallion.png)
+_medallion architecture (datahub 요약)_
+
+- 데이터 저장소로 minio를 사용하였습니다.
+    - 비용과 보안 이슈에 상대적으로 자유로운 on-premise 상황을 가정했습니다.
+    - 추후 클라우드로 이전할 수 있는 상황을 고려하여 s3 object storage의 api와 동일한 minio를 채택하였습니다.
 - minio에 저장되는 데이터는 Medallion Layer 구조를 기반으로 데이터 처리와 목적에 따라 Bronze, Silver, Gold 레이어로 분류하여 적재합니다.
-- 데이터 포맷은 iceberg 테이블 형식으로 다음과 같은 이유로 선정하였습니다.[TODO: 내용 정리]
+- 데이터 포맷은 iceberg 테이블 형식으로 다음과 같은 이유로 선정하였습니다.
     - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내제하고 있음
     - ACID 트랜잭션 보장:  여러 데이터 작업이 동시에 테이블에 접근하더라도 데이터 정합성이 깨지지 않으며, 커밋(Commit)이 완료된 작업만 사용자에게 보여주어 데이터의 신뢰도를 보장
     - 다양한 엔진과의 호환성 및 개방성: 엔진에 종속되지 않는 개방형 표준을 지향
     - 시간 여행과 버전 롤백: 특정 시점의 스냅샷 ID나 타임스탬프를 지정하여 과거의 데이터를 조회 가능하고, 데이터 처리 작업에 오류가 발생했을 경우, 이전의 특정 스냅샷으로 되돌릴 수 있어 데이터 안정성을 크게 높여줌
 
-- Bronze layer에 적재되는 데이터는 아래와 같습니다.
-    - 총 9개 topic에 발행된 원천 데이터들
-    - bronze layer는 원천 데이터를 저장하는 것에 목적이 있으므로 아무런 처리하지 않고 그대로 적재합니다.
+#### Bronze 레이어
 
-[TODO: 내용 다시 정리]
-- Silver layer에 적재되는 데이터는 크게 아래와 같습니다.
-    - null이 없는 레코드
-    - float으로 표현된 데이터 중 int로 표현해도 무방한 데이터의 타입 캐스팅 값
-    - 참조 무결성이 보장된 레코드
-    - 번역 추론 및 감성분석 추론 레코드
-[TODO: 내용 다시 정리]
-- Gold layer에 적재되는 데이터는 크게 아래와 같습니다.
-    - delivered_order_product: 배송이 완료된 제품의 정보
-    - delivered_order_product_bcg: BCG 세그먼트가 포함된 배송완료 제품 정보
-    - timestamp_stats_wide: 시간 정보를 모두 모은 테이블
-    - user_location: seller, customer의 위도, 경도 정보
-    - order_location: 주문의 seller, customer의 위도, 경도 정보
-    - sales_stats: 현재까지 적재된 제품의 매출 집계 테이블
-    - sales_stats_bcg: sales_stats를 기반으로 산출한 BCG 세그먼트가 포함된 매출 집계 테이블
-    - [purchase_retenstion]: 제품을 구매한 고객들의 retention 구매 정보
+| 테이블 이름                | 설명                              |
+|----------------------------|-----------------------------------|
+| `order_item`               | 주문 품목 정보 저장              |
+| `order_status`             | 주문 상태 및 타임스탬프 저장     |
+| `estimated_delivery_date`  | 예상 배송일 저장                 |
+| `product`                  | 제품 정보 저장                   |
+| `payment`                  | 결제 정보 저장                   |
+| `customer`                 | 고객 정보 저장                   |
+| `geolocation`              | 위치 정보 저장                   |
+| `seller`                   | 판매자 정보 저장                 |
+| `review`                   | 리뷰 정보 저장                   |
+
+#### Silver 레이어
+
+| 테이블 이름                    | 설명                              |
+|--------------------------------|-----------------------------------|
+| `order_product`               | 주문과 제품을 조인한 결과            |
+| `delivered_order_product`     | 배송 완료된 제품 정보         |
+| `user_location`               | 고객/판매자 위치 정보 통합       |
+| `delivered_order_timestamp`   | 배송 완료 주문의 통합 시간 기록   |
+| `order_timestamp`             | 주문 상태 별 시간 기록          |
+
+#### Gold 레이어
+
+| 테이블 이름                        | 설명                              |
+|------------------------------------|-----------------------------------|
+| `timestamp_stats_wide`            | 배송 리드타임 통계                |
+| `sale_stats`                      | 제품별 매출 집계                 |
+| `health_beauty_sales_stats_bcg`   | Health & Beauty 매출 및 BCG 세그먼트 |
+| `delivered_order_product_bcg`     | 배송 완료 제품에 BCG 세그먼트 추가 |
+| `order_location`                  | 주문의 고객/판매자 위치 정보     |
+| `review_metatdata_product`        | Health & Beauty 리뷰 정보         |
+
 
 ### 데이터 파이프라인 구조 [TODO: 내용 다시 정리]
+
+![img-description](../assets/img/portfolio/pipeline.png)
+_pipeline architecture_
 - Spark Cluster를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보하고, 준-실시간 처리로 실시간에 근접한 데이터 처리를 보장했습니다.
     - Spark Cluster는 client node, master node, worker node
 - 번역이 필요한 리뷰 레코드는 아래와 같이 구분되어 적재됩니다.
@@ -189,3 +234,5 @@ _high_rate_review_
     - SLA에 중 처리 시간에 대한 SLI의 SLO가 더 높은 기준을 요구를 대비해 apache flink에 대한 학습이 필요합니다.
 
 - 향후에는 dbt를 도입하여 데이터 품질 테스트를 자동화하고 시스템 안정성을 높일 계획입니다.
+
+- [on-going]번역 추론 및 감성분석 추론 레코드
