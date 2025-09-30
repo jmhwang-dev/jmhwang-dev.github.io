@@ -1,10 +1,10 @@
 ---
-title: 포트폴리오 정리 - ecommerce
+title: BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링
 date: 2025-09-28 15:15 +0900
 categories: [portfolio]
 tags: [kafka, confluent, spark, iceberg, minio, superset, datahub, pandas]
 author: <author_id>
-description: 프로젝트 개요
+description: 개인 프로젝트 설명 자료
 mermaid: true
 ---
 
@@ -16,41 +16,22 @@ mermaid: true
 ## 프로젝트 목표
 Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 매출 성장 저해 요인을 데이터 기반으로 식별하고 지속적으로 모니터링할 수 있는 분석 플랫폼을 구축하는 것을 목표로 하였습니다.
 
-## 주요 성과
-- 현업 담당자가 데이터를 직접 분석할 수 있도록 대시보드를 제공하여 데이터 기반 의사결정 환경 제공하였습니다.
-    - 실시간 매출 트렌드 시각화
-    - 수익성이 높은 상품군을 식별할 수 있도록 실시간 BCG 세그먼트 시각화
-    - top 10 제품들의 세부사항
-
-<!-- | _sales_trend_and_BCG_segment_ | _top10_detail_ |
-|:---:|:---:|
-| ![img-description](../assets/img/portfolio/dashboard1.png) | ![img-description](../assets/img/portfolio/dashboard2.png) | -->
-
-
-![img-description](../assets/img/portfolio/dashboard1.png)
-_sales_trend_and_BCG_segment_
-
-![img-description](../assets/img/portfolio/dashboard2.png)
-_top10_detail_
-
-## 상세 진행 과정
-### 비즈니스 도메인을 이커머스로 선정한 이유
-- 빅데이터의 주요 특징은 3V로 요약됩니다. 3V는 Volume, Velocity, Variety를 의미합니다.
+## 비즈니스 도메인을 이커머스로 선정한 이유
 - 평소 이커머스 데이터에 대한 관심이 많았습니다. 그 이유는 아래와 같습니다.
     - 풍부하고 명확한 데이터 수집을 할 수 있는 구조
     - 빠른 실험과 검증이 가능한 도메인
 - 위와 같은 이유로 이커머스를 주제로한 프로젝트를 진행하고자 했습니다.
 
-### 데이터 선정 과정
+## 데이터 선정 과정
 - 프로젝트 진행에 앞서 데이터가 필요했습니다.
 - 데이터 선정의 기준은 다음과 같습니다.
     - 개인 프로젝트에 사용 가능한 public 데이터 일 것
     - 포함 정보가 최대한 다양할 것
     - 데이터의 기록 범위가 최대한 넓을 것
 
-- 여러 선택지가 있었고, 데이터 선정 기준에 모두 부합하는 데이터는 Kaggle의 `Brazilian E-Commerce Public Dataset by Olist`였고 프로젝트의 원천데이터로 선정했습니다.
+- 여러 선택지가 있었고, 데이터 선정 기준에 모두 부합하는 데이터는 Kaggle의 `Brazilian E-Commerce Public Dataset by Olist`였고 프로젝트의 원천 데이터로 선정했습니다.
 
-### 비즈니스 목표 설정 과정
+## 비즈니스 목표 설정 과정
 - 데이터 엔지니어링의 업무 범위는 단순 요구사항 개발에 국한되지 않는다고 생각했습니다.
 - 비즈니스 목표를 해결하는 시작점이기 때문에, 목표 설정이 없으면 프로젝트의 방향이 산으로 갈 수 있다고 생각해서 명확한 목표 설정이 필요하다고 생각했습니다.
 - 데이터에 대한 특성과 관계를 파악하면서, 동시에 명확한 비즈니스 목표를 설정하기 위한 EDA를 수행하여 비즈니스 목표를 설정했습니다.
@@ -60,7 +41,7 @@ _top10_detail_
     - 데이터는 `Olist` 라는 브라질 내 소상공인들이 온라인에서 판매할 수 있도록 마켓플레이스를 제공하는 전자상거래 플랫폼입니다.
     - `Olist`의 주요 수익원은 판매자로부터 발생하는 수수료입니다. 즉, 판매자가 매출이 높을수록 `Olist`의 수익도 증가하는 구조입니다.
 
-### 세부 목표 설정 과정
+### 세부 목표 설정
 - 출처에 대한 이해로부터, 매출 증대라는 비즈니스 목표의 대주제를 설정하고 세부 목표를 달성하기 위한 타겟 선정이 필요했습니다. 
 - 매출 증대를 위한 다양한 전략이 있겠으나, 가장 쉬운 관점인 `많이 팔리는 제품을 더 많이 파는 전략`을 주요 전략으로 선정했습니다.
 - 고객(Customer)은 특정 판매자(Seller)가 아닌 상품(Product) 자체를 보고 구매를 결정합니다.
@@ -87,8 +68,6 @@ _cumul_sales_
 #### 매출 비대칭의 원인 분석
 - `가장 많이 팔리는 제품 카테고리에서 왜 모든 제품이 잘팔리지는 않을까?` 라는 질문으로 자연스럽게 이어졌습니다.
 - 그 원인은 거래 트랜잭션이 아닌 후행 지표인 리뷰에 있다고 생각했고 여기서 원인을 찾아보기로 했습니다.
-
-#### 부정 경험 원인 분석
 - 고객 리뷰 분석 결과, 평점 1-2점의 부정 리뷰에서 **배송 지연**이 주요 키워드로 나타났습니다.
 ![img-description](../assets/img/portfolio/low_rate_review.png)
 _low_rate_review_
@@ -100,21 +79,9 @@ _high_rate_review_
 ### 최종 목표
 - 위 분석 결과로부터, `많이 팔리는 제품을 더 많이 파는 전략`라는 대주제를 `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`이라는 구체적인 주제로 재정의하고 전체적인 아키텍쳐를 설계하였습니다.
 
-## 파이프라인 아키텍쳐
-- `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`이라는 목표로 부터 아키텍쳐의 기본 요구사항을 아래와 같이 설정할 수 있었습니다.
-    1. 모니터링을 위한 실시간 스트림 처리 필요
-    2. BCG Matrix를 계산하기 위한 `평균 판매액`과 `주문 수` 집계 필요
-
-### 실시간 스트림 처리를 위한 데이터 변환
-- olist 데이터는 실시간 유입되는 데이터의 형식인 long type이 아니었습니다.
-- 또한, 실제 데이터에서는 식별이 가능했을 zip code의 지리적 위치정보는 식별이 가능한 개인정보였기 때문에 사용할 수 없는 위도 경도가 포함되어 있어 이를 통합하는 작업이 필요했습니다.
-- 그래서 실시간 스트림 처리를 위해 데이터 형식 변환과 최소한의 전처리가 필요했고 다음과 같이 진행했습니다.
-    - geolocation: zip code 그룹을 기준으로 평균 위,경도 계산하여 대표값 설정
-    - timestamp가 포함된 wide type을 long type으로 변환하여 실시간 스트림 mocking: 결과물 `order_status.tsv`
-
-### CDC Mocking
-- 비즈니스 목표에는 실시간이라는 특성이 있으므로, 데이터 주입 시 Kafka를 사용했습니다.
-- 그러나 데이터 주입 시, 실시간 스트림으로 메시지를 발행하기 위해선 시계열 특성을 갖는 데이터 형식이 필요했습니다.
+## 데이터 준비
+### CDC Mocking을 위한 데이터 변환
+- 데이터 주입 시, 실시간 스트림으로 메시지를 발행하기 위해선 시계열 특성을 갖는 데이터 형식이 필요했습니다.
 - 또한, 중복되는 데이터에 대한 통합, 제거, 수정 작업이 필요했습니다.
 - 데이터가 갖는 의미를 최대한 유지하되, 무결성을 보장하지 않는 최소한의 [전처리](https://github.com/jmhwang-dev/e-commerce/tree/develop/scripts/olist_redefined) 내용은 아래와 같습니다.
     
@@ -134,18 +101,65 @@ _high_rate_review_
 
 ![img-description](../assets/img/portfolio/erd_redefined.svg)
 _전처리 후 스키마_
-        
-- CDC를 mocking하기 위한 데이터 주입의 선택지로 크게 FastAPI와 파이썬 스크립트를 고려했고, 최종적으로 스크립트 작성으로 결정했습니다. 그 이유는 아래와 같습니다.
+    
+## 파이프라인 아키텍쳐
+- `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`이라는 목표로 부터 아키텍쳐의 기본 요구사항을 아래와 같이 설정할 수 있었습니다.
+    1. 배송지연 모니터링을 위한 주문 상태의 시간의 스트림 처리 필요
+    2. BCG Matrix를 계산하기 위한 `평균 판매액`과 `주문 수` 집계 필요
+
+- 요구사항을 기반으로 아래와 같이 아키텍쳐를 설계하였습니다.
+    ![img-description](../assets/img/portfolio/pipeline.png)
+    _pipeline architecture_
+
+### Data Ingestion
+- CDC mocking을 위한 데이터 주입의 선택지로 FastAPI와 파이썬 스크립트를 고려습니다.
+- 최종적으로 스크립트 작성으로 결정했습니다. 그 이유는 아래와 같습니다.
     - CDC mocking이 주요 개발 사항이 아니므로, 최대한 프레임워크를 제외하고 가볍게 구현하기 위함
 - 위와 같은 결정으로 [PandasProducer 클래스](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/service/producer/base/pandas.py)를 상속받아 메시지 발행하도록 구현하였습니다.
 
 - 데이터의 시작 기준은 `order_status.tsv`의 시간 순서대로 fk로 연결된 모든 데이터들이 순차적으로 발행되도록 했습니다.
-- 좀 더 현실적인 메시지 발행을 모사하기 위해서 이전 로그와 현재 로그의 시간 차이만큼 간격을 두어 메시지를 발행하도록 했습니다.
+- 현실적인 메시지 발행을 모사하기 위해서 이전 로그와 현재 로그의 시간 차이만큼 간격을 두어 메시지를 발행하도록 했습니다.
     - 이 때, [base_interval](https://github.com/jmhwang-dev/e-commerce/blob/develop/simulator/run.py)이라는 기준 간격보다, 실제 데이터에서 시간 차이 간격이 너무 큰 경우 `base_interval` 만큼 간격을 두어 메시지를 발행하도록 하여, 시간 간격을 효율적으로 mocking 했습니다.
 - 메시지는 총 9개의 토픽에 시간순으로 연관된 데이터들이 발행됩니다.
+
+#### Confluent Schema Registry
+- CDC로 원천 데이터의 정합성을 보장하기 위해 도입했습니다.
+- 원천 데이터는 누락이 없이 일단 수집되어야 하므로 레코드에 null 값이 포함되어도 허용하도록 스키마를 구성하였습니다.
 - 메시지 발행시, confluent schema registry에 등록한 [스키마](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas/bronze)를 기반으로 역직렬화를 수행합니다.
 
-### 데이터 저장소
+### Kafka cluster
+- 비즈니스 목표에는 실시간이라는 특성이 있으므로, 데이터 주입 시 Kafka를 사용했습니다.
+- Kafka cluster는 최소 3개의 노드로 구성해야 장애 대응에 안정적이므로 3개의 노드로 구성했습니다.
+- 전통적으로 많이 사용되던 메타데이터 관리 방식인 ZooKeeper가 deprecated 될 예정이었으므로, Kraft모드로 구성했습니다.
+
+### Spark cluster
+- Spark Cluster를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보하고, 준-실시간 처리로 실시간에 근접한 데이터 처리를 보장했습니다.
+- Spark Cluster 구성은 client node, master node, worker node로 각 1개의 컨테이너로 구성하였습니다. 구체적인 리소스는 아래와 같습니다.
+    
+```bash
+# driver
+spark.driver.cores 1
+spark.driver.memory 2g
+
+# worker node
+# SPARK_WORKER_MEMORY: 12g  # upper limit of memory to use
+# SPARK_WORKER_CORES: 14    # upper limit of cores to use
+
+spark.executor.cores 1
+spark.executor.memory 2g
+spark.dynamicAllocation.enabled true
+spark.dynamicAllocation.minExecutors 1
+spark.dynamicAllocation.maxExecutors 10
+```
+
+### Iceberg
+- 테이블 형식은 iceberg을 선정하였고 이유는 다음과 같습니다.
+    - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내제하고 있음
+    - ACID 트랜잭션 보장:  여러 데이터 작업이 동시에 테이블에 접근하더라도 데이터 정합성이 깨지지 않으며, 커밋(Commit)이 완료된 작업만 사용자에게 보여주어 데이터의 신뢰도를 보장
+    - 다양한 엔진과의 호환성 및 개방성: 엔진에 종속되지 않는 개방형 표준을 지향
+    - 시간 여행과 버전 롤백: 특정 시점의 스냅샷 ID나 타임스탬프를 지정하여 과거의 데이터를 조회 가능하고, 데이터 처리 작업에 오류가 발생했을 경우, 이전의 특정 스냅샷으로 되돌릴 수 있어 데이터 안정성을 크게 높여줌
+
+### Storage (MinIO)
 
 ![img-description](../assets/img/portfolio/medallion.png)
 _medallion architecture (datahub 요약)_
@@ -154,11 +168,7 @@ _medallion architecture (datahub 요약)_
     - 비용과 보안 이슈에 상대적으로 자유로운 on-premise 상황을 가정했습니다.
     - 추후 클라우드로 이전할 수 있는 상황을 고려하여 s3 object storage의 api와 동일한 minio를 채택하였습니다.
 - minio에 저장되는 데이터는 Medallion Layer 구조를 기반으로 데이터 처리와 목적에 따라 Bronze, Silver, Gold 레이어로 분류하여 적재합니다.
-- 데이터 포맷은 iceberg 테이블 형식으로 다음과 같은 이유로 선정하였습니다.
-    - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내제하고 있음
-    - ACID 트랜잭션 보장:  여러 데이터 작업이 동시에 테이블에 접근하더라도 데이터 정합성이 깨지지 않으며, 커밋(Commit)이 완료된 작업만 사용자에게 보여주어 데이터의 신뢰도를 보장
-    - 다양한 엔진과의 호환성 및 개방성: 엔진에 종속되지 않는 개방형 표준을 지향
-    - 시간 여행과 버전 롤백: 특정 시점의 스냅샷 ID나 타임스탬프를 지정하여 과거의 데이터를 조회 가능하고, 데이터 처리 작업에 오류가 발생했을 경우, 이전의 특정 스냅샷으로 되돌릴 수 있어 데이터 안정성을 크게 높여줌
+
 
 #### Bronze 레이어
 
@@ -195,20 +205,7 @@ _medallion architecture (datahub 요약)_
 | `order_location`                  | 주문의 고객/판매자 위치 정보     |
 | `review_metatdata_product`        | Health & Beauty 리뷰 정보         |
 
-
-### 데이터 파이프라인 구조 [TODO: 내용 다시 정리]
-
-![img-description](../assets/img/portfolio/pipeline.png)
-_pipeline architecture_
-- Spark Cluster를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보하고, 준-실시간 처리로 실시간에 근접한 데이터 처리를 보장했습니다.
-    - Spark Cluster는 client node, master node, worker node
-- 번역이 필요한 리뷰 레코드는 아래와 같이 구분되어 적재됩니다.
-    - review_metadata: 리뷰 레코드와 관련된 정보가 포함된 레코드
-    - review_comment_message: title과 meassage로 long type으로 구성된 데이터
-- [TODO: 내용 다시 정리] 번역 추론 시간은 100건에 약 30분정도의 추론 시간이 소요되어, 추론 시간 Lag을 최대한 줄이기 위해 발행될 때마다 바로 추론할 수 있도록 토픽을 사용했습니다.
-- [TODO: 내용 다시 정리] airflow가 일 단위로 집계?, 토픽으로 실시간 처리?
-
-### 대시보드
+### Superset
 - 비즈니스 목표인 `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`을 확인은 Superset을 활용하여 인터릭티브한 하게 구성했습니다.
     - Salse page
         - 연, 월 별, 매출 트렌드 smooth line plot
@@ -223,16 +220,31 @@ _pipeline architecture_
         - product_id 별 평균 리뷰 답글 소요 시간
         - product_id의 리뷰 스코어별 답글 소요 시간 분포
 
-## 회고 [TODO: 정리 필요]
+## 성과
+- 현업 담당자가 데이터를 직접 분석할 수 있도록 대시보드를 제공하여 데이터 기반 의사결정 환경을 제공할 수 있습니다.
+- 대시보드에 포함된 내용은 아래와 같습니다.
+    - 실시간 매출 트렌드 시각화
+    - 수익성이 높은 상품군을 식별할 수 있도록 실시간 BCG 세그먼트 시각화
+    - top 10 제품들의 세부사항
+
+<!-- | _sales_trend_and_BCG_segment_ | _top10_detail_ |
+|:---:|:---:|
+| ![img-description](../assets/img/portfolio/dashboard1.png) | ![img-description](../assets/img/portfolio/dashboard2.png) | -->
+
+
+![img-description](../assets/img/portfolio/dashboard1.png)
+_sales_trend_and_BCG_segment_
+
+![img-description](../assets/img/portfolio/dashboard2.png)
+_top10_detail_
+
+## 회고
 - 개발 중 예상치 못한 데이터나 더티 데이터가 발생할 수 있을 수 있음을 인지했습니다.
     - 데이터의 모든 엣지 케이스를 완벽히 시뮬레이션하는 것보다, 불완전한 데이터가 들어오더라도 시스템이 안정적으로 동작하게 만드는 것이 더 중요하다고 판단했습니다.
     - 그래서 데이터 생성의 완성도를 높이기보다, 절약된 시간으로 다운스트림에서 Null 값이나 지연 데이터를 처리하는 로직을 구현하는 데 집중했습니다.
 
-
-## 개선점 [TODO: 정리 필요]
-- spark streaming 처리는 실제로 실시간이 아닌 micro-batch로 데이터를 준-실시간으로 처리합니다.
-    - SLA에 중 처리 시간에 대한 SLI의 SLO가 더 높은 기준을 요구를 대비해 apache flink에 대한 학습이 필요합니다.
-
+## 개선점
+- 현재 가용 리소스 내에서 처리와 관련된 SLA를 설정이 필요합니다. prometheus, grafana를 이용한 리소스 모니터링을 추가할 예정입니다.
 - 향후에는 dbt를 도입하여 데이터 품질 테스트를 자동화하고 시스템 안정성을 높일 계획입니다.
-
-- [on-going]번역 추론 및 감성분석 추론 레코드
+- 세밀한 리뷰 분석을 위한 번역 추론 및 감성분석 추론 결과의 시각화를 도입할 예정입니다.
+- 더욱 정확한 집계를 위해서 주기적인 배치 처리가 필요하며, airflow를 활용한 배치 집계를 추가할 예정입니다.
