@@ -20,12 +20,12 @@ Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 
 - 평소 이커머스 데이터에 대한 관심이 많았습니다. 그 이유는 아래와 같습니다.
     - 풍부하고 명확한 데이터 수집을 할 수 있는 구조
     - 빠른 실험과 검증이 가능한 도메인
-- 위와 같은 이유로 이커머스를 주제로한 프로젝트를 진행하고자 했습니다.
+- 위와 같은 이유로 이커머스를 주제로 한 프로젝트를 진행하고자 했습니다.
 
 ## 데이터 선정 과정
 - 프로젝트 진행에 앞서 데이터가 필요했습니다.
 - 데이터 선정의 기준은 다음과 같습니다.
-    - 개인 프로젝트에 사용 가능한 public 데이터 일 것
+    - 개인 프로젝트에 사용 가능한 public 데이터일 것
     - 포함 정보가 최대한 다양할 것
     - 데이터의 기록 범위가 최대한 넓을 것
 
@@ -50,23 +50,23 @@ Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 
 #### 파레토 법칙 확인
 - `많이 팔리는 제품을 더 많이 파는 전략`을 세부적으로 나눌 필요가 있었습니다.
 - 제품명은 비식별화되어 있었으나, 카테고리는 식별할 수 있었으므로 카테고리를 기준으로 제품 자체를 정의할 수 있었습니다.
-- 데이터를 통해 총 72개의 판매 상품 카테고리가 있음을 파악헀습니다.
-- 이 중에서 `Health Beauty` 제품군이 가장 많이 팔리는 제품군을 데이터로부터 확인할 수 있었습니다.
+- 데이터를 통해 총 72개의 판매 상품 카테고리가 있음을 파악했습니다.
+- 이 중에서 `Health & Beauty` 제품군이 가장 많이 팔리는 제품군을 데이터로부터 확인할 수 있었습니다.
 ![img-description](../assets/img/portfolio/top3_sales_category.png)
 _top3_sales_category_
-- `Health Beauty` 제품군의 전체 매출에서 각 제품이 차지하는 비중을 확인했습니다.
+- `Health & Beauty` 제품군의 전체 매출에서 각 제품이 차지하는 비중을 확인했습니다.
 - 여기서 상위 20% 상품이 매출의 80%를 차지하는 파레토 법칙을 확인하였으며, 소수의 핵심 상품 관리가 매출에 결정적임을 도출하였습니다.
 ![img-description](../assets/img/portfolio/cumul_sales.png)
 _cumul_sales_
 - 위 결과로 잘 팔리는 제품 대신 제품군으로서 `Health & Beauty` 카테고리를 선정하였습니다.
 
 #### BCG 매트릭스 기반 상품 포트폴리오 분석
-- 파레토 법칙으로 확인한 제품군들의 매출을 좀 더 세부적으로 파악하는게 필요하다고 생각했습니다.
+- 파레토 법칙으로 확인한 제품군들의 매출을 좀 더 세부적으로 파악하는 게 필요하다고 생각했습니다.
 - 그래서 `BCG 매트릭스`를 기반으로 제품 군을 좀 더 세부적으로 나누어 매출 증대에 기여하는 특정 제품들의 세그먼트를 설정하였습니다.
 - 구체적으로 평균 판매액과 주문 수를 기준으로 상품군을 **Star Products, Niche Gems, Volume Drivers, Question Marks**로 구분했습니다.
 
 #### 매출 비대칭의 원인 분석
-- `가장 많이 팔리는 제품 카테고리에서 왜 모든 제품이 잘팔리지는 않을까?` 라는 질문으로 자연스럽게 이어졌습니다.
+- `가장 많이 팔리는 제품 카테고리에서 왜 모든 제품이 잘 팔리지는 않을까?` 라는 질문으로 자연스럽게 이어졌습니다.
 - 그 원인은 거래 트랜잭션이 아닌 후행 지표인 리뷰에 있다고 생각했고 여기서 원인을 찾아보기로 했습니다.
 - 고객 리뷰 분석 결과, 평점 1-2점의 부정 리뷰에서 **배송 지연**이 주요 키워드로 나타났습니다.
 ![img-description](../assets/img/portfolio/low_rate_review.png)
@@ -77,7 +77,7 @@ _high_rate_review_
 - 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
 
 ### 최종 목표
-- 위 분석 결과로부터, `많이 팔리는 제품을 더 많이 파는 전략`라는 대주제를 `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`이라는 구체적인 주제로 재정의하고 전체적인 아키텍쳐를 설계하였습니다.
+- 위 분석 결과로부터, `많이 팔리는 제품을 더 많이 파는 전략`라는 대주제를 `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`이라는 구체적인 주제로 재정의하고 전체적인 아키텍처를 설계하였습니다.
 
 ## 데이터 준비
 ### CDC Mocking을 위한 데이터 변환
@@ -102,17 +102,17 @@ _high_rate_review_
 ![img-description](../assets/img/portfolio/erd_redefined.svg)
 _전처리 후 스키마_
     
-## 파이프라인 아키텍쳐
-- `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`이라는 목표로 부터 아키텍쳐의 기본 요구사항을 아래와 같이 설정할 수 있었습니다.
-    1. 배송지연 모니터링을 위한 주문 상태의 시간의 스트림 처리 필요
+## 파이프라인 아키텍처
+- `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`이라는 목표로부터 아키텍처의 기본 요구사항을 아래와 같이 설정할 수 있었습니다.
+    1. 배송지연 모니터링을 위한 주문 상태 시간의 스트림 처리 필요
     2. BCG Matrix를 계산하기 위한 `평균 판매액`과 `주문 수` 집계 필요
 
-- 요구사항을 기반으로 아래와 같이 아키텍쳐를 설계하였습니다.
+- 요구사항을 기반으로 아래와 같이 아키텍처를 설계하였습니다.
     ![img-description](../assets/img/portfolio/pipeline.png)
     _pipeline architecture_
 
 ### Data Ingestion
-- CDC mocking을 위한 데이터 주입의 선택지로 FastAPI와 파이썬 스크립트를 고려습니다.
+- CDC mocking을 위한 데이터 주입의 선택지로 FastAPI와 파이썬 스크립트를 고려했습니다.
 - 최종적으로 스크립트 작성으로 결정했습니다. 그 이유는 아래와 같습니다.
     - CDC mocking이 주요 개발 사항이 아니므로, 최대한 프레임워크를 제외하고 가볍게 구현하기 위함
 - 위와 같은 결정으로 [PandasProducer 클래스](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/service/producer/base/pandas.py)를 상속받아 메시지 발행하도록 구현하였습니다.
@@ -125,12 +125,12 @@ _전처리 후 스키마_
 #### Confluent Schema Registry
 - CDC로 원천 데이터의 정합성을 보장하기 위해 도입했습니다.
 - 원천 데이터는 누락이 없이 일단 수집되어야 하므로 레코드에 null 값이 포함되어도 허용하도록 스키마를 구성하였습니다.
-- 메시지 발행시, confluent schema registry에 등록한 [스키마](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas/bronze)를 기반으로 역직렬화를 수행합니다.
+- 메시지 발행 시, confluent schema registry에 등록한 [스키마](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas/bronze)를 기반으로 직렬화를 수행합니다.
 
 ### Kafka cluster
 - 비즈니스 목표에는 실시간이라는 특성이 있으므로, 데이터 주입 시 Kafka를 사용했습니다.
 - Kafka cluster는 최소 3개의 노드로 구성해야 장애 대응에 안정적이므로 3개의 노드로 구성했습니다.
-- 전통적으로 많이 사용되던 메타데이터 관리 방식인 ZooKeeper가 deprecated 될 예정이었으므로, Kraft모드로 구성했습니다.
+- 전통적으로 많이 사용되던 메타데이터 관리 방식인 ZooKeeper가 deprecated 될 예정이었으므로, KRaft 모드로 구성했습니다.
 
 ### Spark cluster
 - Spark Cluster를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보하고, 준-실시간 처리로 실시간에 근접한 데이터 처리를 보장했습니다.
@@ -153,8 +153,8 @@ spark.dynamicAllocation.maxExecutors 10
 ```
 
 ### Iceberg
-- 테이블 형식은 iceberg을 선정하였고 이유는 다음과 같습니다.
-    - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내제하고 있음
+- 테이블 형식은 Iceberg을 선정하였고 이유는 다음과 같습니다.
+    - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내재하고 있음
     - ACID 트랜잭션 보장:  여러 데이터 작업이 동시에 테이블에 접근하더라도 데이터 정합성이 깨지지 않으며, 커밋(Commit)이 완료된 작업만 사용자에게 보여주어 데이터의 신뢰도를 보장
     - 다양한 엔진과의 호환성 및 개방성: 엔진에 종속되지 않는 개방형 표준을 지향
     - 시간 여행과 버전 롤백: 특정 시점의 스냅샷 ID나 타임스탬프를 지정하여 과거의 데이터를 조회 가능하고, 데이터 처리 작업에 오류가 발생했을 경우, 이전의 특정 스냅샷으로 되돌릴 수 있어 데이터 안정성을 크게 높여줌
@@ -164,10 +164,10 @@ spark.dynamicAllocation.maxExecutors 10
 ![img-description](../assets/img/portfolio/medallion.png)
 _medallion architecture (datahub 요약)_
 
-- 데이터 저장소로 minio를 사용하였습니다.
+- 데이터 저장소로 MinIO를 사용하였습니다.
     - 비용과 보안 이슈에 상대적으로 자유로운 on-premise 상황을 가정했습니다.
-    - 추후 클라우드로 이전할 수 있는 상황을 고려하여 s3 object storage의 api와 동일한 minio를 채택하였습니다.
-- minio에 저장되는 데이터는 Medallion Layer 구조를 기반으로 데이터 처리와 목적에 따라 Bronze, Silver, Gold 레이어로 분류하여 적재합니다.
+    - 추후 클라우드로 이전할 수 있는 상황을 고려하여 s3 object storage의 api와 동일한 MinIO를 채택하였습니다.
+- MinIO에 저장되는 데이터는 Medallion Layer 구조를 기반으로 데이터 처리와 목적에 따라 Bronze, Silver, Gold 레이어로 분류하여 적재합니다.
 
 
 #### Bronze 레이어
@@ -206,8 +206,8 @@ _medallion architecture (datahub 요약)_
 | `review_metatdata_product`        | Health & Beauty 리뷰 정보         |
 
 ### Superset
-- 비즈니스 목표인 `BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링`을 확인은 Superset을 활용하여 인터릭티브한 하게 구성했습니다.
-    - Salse page
+- 비즈니스 목표인 `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`을 확인할 수 있도록 Superset을 활용하여 인터랙티브하게 구성했습니다.
+    - Sales page
         - 연, 월 별, 매출 트렌드 smooth line plot
         - BCG matrix 기반 상품 포트폴리오 scatter plot
     - Top 10 Product detail
@@ -239,12 +239,12 @@ _sales_trend_and_BCG_segment_
 _top10_detail_
 
 ## 회고
-- 개발 중 예상치 못한 데이터나 더티 데이터가 발생할 수 있을 수 있음을 인지했습니다.
+- 개발 중 예상치 못한 데이터나 더티 데이터가 발생할 수 있음을 인지했습니다.
     - 데이터의 모든 엣지 케이스를 완벽히 시뮬레이션하는 것보다, 불완전한 데이터가 들어오더라도 시스템이 안정적으로 동작하게 만드는 것이 더 중요하다고 판단했습니다.
     - 그래서 데이터 생성의 완성도를 높이기보다, 절약된 시간으로 다운스트림에서 Null 값이나 지연 데이터를 처리하는 로직을 구현하는 데 집중했습니다.
 
 ## 개선점
-- 현재 가용 리소스 내에서 처리와 관련된 SLA를 설정이 필요합니다. prometheus, grafana를 이용한 리소스 모니터링을 추가할 예정입니다.
+- 현재 가용 리소스 내에서 처리와 관련된 SLA 설정이 필요합니다. prometheus, grafana를 이용한 리소스 모니터링을 추가할 예정입니다.
 - 향후에는 dbt를 도입하여 데이터 품질 테스트를 자동화하고 시스템 안정성을 높일 계획입니다.
 - 세밀한 리뷰 분석을 위한 번역 추론 및 감성분석 추론 결과의 시각화를 도입할 예정입니다.
 - 더욱 정확한 집계를 위해서 주기적인 배치 처리가 필요하며, airflow를 활용한 배치 집계를 추가할 예정입니다.
