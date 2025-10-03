@@ -242,11 +242,6 @@ _medallion architecture (datahub 요약)_
     - 수익성이 높은 상품군을 식별할 수 있도록 실시간 BCG 세그먼트 시각화
     - Top 10 제품들의 세부사항
 
-<!-- | _sales_trend_and_BCG_segment_ | _top10_detail_ |
-|:---:|:---:|
-| ![img-description](../assets/img/portfolio/dashboard1.png) | ![img-description](../assets/img/portfolio/dashboard2.png) | -->
-
-
 ![img-description](../assets/img/portfolio/dashboard1.png)
 _sales_trend_and_BCG_segment_
 
