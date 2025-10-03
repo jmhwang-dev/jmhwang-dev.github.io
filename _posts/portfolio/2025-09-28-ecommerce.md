@@ -8,22 +8,22 @@ description: 개인 프로젝트 설명 자료
 mermaid: true
 ---
 
-## 1. 프로젝트 개요
+## 프로젝트 개요
 
 **프로젝트 기간**: 2025년 4월 ~  
 **사용 기술**: Kafka, Confluent, Spark, Iceberg, MinIO, Superset, Datahub, Pandas
 
-## 2. 프로젝트 목표
-- Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 매출 성장 저해 요인을 데이터 기반으로 식별하고 지속적으로 모니터링할 수 있는 분석 플랫폼을 구축하는 것을 목표로 
-합니다.
-
-## 비즈니스 도메인을 이커머스로 선정한 이유
+### 비즈니스 도메인을 이커머스로 선정한 이유
 - 평소 이커머스 데이터에 대한 관심이 많았습니다. 그 이유는 아래와 같습니다.
     - 풍부하고 명확한 데이터 수집을 할 수 있는 구조
     - 빠른 실험과 검증이 가능한 도메인
 - 위와 같은 이유로 이커머스를 주제로 한 프로젝트를 진행하고자 했습니다.
 
-## 3. 데이터 선정 과정
+### 프로젝트 목표
+- Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 매출 성장 저해 요인을 데이터 기반으로 식별하고 지속적으로 모니터링할 수 있는 분석 플랫폼을 구축하는 것을 목표로 
+합니다.
+
+## 데이터 선정 과정
 - 프로젝트 진행에 앞서 데이터가 필요했고, 데이터 선정의 기준은 다음과 같습니다.
     - 개인 프로젝트에 사용 가능한 public 데이터일 것
     - 포함 정보가 최대한 다양할 것
@@ -32,16 +32,16 @@ mermaid: true
 - 최종적으로 위 기준에 부합하는 데이터로 Kaggle에서 제공하는 아래 데이터를 최종 선정하였습니다.<br>
 [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
 
-## 4. 비즈니스 목표 설정 과정
+## 비즈니스 목표 설정 과정
 - 프로젝트 진행을 위해서는 명확한 목표 설정이 필요합니다.
 - 데이터에 대한 특성과 관계를 파악하면서, 동시에 명확한 비즈니스 목표를 설정하기 위한 EDA를 수행하여 비즈니스 목표를 설정했습니다.
 
-### 4-1. 데이터 출처에 대한 이해
+### 데이터 출처에 대한 이해
 - 데이터를 탐색하기 전에 데이터 출처에 대한 이해가 필요하다고 생각했습니다. 파악한 결과는 아래와 같습니다.
     - 데이터는 `Olist` 라는 브라질 내 소상공인들이 온라인에서 판매할 수 있도록 마켓플레이스를 제공하는 전자상거래 플랫폼입니다.
     - `Olist`의 주요 수익원은 판매자로부터 발생하는 수수료입니다. 즉, 판매자가 매출이 높을수록 `Olist`의 수익도 증가하는 구조입니다.
 
-### 4-2. 세부 목표 설정
+### 세부 목표 설정
 - 출처에 대한 이해로부터, 매출 증대라는 비즈니스 목표의 대주제를 설정하고 세부 목표를 달성하기 위한 타겟 선정이 필요했습니다. 
 - 매출 증대를 위한 다양한 전략이 있겠으나, 가장 직관적인 관점인 `많이 팔리는 제품을 더 많이 파는 전략`을 주요 전략으로 선정했습니다.
 
@@ -79,11 +79,11 @@ _low_rate_review_
 _high_rate_review_
 - 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
 
-### 4-3. 최종 목표
+### 최종 목표
 - 위 분석 결과로부터, `많이 팔리는 제품을 더 많이 파는 전략`라는 대주제를 `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`이라는 구체적인 주제로 재정의하고 전체적인 아키텍처를 설계하였습니다.
 
-## 5. 데이터 준비
-### 5-1. CDC Mocking을 위한 데이터 변환
+## 데이터 준비
+### CDC Mocking을 위한 데이터 변환
 - 데이터 주입 시, 실시간 스트림으로 메시지를 발행하기 위해선 시계열 특성을 갖는 데이터 형식이 필요했습니다.
 - 또한, 중복되는 데이터에 대한 통합, 제거, 수정 작업이 필요했습니다.
 - 데이터가 갖는 의미를 최대한 유지하되, 무결성을 보장하지 않는 최소한의 [전처리](https://github.com/jmhwang-dev/e-commerce/tree/develop/scripts/olist_redefined) 내용은 아래와 같습니다.
@@ -105,7 +105,7 @@ _high_rate_review_
 ![img-description](../assets/img/portfolio/erd_redefined.svg)
 _전처리 후 스키마_
     
-## 6. 파이프라인 아키텍처
+## 파이프라인 아키텍처
 
 > 다양한 분석 요구사항을 대비하여, 동일한 비즈니스 목표를 기반으로 `배치 처리`와 `(준)실시간 스트림 처리`를 구분하여 개발 중입니다. 본 절은 `배치 처리`에 대한 아키텍쳐 설명만 포함합니다.
 
@@ -118,7 +118,7 @@ _전처리 후 스키마_
 ![img-description](../assets/img/portfolio/pipeline_batch.png)
 _batch pipeline architecture_
 
-### 6-2. Data Ingestion
+### Data Ingestion
 - CDC mocking을 위한 데이터 주입의 선택지로 FastAPI와 파이썬 스크립트를 고려했습니다.
 - 최종적으로 스크립트 작성으로 결정했습니다. 그 이유는 아래와 같습니다.
     - CDC mocking이 주요 개발 사항이 아니므로, 최대한 프레임워크를 제외하고 가볍게 구현하기 위함
@@ -138,7 +138,7 @@ _batch pipeline architecture_
 - 원천 데이터는 누락이 없이 일단 수집되어야 하므로 [메시지에 null 값이 포함돼도 발행되도록 스키마를 구성](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas/bronze)하였습니다.
 - 메시지 발행 시, confluent schema registry에 등록한 스키마를 기반으로 직렬화를 수행합니다.
 
-### 6-3. Kafka cluster
+### Kafka cluster
 - 비즈니스 목표에는 실시간이라는 특성이 있으므로, 데이터 주입 시 Kafka를 사용했습니다.
 - Kafka cluster는 최소 3개의 노드로 구성해야 장애 대응에 안정적이므로 3개의 노드로 구성했습니다.
 - 전통적으로 많이 사용되던 메타데이터 관리 방식인 ZooKeeper가 deprecated 될 예정이었으므로, KRaft 모드로 구성했습니다.
@@ -146,35 +146,19 @@ _batch pipeline architecture_
 - 파티션 개수는 메시지의 시간 순서를 보장하고 구현을 단순화하기 위해 단일 파티션으로 구성하였습니다.
 - 데이터 주입 시, 개발 및 운영을 상황을 고려해서 동일 네트워크 및 외부 클라이언트가 주입할 수 있도록 [advertised.listeners](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/kafka/server1.properties)를 구성하였습니다.
 
-### 6-4. Spark cluster
+### Spark cluster
 - 배치 처리와 스트림 처리를 모두 지원하는 통합 프레임워크로서 Spark를 선택했습니다.
 - Spark 클러스터를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보했습니다.
-- 구성은 클라이언트 노드, 마스터 노드, 워커 노드로 각각 하나의 컨테이너로 배포하였습니다. 구체적인 리소스 사양은 아래와 같습니다.
-    
-```bash
-# driver
-spark.driver.cores 1
-spark.driver.memory 2g
+- 구성은 클라이언트 노드, 마스터 노드, 워커 노드로 각각 하나의 컨테이너로 배포하였습니다.<br>(ETL 클러스터의 [구체적인 리소스](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/spark/spark-defaults.conf))
 
-# worker node
-# SPARK_WORKER_MEMORY: 12g  # upper limit of memory to use
-# SPARK_WORKER_CORES: 14    # upper limit of cores to use
-
-spark.executor.cores 1
-spark.executor.memory 2g
-spark.dynamicAllocation.enabled true
-spark.dynamicAllocation.minExecutors 1
-spark.dynamicAllocation.maxExecutors 10
-```
-
-### 6-5. Iceberg
+### Iceberg
 - 테이블 형식은 Iceberg을 선정하였고 이유는 다음과 같습니다.
     - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내재하고 있음
     - ACID 트랜잭션 보장:  여러 데이터 작업이 동시에 테이블에 접근하더라도 데이터 정합성이 깨지지 않으며, 커밋(Commit)이 완료된 작업만 사용자에게 보여주어 데이터의 신뢰도를 보장
     - 다양한 엔진과의 호환성 및 개방성: 엔진에 종속되지 않는 개방형 표준을 지향
     - 시간 여행과 버전 롤백: 특정 시점의 스냅샷 ID나 타임스탬프를 지정하여 과거의 데이터를 조회 가능하고, 데이터 처리 작업에 오류가 발생했을 경우, 이전의 특정 스냅샷으로 되돌릴 수 있어 데이터 안정성을 크게 높여줌
 
-### 6-6. Storage (MinIO)
+### Storage (MinIO)
 
 ![img-description](../assets/img/portfolio/medallion.png)
 _medallion architecture (datahub 요약)_
@@ -220,7 +204,7 @@ _medallion architecture (datahub 요약)_
 | `order_location`                  | 주문의 고객/판매자 위치 정보     |
 | `review_metatdata_product`        | Health & Beauty 리뷰 정보         |
 
-### 6-7. Superset
+### Superset
 - 비즈니스 목표인 `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`을 확인할 수 있도록 Superset을 활용하여 인터랙티브하게 구성했습니다.
     - Sales page
         - 연, 월 별, 매출 트렌드 smooth line plot
@@ -235,7 +219,7 @@ _medallion architecture (datahub 요약)_
         - product_id 별 평균 리뷰 답글 소요 시간
         - product_id의 리뷰 스코어별 답글 소요 시간 분포
 
-## 7. 성과
+## 성과
 - 현업 담당자가 데이터를 직접 분석할 수 있도록 대시보드를 제공하여 데이터 기반 의사결정 환경을 제공할 수 있습니다.
 - 대시보드에 포함된 내용은 아래와 같습니다.
     - 실시간 매출 트렌드 시각화
@@ -248,7 +232,7 @@ _sales_trend_and_BCG_segment_
 ![img-description](../assets/img/portfolio/dashboard2.png)
 _top10_detail_
 
-## 8. TO-DO
+## TO-DO
 - 시간 순서를 보장하면서도 확장성을 확보한 카프카 파티션 정책 수정
 - 현재 가용 리소스 내에서 처리와 관련된 SLA 설정
 - prometheus, grafana 도입: 리소스 모니터링을 추가
