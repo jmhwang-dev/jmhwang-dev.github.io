@@ -202,7 +202,7 @@ _medallion architecture (datahub 요약)_
 | `health_beauty_sales_stats_bcg`   | Health & Beauty 매출 및 BCG 세그먼트 |
 | `delivered_order_product_bcg`     | 배송 완료 제품에 BCG 세그먼트 추가 |
 | `order_location`                  | 주문의 고객/판매자 위치 정보     |
-| `review_metatdata_product`        | Health & Beauty 리뷰 정보         |
+| `review_metadata_product`        | Health & Beauty 리뷰 정보         |
 
 ### Superset
 - 비즈니스 목표인 `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`을 확인할 수 있도록 Superset을 활용하여 인터랙티브하게 구성했습니다.
@@ -224,7 +224,7 @@ _medallion architecture (datahub 요약)_
 - 대시보드에 포함된 내용은 아래와 같습니다.
     - 실시간 매출 트렌드 시각화
     - 수익성이 높은 상품군을 식별할 수 있도록 실시간 BCG 세그먼트 시각화
-    - Top 10 제품들의 세부사항
+    - 매출 Top 10 제품들의 세부사항
 
 ![img-description](../assets/img/portfolio/dashboard1.png)
 _sales_trend_and_BCG_segment_
@@ -233,9 +233,10 @@ _sales_trend_and_BCG_segment_
 _top10_detail_
 
 ## TO-DO
-- 시간 순서를 보장하면서도 확장성을 확보한 카프카 파티션 정책 수정
 - 현재 가용 리소스 내에서 처리와 관련된 SLA 설정
-- prometheus, grafana 도입: 리소스 모니터링을 추가
-- dbt를 도입: 데이터 품질 테스트를 자동화하고 시스템 안정성 개선
+- 시간 순서를 보장하면서도 확장성을 확보한 카프카 파티션 정책 수정
 - 세밀한 리뷰 분석을 위한 번역 추론 및 감성분석 추론 결과의 시각화 도입
-- 메타데이터 관리와 데이터 품질을 보장을 위한 DataHub 고도화
+- 메타데이터 관리와 "데이터 품질 보장을 위한 DataHub 고도화
+- 리소스 모니터링을 위한 Prometheus, Grafana 도입
+- 데이터 품질 테스트를 자동화하고 시스템 안정성 개선을 위한 DBT 도입
+- 배치 처리를 위한 Airflow 도입
