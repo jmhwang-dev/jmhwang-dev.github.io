@@ -8,13 +8,14 @@ description: 개인 프로젝트 설명 자료
 mermaid: true
 ---
 
-## 프로젝트 개요
+## 1. 프로젝트 개요
 
 **프로젝트 기간**: 2025년 4월 ~  
-**사용 기술**: Kafka, Confluent, Spark, Iceberg, MinIO, Superset, Pandas
+**사용 기술**: Kafka, Confluent, Spark, Iceberg, MinIO, Superset, Datahub, Pandas
 
-## 프로젝트 목표
-Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 매출 성장 저해 요인을 데이터 기반으로 식별하고 지속적으로 모니터링할 수 있는 분석 플랫폼을 구축하는 것을 목표로 하였습니다.
+## 2. 프로젝트 목표
+- Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 매출 성장 저해 요인을 데이터 기반으로 식별하고 지속적으로 모니터링할 수 있는 분석 플랫폼을 구축하는 것을 목표로 
+합니다.
 
 ## 비즈니스 도메인을 이커머스로 선정한 이유
 - 평소 이커머스 데이터에 대한 관심이 많았습니다. 그 이유는 아래와 같습니다.
@@ -22,34 +23,36 @@ Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 
     - 빠른 실험과 검증이 가능한 도메인
 - 위와 같은 이유로 이커머스를 주제로 한 프로젝트를 진행하고자 했습니다.
 
-## 데이터 선정 과정
-- 프로젝트 진행에 앞서 데이터가 필요했습니다.
-- 데이터 선정의 기준은 다음과 같습니다.
+## 3. 데이터 선정 과정
+- 프로젝트 진행에 앞서 데이터가 필요했고, 데이터 선정의 기준은 다음과 같습니다.
     - 개인 프로젝트에 사용 가능한 public 데이터일 것
     - 포함 정보가 최대한 다양할 것
     - 데이터의 기록 범위가 최대한 넓을 것
 
-- 여러 선택지가 있었고, 데이터 선정 기준에 모두 부합하는 데이터는 Kaggle의 `Brazilian E-Commerce Public Dataset by Olist`였고 프로젝트의 원천 데이터로 선정했습니다.
+- 최종적으로 위 기준에 부합하는 데이터로 Kaggle에서 제공하는 아래 데이터를 최종 선정하였습니다.<br>
+[Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
 
-## 비즈니스 목표 설정 과정
-- 데이터 엔지니어링의 업무 범위는 단순 요구사항 개발에 국한되지 않는다고 생각했습니다.
-- 비즈니스 목표를 해결하는 시작점이기 때문에, 목표 설정이 없으면 프로젝트의 방향이 산으로 갈 수 있다고 생각해서 명확한 목표 설정이 필요하다고 생각했습니다.
+## 4. 비즈니스 목표 설정 과정
+- 프로젝트 진행을 위해서는 명확한 목표 설정이 필요합니다.
 - 데이터에 대한 특성과 관계를 파악하면서, 동시에 명확한 비즈니스 목표를 설정하기 위한 EDA를 수행하여 비즈니스 목표를 설정했습니다.
 
-### 데이터 출처에 대한 이해
+### 4-1. 데이터 출처에 대한 이해
 - 데이터를 탐색하기 전에 데이터 출처에 대한 이해가 필요하다고 생각했습니다. 파악한 결과는 아래와 같습니다.
     - 데이터는 `Olist` 라는 브라질 내 소상공인들이 온라인에서 판매할 수 있도록 마켓플레이스를 제공하는 전자상거래 플랫폼입니다.
     - `Olist`의 주요 수익원은 판매자로부터 발생하는 수수료입니다. 즉, 판매자가 매출이 높을수록 `Olist`의 수익도 증가하는 구조입니다.
 
-### 세부 목표 설정
+### 4-2. 세부 목표 설정
 - 출처에 대한 이해로부터, 매출 증대라는 비즈니스 목표의 대주제를 설정하고 세부 목표를 달성하기 위한 타겟 선정이 필요했습니다. 
-- 매출 증대를 위한 다양한 전략이 있겠으나, 가장 쉬운 관점인 `많이 팔리는 제품을 더 많이 파는 전략`을 주요 전략으로 선정했습니다.
+- 매출 증대를 위한 다양한 전략이 있겠으나, 가장 직관적인 관점인 `많이 팔리는 제품을 더 많이 파는 전략`을 주요 전략으로 선정했습니다.
+
+#### 타겟 설정
 - 고객(Customer)은 특정 판매자(Seller)가 아닌 상품(Product) 자체를 보고 구매를 결정합니다.
 - 따라서 분석의 핵심 타겟을 판매자가 아닌 **'상품(Product)'**으로 설정하였습니다.
 
 #### 파레토 법칙 확인
 - `많이 팔리는 제품을 더 많이 파는 전략`을 세부적으로 나눌 필요가 있었습니다.
-- 제품명은 비식별화되어 있었으나, 카테고리는 식별할 수 있었으므로 카테고리를 기준으로 제품 자체를 정의할 수 있었습니다.
+- 제품명은 비식별화되어 있었으나, 카테고리는 식별할 수 있었습니다.
+- 따라서, 카테고리를 기준으로 제품을 식별할 수 있었습니다.
 - 데이터를 통해 총 72개의 판매 상품 카테고리가 있음을 파악했습니다.
 - 이 중에서 `Health & Beauty` 제품군이 가장 많이 팔리는 제품군을 데이터로부터 확인할 수 있었습니다.
 ![img-description](../assets/img/portfolio/top3_sales_category.png)
@@ -76,11 +79,11 @@ _low_rate_review_
 _high_rate_review_
 - 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
 
-### 최종 목표
+### 4-3. 최종 목표
 - 위 분석 결과로부터, `많이 팔리는 제품을 더 많이 파는 전략`라는 대주제를 `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`이라는 구체적인 주제로 재정의하고 전체적인 아키텍처를 설계하였습니다.
 
-## 데이터 준비
-### CDC Mocking을 위한 데이터 변환
+## 5. 데이터 준비
+### 5-1. CDC Mocking을 위한 데이터 변환
 - 데이터 주입 시, 실시간 스트림으로 메시지를 발행하기 위해선 시계열 특성을 갖는 데이터 형식이 필요했습니다.
 - 또한, 중복되는 데이터에 대한 통합, 제거, 수정 작업이 필요했습니다.
 - 데이터가 갖는 의미를 최대한 유지하되, 무결성을 보장하지 않는 최소한의 [전처리](https://github.com/jmhwang-dev/e-commerce/tree/develop/scripts/olist_redefined) 내용은 아래와 같습니다.
@@ -102,16 +105,20 @@ _high_rate_review_
 ![img-description](../assets/img/portfolio/erd_redefined.svg)
 _전처리 후 스키마_
     
-## 파이프라인 아키텍처
+## 6. 파이프라인 아키텍처
+
+> 다양한 분석 요구사항을 대비하여, 동일한 비즈니스 목표를 기반으로 `배치 처리`와 `(준)실시간 스트림 처리`를 구분하여 개발 중입니다. 본 절은 `배치 처리`에 대한 아키텍쳐 설명만 포함합니다.
+
 - `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`이라는 목표로부터 아키텍처의 기본 요구사항을 아래와 같이 설정할 수 있었습니다.
     1. 배송지연 모니터링을 위한 주문 상태 시간의 스트림 처리 필요
     2. BCG Matrix를 계산하기 위한 `평균 판매액`과 `주문 수` 집계 필요
 
 - 요구사항을 기반으로 아래와 같이 아키텍처를 설계하였습니다.
-    ![img-description](../assets/img/portfolio/pipeline.png)
-    _pipeline architecture_
 
-### Data Ingestion
+![img-description](../assets/img/portfolio/pipeline_batch.png)
+_batch pipeline architecture_
+
+### 6-2. Data Ingestion
 - CDC mocking을 위한 데이터 주입의 선택지로 FastAPI와 파이썬 스크립트를 고려했습니다.
 - 최종적으로 스크립트 작성으로 결정했습니다. 그 이유는 아래와 같습니다.
     - CDC mocking이 주요 개발 사항이 아니므로, 최대한 프레임워크를 제외하고 가볍게 구현하기 위함
@@ -122,19 +129,27 @@ _전처리 후 스키마_
     - 이 때, [base_interval](https://github.com/jmhwang-dev/e-commerce/blob/develop/simulator/run.py)이라는 기준 간격보다, 실제 데이터에서 시간 차이 간격이 너무 큰 경우 `base_interval` 만큼 간격을 두어 메시지를 발행하도록 하여, 시간 간격을 효율적으로 mocking 했습니다.
 - 메시지는 총 9개의 토픽에 시간순으로 연관된 데이터들이 발행됩니다.
 
+#### Ingestion Time 추가
+- 실제 비즈니스 상황을 고려해, 레코드 누락을 방지하고 배치 처리 및 스트림 처리 결과의 정확성을 보장하기 위해 임의의 `current_ingest_time`을 추가하여 데이터 주입 시간을 관리합니다.
+    - 원래는 메시지 소비 시점에 `current_ingest_time`을 추가해야 하지만, 개발 편의성을 위해 [메시지 발행 단계에서 주입 시간을 추가](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/service/producer/base/pandas.py)하도록 구현했습니다.
+
 #### Confluent Schema Registry
 - CDC로 원천 데이터의 정합성을 보장하기 위해 도입했습니다.
-- 원천 데이터는 누락이 없이 일단 수집되어야 하므로 레코드에 null 값이 포함되어도 허용하도록 스키마를 구성하였습니다.
-- 메시지 발행 시, confluent schema registry에 등록한 [스키마](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas/bronze)를 기반으로 직렬화를 수행합니다.
+- 원천 데이터는 누락이 없이 일단 수집되어야 하므로 [메시지에 null 값이 포함돼도 발행되도록 스키마를 구성](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas/bronze)하였습니다.
+- 메시지 발행 시, confluent schema registry에 등록한 스키마를 기반으로 직렬화를 수행합니다.
 
-### Kafka cluster
+### 6-3. Kafka cluster
 - 비즈니스 목표에는 실시간이라는 특성이 있으므로, 데이터 주입 시 Kafka를 사용했습니다.
 - Kafka cluster는 최소 3개의 노드로 구성해야 장애 대응에 안정적이므로 3개의 노드로 구성했습니다.
 - 전통적으로 많이 사용되던 메타데이터 관리 방식인 ZooKeeper가 deprecated 될 예정이었으므로, KRaft 모드로 구성했습니다.
+- 단일 파티션에서는 모든 메시지가 한 파티션에 저장되므로, 메시지의 순서가 보장됩니다.
+- 파티션 개수는 메시지의 시간 순서를 보장하고 구현을 단순화하기 위해 단일 파티션으로 구성하였습니다.
+- 데이터 주입 시, 개발 및 운영을 상황을 고려해서 동일 네트워크 및 외부 클라이언트가 주입할 수 있도록 [advertised.listeners](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/kafka/server1.properties)를 구성하였습니다.
 
-### Spark cluster
-- Spark Cluster를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보하고, 준-실시간 처리로 실시간에 근접한 데이터 처리를 보장했습니다.
-- Spark Cluster 구성은 client node, master node, worker node로 각 1개의 컨테이너로 구성하였습니다. 구체적인 리소스는 아래와 같습니다.
+### 6-4. Spark cluster
+- 배치 처리와 스트림 처리를 모두 지원하는 통합 프레임워크로서 Spark를 선택했습니다.
+- Spark 클러스터를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보했습니다.
+- 구성은 클라이언트 노드, 마스터 노드, 워커 노드로 각각 하나의 컨테이너로 배포하였습니다. 구체적인 리소스 사양은 아래와 같습니다.
     
 ```bash
 # driver
@@ -152,14 +167,14 @@ spark.dynamicAllocation.minExecutors 1
 spark.dynamicAllocation.maxExecutors 10
 ```
 
-### Iceberg
+### 6-5. Iceberg
 - 테이블 형식은 Iceberg을 선정하였고 이유는 다음과 같습니다.
     - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내재하고 있음
     - ACID 트랜잭션 보장:  여러 데이터 작업이 동시에 테이블에 접근하더라도 데이터 정합성이 깨지지 않으며, 커밋(Commit)이 완료된 작업만 사용자에게 보여주어 데이터의 신뢰도를 보장
     - 다양한 엔진과의 호환성 및 개방성: 엔진에 종속되지 않는 개방형 표준을 지향
     - 시간 여행과 버전 롤백: 특정 시점의 스냅샷 ID나 타임스탬프를 지정하여 과거의 데이터를 조회 가능하고, 데이터 처리 작업에 오류가 발생했을 경우, 이전의 특정 스냅샷으로 되돌릴 수 있어 데이터 안정성을 크게 높여줌
 
-### Storage (MinIO)
+### 6-6. Storage (MinIO)
 
 ![img-description](../assets/img/portfolio/medallion.png)
 _medallion architecture (datahub 요약)_
@@ -205,7 +220,7 @@ _medallion architecture (datahub 요약)_
 | `order_location`                  | 주문의 고객/판매자 위치 정보     |
 | `review_metatdata_product`        | Health & Beauty 리뷰 정보         |
 
-### Superset
+### 6-7. Superset
 - 비즈니스 목표인 `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`을 확인할 수 있도록 Superset을 활용하여 인터랙티브하게 구성했습니다.
     - Sales page
         - 연, 월 별, 매출 트렌드 smooth line plot
@@ -220,12 +235,12 @@ _medallion architecture (datahub 요약)_
         - product_id 별 평균 리뷰 답글 소요 시간
         - product_id의 리뷰 스코어별 답글 소요 시간 분포
 
-## 성과
+## 7. 성과
 - 현업 담당자가 데이터를 직접 분석할 수 있도록 대시보드를 제공하여 데이터 기반 의사결정 환경을 제공할 수 있습니다.
 - 대시보드에 포함된 내용은 아래와 같습니다.
     - 실시간 매출 트렌드 시각화
     - 수익성이 높은 상품군을 식별할 수 있도록 실시간 BCG 세그먼트 시각화
-    - top 10 제품들의 세부사항
+    - Top 10 제품들의 세부사항
 
 <!-- | _sales_trend_and_BCG_segment_ | _top10_detail_ |
 |:---:|:---:|
@@ -238,13 +253,10 @@ _sales_trend_and_BCG_segment_
 ![img-description](../assets/img/portfolio/dashboard2.png)
 _top10_detail_
 
-## 회고
-- 개발 중 예상치 못한 데이터나 더티 데이터가 발생할 수 있음을 인지했습니다.
-    - 데이터의 모든 엣지 케이스를 완벽히 시뮬레이션하는 것보다, 불완전한 데이터가 들어오더라도 시스템이 안정적으로 동작하게 만드는 것이 더 중요하다고 판단했습니다.
-    - 그래서 데이터 생성의 완성도를 높이기보다, 절약된 시간으로 다운스트림에서 Null 값이나 지연 데이터를 처리하는 로직을 구현하는 데 집중했습니다.
-
-## 개선점
-- 현재 가용 리소스 내에서 처리와 관련된 SLA 설정이 필요합니다. prometheus, grafana를 이용한 리소스 모니터링을 추가할 예정입니다.
-- 향후에는 dbt를 도입하여 데이터 품질 테스트를 자동화하고 시스템 안정성을 높일 계획입니다.
-- 세밀한 리뷰 분석을 위한 번역 추론 및 감성분석 추론 결과의 시각화를 도입할 예정입니다.
-- 더욱 정확한 집계를 위해서 주기적인 배치 처리가 필요하며, airflow를 활용한 배치 집계를 추가할 예정입니다.
+## 8. TO-DO
+- 시간 순서를 보장하면서도 확장성을 확보한 카프카 파티션 정책 수정
+- 현재 가용 리소스 내에서 처리와 관련된 SLA 설정
+- prometheus, grafana 도입: 리소스 모니터링을 추가
+- dbt를 도입: 데이터 품질 테스트를 자동화하고 시스템 안정성 개선
+- 세밀한 리뷰 분석을 위한 번역 추론 및 감성분석 추론 결과의 시각화 도입
+- 메타데이터 관리와 데이터 품질을 보장을 위한 DataHub 고도화
