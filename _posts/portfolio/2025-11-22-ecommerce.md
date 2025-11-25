@@ -1,8 +1,8 @@
 ---
-title: BCG Matrix 기반 Health Beauty 제품군의 배송지연 모니터링
-date: 2025-09-28 15:15 +0900
+title: 개인 포트폴리오 상세 설명 자료
+date: 2025-11-22 16:49 +0900
 categories: [portfolio]
-tags: [kafka, confluent, spark, iceberg, minio, superset, datahub, pandas]
+tags: [kafka, confluent, spark, iceberg, minio, airflow, prometheus, grafana, superset]
 author: <author_id>
 description: 개인 프로젝트 설명 자료
 mermaid: true
@@ -10,61 +10,29 @@ mermaid: true
 
 ## 프로젝트 개요
 
-**프로젝트 기간**: 2025년 4월 ~  
-**사용 기술**: Kafka, Confluent, Spark, Iceberg, MinIO, Superset, DataHub, Pandas
+1. 프로젝트 기간: 2025년 4월 ~
 
-### 비즈니스 도메인을 이커머스로 선정한 이유
-- 평소 이커머스 데이터에 대한 관심이 많았습니다. 그 이유는 아래와 같습니다.
-    - 풍부하고 명확한 데이터 수집을 할 수 있는 구조
-    - 빠른 실험과 검증이 가능한 도메인
-- 위와 같은 이유로 이커머스를 주제로 한 프로젝트를 진행하고자 했습니다.
+2. 사용 기술: kafka, confluent, spark, iceberg, minio, airflow, prometheus, grafana, superset
 
-### 프로젝트 목표
-- Health & Beauty 카테고리의 핵심 제품 매출을 극대화하기 위해, 매출 성장 저해 요인을 데이터 기반으로 식별하고 지속적으로 모니터링할 수 있는 분석 플랫폼을 구축하는 것을 목표로 합니다.
+3. 사용 데이터
+- 캐글: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
+    - 브라질 소상공인들에게 온라인 마켓플레이스를 제공하는 전자상거래 플랫폼인 `Olist`에서 제공
 
-## 데이터 선정 과정
-- 프로젝트 진행에 앞서 데이터가 필요했고, 데이터 선정의 기준은 다음과 같습니다.
-    - 개인 프로젝트에 사용 가능한 public 데이터일 것
-    - 포함 정보가 최대한 다양할 것
-    - 데이터의 기록 범위가 최대한 넓을 것
+## 프로젝트 목표
+-  실시간 배송 지연 모니터링 및 매출 대시보드 구축
 
-- 최종적으로 위 기준에 부합하는 데이터로 Kaggle에서 제공하는 아래 데이터를 최종 선정하였습니다.<br>
-[Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
+### 프로젝트 목표 설정 과정
+1. 데이터 출처에 대한 이해
+- `Olist`의 주요 수익원은 판매자로부터 발생하는 수수료입니다.
+- 즉, 판매자가 매출이 높을수록 `Olist`의 수익도 증가하는 구조입니다.
 
-## 비즈니스 목표 설정 과정
-- 프로젝트 진행을 위해서는 명확한 목표 설정이 필요합니다.
-- 데이터에 대한 특성과 관계를 파악하면서, 동시에 명확한 비즈니스 목표를 설정하기 위한 EDA를 수행하여 비즈니스 목표를 설정했습니다.
-
-### 데이터 출처에 대한 이해
-- 데이터를 탐색하기 전에 데이터 출처에 대한 이해가 필요하다고 생각했습니다. 파악한 결과는 아래와 같습니다.
-    - 데이터는 `Olist` 라는 브라질 내 소상공인들이 온라인에서 판매할 수 있도록 마켓플레이스를 제공하는 전자상거래 플랫폼입니다.
-    - `Olist`의 주요 수익원은 판매자로부터 발생하는 수수료입니다. 즉, 판매자가 매출이 높을수록 `Olist`의 수익도 증가하는 구조입니다.
-
-### 세부 목표 설정
-- 출처에 대한 이해로부터, 매출 증대라는 비즈니스 목표의 대주제를 설정하고 세부 목표를 달성하기 위한 타겟 선정이 필요했습니다. 
+2. 세부 목표 설정
+- 데이터에 대한 이해로부터, 매출 증대라는 비즈니스 목표의 대주제를 설정하고 세부 목표를 달성하기 위한 타겟 선정이 필요했습니다.
 - 매출 증대를 위한 다양한 전략이 있겠으나, 가장 직관적인 관점인 `많이 팔리는 제품을 더 많이 파는 전략`을 주요 전략으로 선정했습니다.
 
-#### 타겟 설정
-- 고객(Customer)은 특정 판매자(Seller)가 아닌 상품(Product) 자체를 보고 구매를 결정합니다.
-- 따라서 분석의 핵심 타겟을 판매자가 아닌 **'상품(Product)'**으로 설정하였습니다.
-
-#### 파레토 법칙 확인
-- `많이 팔리는 제품을 더 많이 파는 전략`을 세부적으로 나눌 필요가 있었습니다.
-- 제품명은 비식별화되어 있었으나, 카테고리는 식별할 수 있었습니다.
-- 따라서, 카테고리를 기준으로 제품을 식별할 수 있었습니다.
-- 데이터를 통해 총 72개의 판매 상품 카테고리가 있음을 파악했습니다.
-- 이 중에서 `Health & Beauty` 제품군이 가장 많이 팔리는 제품군을 데이터로부터 확인할 수 있었습니다.
-![img-description](../assets/img/portfolio/top3_sales_category.png)
-_top3_sales_category_
-- `Health & Beauty` 제품군의 전체 매출에서 각 제품이 차지하는 비중을 확인했습니다.
-- 여기서 상위 20% 상품이 매출의 80%를 차지하는 파레토 법칙을 확인하였으며, 소수의 핵심 상품 관리가 매출에 결정적임을 도출하였습니다.
-![img-description](../assets/img/portfolio/cumul_sales.png)
-_cumul_sales_
-- 위 결과로 잘 팔리는 제품 대신 제품군으로서 `Health & Beauty` 카테고리를 선정하였습니다.
-
-#### BCG 매트릭스 기반 상품 포트폴리오 분석
+#### 매출 기반 상품 포트폴리오 분석
 - 파레토 법칙으로 확인한 제품군들의 매출을 좀 더 세부적으로 파악하는 게 필요하다고 생각했습니다.
-- 그래서 `BCG 매트릭스`를 기반으로 제품 군을 좀 더 세부적으로 나누어 매출 증대에 기여하는 특정 제품들의 세그먼트를 설정하였습니다.
+- 그래서 분기별 매출를 기반으로 제품 군을 좀 더 세부적으로 나누어 매출 증대에 기여하는 특정 제품들의 세그먼트를 설정하였습니다.
 - 구체적으로 평균 판매액과 주문 수를 기준으로 상품군을 **Star Products, Niche Gems, Volume Drivers, Question Marks**로 구분했습니다.
 
 #### 매출 비대칭의 원인 분석
@@ -78,8 +46,6 @@ _low_rate_review_
 _high_rate_review_
 - 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
 
-### 최종 목표
-- 위 분석 결과로부터, `많이 팔리는 제품을 더 많이 파는 전략`라는 대주제를 `BCG Matrix 기반 Health & Beauty 제품군의 배송지연 모니터링`이라는 구체적인 주제로 재정의하고 전체적인 아키텍처를 설계하였습니다.
 
 ## 데이터 준비
 ### CDC Mocking을 위한 데이터 변환
@@ -101,7 +67,7 @@ _high_rate_review_
 
 - 전처리 후 스키마는 아래와 같이 변경됩니다.
 
-![img-description](../assets/img/portfolio/erd_redefined.svg)
+![img-description](../assets/img/portfolio/schema/bronze.png)
 _전처리 후 스키마_
     
 ## 파이프라인 아키텍처
@@ -114,7 +80,7 @@ _전처리 후 스키마_
 
 - 요구사항을 기반으로 아래와 같이 아키텍처를 설계하였습니다.
 
-![img-description](../assets/img/portfolio/pipeline_batch.png)
+![img-description](../assets/img/portfolio/pipeline/arch.png)
 _batch pipeline architecture_
 
 ### Data Ingestion
@@ -159,7 +125,7 @@ _batch pipeline architecture_
 
 ### Storage (MinIO)
 
-![img-description](../assets/img/portfolio/medallion.png)
+![img-description](../assets/img/portfolio/pipeline/medallion.png)
 _medallion architecture (datahub 요약)_
 
 - 데이터 저장소로 MinIO를 사용하였습니다.
@@ -218,24 +184,7 @@ _medallion architecture (datahub 요약)_
         - product_id 별 평균 리뷰 답글 소요 시간
         - product_id의 리뷰 스코어별 답글 소요 시간 분포
 
-## 성과
-- 현업 담당자가 데이터를 직접 분석할 수 있도록 대시보드를 제공하여 데이터 기반 의사결정 환경을 제공할 수 있습니다.
-- 대시보드에 포함된 내용은 아래와 같습니다.
-    - 실시간 매출 트렌드 시각화
-    - 수익성이 높은 상품군을 식별할 수 있도록 실시간 BCG 세그먼트 시각화
-    - 매출 Top 10 제품들의 세부사항
+## 결과
+![img-description](../assets/img/portfolio/dashboard/sales.png)
 
-![img-description](../assets/img/portfolio/dashboard1.png)
-_sales_trend_and_BCG_segment_
-
-![img-description](../assets/img/portfolio/dashboard2.png)
-_top10_detail_
-
-## TO-DO
-- 현재 가용 리소스 내에서 처리와 관련된 SLA 설정
-- 시간 순서를 보장하면서도 확장성을 확보한 카프카 파티션 정책 수정
-- 세밀한 리뷰 분석을 위한 번역 추론 및 감성분석 추론 결과의 시각화 도입
-- 메타데이터 관리와 "데이터 품질 보장을 위한 DataHub 고도화
-- 리소스 모니터링을 위한 Prometheus, Grafana 도입
-- 데이터 품질 테스트를 자동화하고 시스템 안정성 개선을 위한 DBT 도입
-- 배치 처리를 위한 Airflow 도입
+![img-description](../assets/img/portfolio/dashboard/monitor.png)
