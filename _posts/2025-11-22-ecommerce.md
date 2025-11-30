@@ -18,23 +18,62 @@ mermaid: true
 
 ## 프로젝트 목표 선정 배경
 
-- 비즈니스 모델 분석
-    - Olist는 오픈 마켓 특성상 판매 중개 수수료(Commission)가 핵심 수익원입니다.
-    - 따라서 **판매자의 매출 성장이 곧 플랫폼(Olist)의 매출 확대로 직결되는 '동반 성장 구조'**를 가지고 있습니다.
+### 비즈니스 모델 분석
+- Olist는 오픈 마켓 특성상 판매 중개 수수료(Commission)가 핵심 수익원입니다.
+- 따라서 **판매자의 매출 성장이 곧 플랫폼(Olist)의 매출 확대로 직결되는 '동반 성장 구조'**를 가지고 있습니다.
 
-- 가설 설정 및 목표
-    - 이에 따라 **'매출 증대'**를 최우선 비즈니스 목표로 가정하였습니다.
-    - 이 후, 데이터를 통해 그 **성장 동력(Growth Driver)**을 발굴하고자 EDA를 수행했습니다.
+### 가설 설정 및 목표
+- 이에 따라 **'매출 증대'**를 최우선 비즈니스 목표로 가정하였습니다.
+- 이 후, 데이터를 통해 그 **성장 동력(Growth Driver)**을 발굴하고자 EDA를 수행했습니다.
 
 ### EDA
-
 - `Olist` 플랫폼의 매출 성장을 저해하는 원인을 파악하기 위해, 리뷰에 대한 텍스트 마이닝(EDA)을 수행했습니다.
 
-- 리뷰 점수가 1-2점의 부정 리뷰에서는 상위 20개 키워드 중 `deliver`, `receive`, `didnt`, `wait` 등 **배송 관련 키워드가 60% 이상**을 차지함을 확인했습니다.
+#### 번역 추론
+- 모델 선정
+    - 번역 특화 LLM인 [Unbabel/TowerInstruct-7B-v0.2](https://huggingface.co/Unbabel/TowerInstruct-7B-v0.2)를 채택 했습니다.
+
+- 추론 환경
+    - CPU
+        - Model: Intel Core i5-12600K (12th Gen)
+        - Cores: 10 cores / 16 threads
+        - Max Clock: 4.9 GHz
+
+    - GPU
+        - Model: NVIDIA GeForce RTX 3060
+        - VRAM: 12GB
+        - CUDA Version: 12.2
+        - Driver Version: 535.274.02
+
+- 수행 결과
+    - 총 36,455건의 리뷰 데이터를 약 7일에 걸쳐 번역 완료 ([이슈사항](https://github.com/jmhwang-dev/e-commerce/issues?q=is%3Aissue%20state%3Aclosed))
+    - 가용 자원을 최대로 사용하기 위한 [추론 패키지 개발](https://github.com/jmhwang-dev/e-commerce/tree/develop/src/translate)
+        - [멀티 프로세싱 (Multi-processing)](https://github.com/jmhwang-dev/e-commerce/blob/develop/scripts/inference/run_por2eng.py)
+        - [동적 배칭 (Dynamic Batching)](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/translate/inference/translate.py#L40)
+        - [번역 추론 관련 config 정의](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/translate/utils/config.py)
+            ```yaml
+            # example
+
+            src_path: ~/github/jmhwang-dev/e-commerce/data/silver/clean_comments_text_only.tsv
+            dataset_start_index: 0
+            dataset_end_index: 18227
+            dst_path: ~/jmhwang-dev/e-commerce/artifacts/inference/por2eng_20250626_172543_1.tsv
+            checkpoint: Unbabel/TowerInstruct-7B-v0.2
+            device: auto
+            initial_batch_size: 30
+            language_from: Portuguese
+            language_into: English
+
+            ```
+
+#### 리뷰 분석
+- 부정 리뷰 (리뷰 점수가 1~2점)
+    - 상위 20개 키워드 중 `deliver`, `receive`, `didnt`, `wait` 등 **배송 관련 키워드가 60% 이상**을 차지함을 확인했습니다.
     ![img-description](../assets/img/portfolio/eda/review_low_score.png)
     _review_low_score_
 
-- 반면, 리뷰 점수가 4-5점의 긍정 리뷰에서도 배송 관련 키워드의 언급이 있었으나, 부정 리뷰 대비 `fast`라는 키워드가 존재했습니다. 
+- 긍정 리뷰 (리뷰 점수가 4~5점)
+    - 긍정 리뷰에서도 배송 관련 키워드의 언급이 있었으나, 부정 리뷰 대비 `fast`라는 키워드가 존재했습니다. 
     ![img-description](../assets/img/portfolio/eda/review_high_score.png)
     _review_high_score_
 
@@ -44,55 +83,58 @@ mermaid: true
 
 - 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
 
-<!-- ### 해결 전략: 하이브리드(Hybrid) 관제 시스템
-
-다음과 같은 3단계 계층 전략을 수립했습니다.
-
-    * **Analytical Layer (Batch):** 대용량 판매 이력을 분석하여 상품별 **비즈니스 등급(Tier)**을 산정합니다.
-    * **Operational Layer (Streaming):** 개별 주문의 배송 상태와 지연 여부를 **실시간으로 추적**합니다.
-    * **Serving Layer (Hybrid):** 위 두 정보를 결합하여, 운영자가 **핵심 상품(Star Product)의 지연**을 최우선으로 식별하고 조치할 수 있도록 지원합니다. -->
-
-### 핵심 분석 방법론: 상품 포트폴리오 매트릭스
-#### 도입 배경
+## 상품 포트폴리오 매트릭스
+### 도입 배경
 - 한정된 자원으로 모든 제품의 배송 지연을 관리하는 것은 운영 효율이 낮다는 문제점이 있습니다.
-- 단순히 배송 지연 현황을 나열하는 식 보다, 플랫폼내에서 비즈니스 영향력이 더 큰 제품에 대한 관리가 더 효율적입니다.
-- 따라서, `어떤 제품의 배송 지연이 비즈니스에 더 치명적인가?`를 판단하기 위해, 제품의 비즈니스 영향력 평가가 필요했습니다.
-- 제품 관리 기준을 마련하기 위해, 정통 BCG 매트릭스를 재정의하여 **내부 데이터 기반으로** `상품 포트폴리오 매트릭스`를 도입했습니다.
-- 재정의한 이유는 다음과 같습니다.
-    1. 데이터의 한계 (External Data Unavailable)
-        - 정통 BCG 매트릭스를 산출하려면 외부 시장 데이터가 필수적입니다.
-            - 시장 점유율 (Relative Market Share): 경쟁사의 매출 데이터가 없으므로, 우리 제품이 시장에서 몇 등인지 알 수 없습니다.
-            - 시장 성장률 (Market Growth Rate): 전체 시장 규모가 커지고 있는지 줄어들고 있는지 알 수 없습니다.
-        - `Olist` 데이터셋은 내부 트랜잭션 데이터뿐이므로 이를 구할 수 없었습니다.
+- 단순히 배송 지연 현황을 나열하기 보다 비즈니스 영향력이 더 큰 제품에 대한 관리가 더 효율적입니다.
+- 따라서, `어떤 제품의 배송 지연이 비즈니스에 더 치명적인가?`를 판단할 수 있는 기준이 필요했습니다.
+- BCG 매트릭스 제품의 비즈니스 영향력을 평가하는 대표적인 방법입니다.
 
-    2. 통계적 타당성 확보 (Independence of Variables)
-        - 단순히 내부 데이터를 쓴다고 해결되는 게 아니라, 축(Axis) 설정에 신중해야 했습니다.
-        - 초기에는 Y축을 '매출(Revenue)'로 잡았으나, 다중공선성 문제가 있었습니다.
-            - 문제: 매출 = 판매량 × 단가이므로, 판매량(X축)이 늘면 매출(Y축)도 같이 늘어나는 강한 상관관계가 발생합니다.
-            - 해결: 매출에 대한 독립 변수인 **판매량**과 **평균 단가(Unit Price)**를 Y축으로 채택하여, **"많이 팔리는가(Traffic)"**와 **"비싸게 팔리는가(Value)"**라는 서로 다른 두 가지 가치를 명확히 구분했습니다.
+    > BCG 매트릭스(BCG Matrix)
+    - 정의: 보스턴 컨설팅 그룹(Boston Consulting Group)이 개발한 전략 평가 도구
+    - 목적: 자원을 어떻게 배분할지 결정할 때 사용
+    - 방법: 기업이 보유한 여러 사업이나 제품을 `시장 성장률`과 `상대적 시장 점유율` 두 가지 축을 기준으로 분류
 
-            ![img-description](../assets/img/portfolio/eda/corr_heatmap_top16.png)
-        _corr_heatmap_top16_
+- BCG 매트릭스를 산출하려면 다음과 같은 지표가 필요합니다.
+    - 시장 점유율 (Relative Market Share)
+    - 시장 성장률 (Market Growth Rate)
 
-            ![img-description](../assets/img/portfolio/eda/corr_scatter_with_reg_top_16.png)
-        _corr_scatter_with_reg_top_16_
+- 그러나, `Olist` 데이터셋은 내부 트랜잭션 데이터이므로 이를 구할 수 없었습니다.
+- 제품의 비즈니스 영향력을 평가하기 위해, BCG 매트릭스를 기반으로 `상품 포트폴리오 매트릭스`를 재정의했습니다.
 
-    3. 통계적 보정: 롱테일 분포 해결
-        * **현상 분석:** 데이터 분석 결과, 전체 상품군 별 **50% 이상이 '월 판매량 1개'**에 집중된 심한 롱테일(Long-tail) 분포를 보였습니다.
-        * **보정 적용:** 중앙값을 그대로 적용할 경우 변별력이 상실되는 문제를 해결하기 위해, **성과 기준을 중앙값 초과(>1)로 상향 조정**하여 유의미한 4분면 분류를 도출했습니다.
-        ![img-description](../assets/img/portfolio/eda/long_tail_quantity_by_product.png)
-        _long_tail_quantity_by_product_
+### 정의 과정
+#### 통계적 타당성 확보 (Independence of Variables)
+- 단순히 내부 데이터를 쓴다고 해결되는 게 아니라, 축(Axis) 설정에 신중해야 했습니다.
+- 초기에는 Y축을 '매출(Revenue)'로 잡았으나, 다중공선성 문제가 있었습니다.
+    - 문제: 매출 = 판매량 × 단가이므로, 판매량(X축)이 늘면 매출(Y축)도 같이 늘어나는 강한 상관관계가 발생합니다.
+    - 해결: 매출에 대한 독립 변수인 **판매량**과 **평균 단가(Unit Price)**를 Y축으로 채택하여, **"많이 팔리는가(Traffic)"**와 **"비싸게 팔리는가(Value)"**라는 서로 다른 두 가지 가치를 명확히 구분했습니다.
+
+    ![img-description](../assets/img/portfolio/eda/corr_heatmap_top16.png)
+_corr_heatmap_top16_
+
+    ![img-description](../assets/img/portfolio/eda/corr_scatter_with_reg_top_16.png)
+_corr_scatter_with_reg_top_16_
+
+#### 통계적 보정: 롱테일 분포 해결
+* **현상 분석:** 데이터 분석 결과, 전체 상품군 별 **50% 이상이 '월 판매량 1개'**에 집중된 심한 롱테일(Long-tail) 분포를 보였습니다.
+* **보정 적용:** 중앙값을 그대로 적용할 경우 변별력이 상실되는 문제를 해결하기 위해, **성과 기준을 중앙값 초과(>1)로 상향 조정**하여 유의미한 4분면 분류를 도출했습니다.
+![img-description](../assets/img/portfolio/eda/long_tail_quantity_by_product.png)
+_long_tail_quantity_by_product_
 
 #### 최종 분류 및 의미
 - 최종적으로 상품 포트폴리오 매트릭스는 아래와 같습니다.
-    * **X축 (인기도) - 판매량 (Sales Quantity):** 시장 점유율을 대체하는 지표로, 해당 상품이 플랫폼 내에서 점유하고 있는 트래픽과 수요의 규모를 측정합니다.
-    * **Y축 (기여도) - 평균 단가 (Mean Price):** 시장 성장률을 대체하는 지표로, 해당 상품이 비즈니스 수익 창출에 실질적으로 얼마나 기여하는지를 측정합니다.
+    * **X축 (인기도) - 판매량 (Sales Quantity)**
+        - 시장 점유율을 대체하는 지표
+        - 해당 상품이 플랫폼 내에서 점유하고 있는 트래픽과 수요의 규모를 측정
+    * **Y축 (기여도) - 평균 단가 (Mean Price)**
+        - 시장 성장률을 대체하는 지표
+        - 해당 상품이 비즈니스 수익 창출에 실질적으로 얼마나 기여하는지를 측정
 
 - 카테고리 내 상대적 위치를 파악하기 위해 각 축의 **중앙값(Median)**을 기준으로 4분면(Quadrant)을 구분하였으며, 상품군은 다음과 같이 분류됩니다.
-    * **Star Products (High Vol, High Rev):** 높은 인기와 매출을 모두 견인하는 **핵심 상품**입니다.
-    * **Volume Drivers (High Vol, Low Rev):** 객단가는 낮으나 압도적인 판매량으로 **트래픽을 유입**시키는 상품입니다.
-    * **Niche Gems (Low Vol, High Rev):** 판매량은 적으나 고단가로 **높은 마진**을 창출하는 틈새 상품입니다.
-    * **Question Marks (Low Vol, Low Rev):** 성과가 저조하여 판매 중단 혹은 **전략 수정**이 필요한 상품입니다.
+    * **Star Products (High Vol, High Rev):** 높은 인기와 매출을 모두 견인하는 **핵심 상품**
+    * **Volume Drivers (High Vol, Low Rev):** 객단가는 낮으나 압도적인 판매량으로 **트래픽을 유입시키는 상품**
+    * **Niche Gems (Low Vol, High Rev):** 판매량은 적으나 고단가로 **높은 마진을 창출하는 틈새 상품**
+    * **Question Marks (Low Vol, Low Rev):** 성과가 저조하여 판매 중단 혹은 **전략 수정이 필요한 상품**
 
     ![img-description](../assets/img/portfolio/eda/product_portfolio_matrix_ex.png)
         _example: product_portfolio_matrix for health_beauty_
@@ -122,83 +164,72 @@ _CDC에 사용할 데이터의 최종 스키마_
 - 원래는 메시지 소비 시점에 `current_ingest_time`을 추가해야 합니다.
 - 그러나 개발 편의성을 위해 메시지 발행 단계에서 주입 시간을 추가하도록 [PandasProducer](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/service/producer/base/pandas.py) 클래스를 구현했습니다.
 - `current_ingest_time`은 아래와 같이 계산합니다.
+
 ```python
 """current_ingest_time 계산"""
+
 current_ingest_time = \
     `order_status.tsv`의 이벤트 발생 시간 + \
     pd.Timedelta(f"{50 + np.random.rand() * 50}ms") # 임의의 네트워크 지연 시간: [50ms, 100ms)
 ```
 - 이 때, `FK`로 연결된 모든 레코드에도 직전 계산된 `current_ingest_time`에 지연시간을 추가하여 레코드의 시계열성을 보장합니다.
 
-### 메시지 발행 간격 설정
+### 메시지 발행 간격 설정: 휴지기(Idle Time) 단축 전략
 
-<!-- # Mock CDC 데이터 생성 로직: 휴지기(Idle Time) 단축 전략
+#### 배경 및 목적
+- 원본 데이터(`olist_orders`)에서 주문상태는 **수 시간에서 수일 간격**으로 발생하는 경우가 포함되어 있습니다.
+- 이를 실시간 파이프라인 시뮬레이션에 그대로 적용할 경우, **데이터가 유입되지 않는 긴 대기 시간**으로 인해 개발 효율성이 저하됩니다.
+- 따라서 **실제 주문 패턴(Burstiness)은 유지하되, 불필요한 공백기만 효율적으로 단축**하는 전략을 수립하였습니다.
 
-## 1. 배경 및 목적
-실제 이커머스 데이터(`olist_orders`)는 주문이 **수 시간에서 수일 간격**으로 발생하는 경우가 포함되어 있습니다.
-이를 실시간 파이프라인 시뮬레이션에 그대로 적용할 경우, **데이터가 유입되지 않는 긴 대기 시간(Long Tail)**으로 인해 테스트 효율성이 저하됩니다.
+#### 데이터 분포 분석
+- 전체 주문 데이터에서 [주문 상태의 시간 차이](https://github.com/jmhwang-dev/e-commerce/blob/develop/notebooks/pandas/eda/diff_event_timestamp.ipynb)를 분석한 결과는 다음과 같습니다.
 
-따라서 **"실제 주문 패턴(Burstiness)은 유지하되, 불필요한 공백기만 효율적으로 단축"**하는 전략을 수립하였습니다.
+    * **Median (50%):** 39초 (평균적인 주문 흐름)
+    * **75th Percentile:** 120초 (2분)
+    * **90th Percentile:** 286초 (약 4분 46초)
 
-## 2. 데이터 분포 분석 (Statistical Basis)
-전체 주문 데이터의 `이전 주문과의 시간 차이(Time Diff)`를 분석한 결과는 다음과 같습니다.
+- 위 결과로부터 전체 주문 간격의 **90%는 약 5분(300초) 이내**에 발생함을 확인할 수 있었습니다.
 
-* **Median (50%):** 39초 (평균적인 주문 흐름)
-* **75th Percentile:** 120초 (2분)
-* **90th Percentile:** 286초 (약 4분 46초)
+#### 임계값 설정
 
-즉, 전체 주문 간격의 **90%는 약 5분(300초) 이내**에 발생하며, 5분을 초과하는 경우는 상위 10%의 '이례적인 공백기(새벽 시간 등)'로 판단됩니다.
+- 현실성 있는 [메시지 발행 시뮬레이션](https://github.com/jmhwang-dev/e-commerce/blob/develop/simulator/run.py)과 개발 속도를 높이기 위해 다음과 같이 임계값을 설정하였습니다.
 
-## 3. 임계값 설정 및 로직 (Decision Making)
-
-데이터의 리얼리티를 살리면서 시뮬레이션 속도를 높이기 위해 **Threshold(임계값)**와 **Base Interval(단축 시간)**을 다음과 같이 설정했습니다.
-
-* **Threshold: `300초` (5분)**
-    * **근거:** 전체 데이터 패턴의 **90%를 원본 그대로 보존**하여, 주문 폭주(Burst) 및 일반적인 트래픽 리듬을 왜곡 없이 재현하기 위함입니다.
-* **Base Interval: `30초`**
-    * **근거:** 모니터링 대시보드(Grafana)에서 **'트래픽이 끊겼음(Lag 해소)'**을 시각적으로 인지할 수 있는 최소한의 시간을 확보하면서도, 지루한 대기 시간을 최소화하기 위함입니다.
-
-### 🛠 적용 알고리즘 (Pseudo-code)
+    - **Threshold: `300초` (5분)**
+        - 전체 데이터 패턴의 **90%를 원본 그대로 보존**
+        - 주문 폭주(Burst) 및 일반적인 트래픽 리듬을 왜곡 없이 재현
+    - **Base Interval: `30초`**
+        - Grafana에서 **트래픽이 끊겼음(Lag 해소)**을 시각적으로 인지할 수 있는 최소한의 대기 시간 확보
 
 ```python
-# 1. 이전 이벤트와의 실제 시간 차이 계산
-actual_diff = current_timestamp - prev_timestamp
+"""transaction replay: mock real-time transaction"""
 
-# 2. 휴지기 판단 및 대기 시간 결정
-if actual_diff > 300:  # 5분(Threshold)을 초과하는 긴 공백인 경우
-    time.sleep(30)     # 30초(Base Interval)만 대기하고 스킵
-else:                  # 5분 이내의 일반적인 간격인 경우
-    time.sleep(actual_diff)  # 실제 시간 차이만큼 대기하여 리얼리티 유지 -->
+base_interval = 30  # seconds
+threshold_interval = 300  # seconds
+
+order_status_df = OrderStatusBronzeProducer.get_df()
+past_event_timestamp = pd.to_datetime("2016-09-04 21:15:19.000000")   # first timestamp in order_status
+for i, order_status_series in order_status_df.iterrows():
+    current_event_timestamp = order_status_series['timestamp']
+    event_term = current_event_timestamp - past_event_timestamp
+
+    # transaction replay: mock real-time transaction
+    if event_term > pd.Timedelta(seconds=threshold_interval):
+        time.sleep(base_interval)
+    else:
+        time.sleep(event_term.total_seconds())
+```
 
 
-- 메시지 발행시, 이전 이벤트와 현재 이벤트 간 시간 간격을 두어 메시지를 발행하도록 했습니다.
-- 메시지 발행 간격을 효율적으로 mocking 하기 위해 아래와 같이 발행 간격을 설정하였습니다.
-<!-- [base_interval](https://github.com/jmhwang-dev/e-commerce/blob/develop/simulator/run.py -->
+## 파이프라인 구조: 하이브리드(Hybrid) 모니터링 시스템
 
-    ```python
-    """transaction replay: mock real-time transaction"""
-    
-    base_interval = 0  # seconds
-    order_status_df = OrderStatusBronzeProducer.get_df()
-    past_event_timestamp = pd.to_datetime("2016-09-04 21:15:19.000000")   # first timestamp in order_status
-
-    for i, order_status_series in order_status_df.iterrows():
-        current_event_timestamp = order_status_series['timestamp']
-        event_term = current_event_timestamp - past_event_timestamp
-
-        # 실제 이벤트 간 시간 차이 간격이 너무 큰 경우 `base_interval` 만큼 간격을 두어 메시지를 발행
-        if event_term > pd.Timedelta(seconds=base_interval):
-            time.sleep(base_interval)
-        else:
-            time.sleep(event_term.total_seconds())
-    ```
-
-## 파이프라인 구조
-<!-- - 프로젝트 목표로부터 아키텍처의 기본 요구사항을 아래와 같이 설정할 수 있었습니다.
+- 프로젝트 목표로부터 아키텍처의 기본 요구사항은 아래와 같습니다.
     1. 배송지연 모니터링을 위한 주문 상태 시간의 스트림 처리 필요
-    2. BCG Matrix를 계산하기 위한 `평균 판매액`과 `주문 수` 집계 필요
+    2. 상품 포트폴리오 매트릭스를 계산하기 위한 `평균 판매액`과 `주문 수` 배치 집계 필요
 
-- 요구사항을 기반으로 아래와 같이 아키텍처를 설계하였습니다. -->
+- 요구사항을 통해 파이프라인 아키텍처를 다음과 같이 설계했습니다.
+    * **Analytical Layer (Batch):** 대용량 판매 이력을 분석하여 상품별 **비즈니스 등급(Tier)**을 산정
+    * **Operational Layer (Streaming):** 개별 주문의 배송 상태와 지연 여부를 **실시간으로 추적**
+    * **Serving Layer (Hybrid):** 위 두 정보를 결합하여, 운영자가 **핵심 상품(Star Product)의 지연**을 최우선으로 식별하고 조치할 수 있도록 지원
 
 ![img-description](../assets/img/portfolio/pipeline/arch.png)
 _Lambda Architecture_
@@ -228,7 +259,7 @@ _Lambda Architecture_
 #### Spark Streaming
 - 배치 처리와 스트림 처리를 모두 지원하는 통합 프레임워크로서 Spark를 선택했습니다.
 - Spark 클러스터를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보했습니다.
-- 구성은 클라이언트 노드, 마스터 노드, 워커 노드로 각각 하나의 컨테이너로 배포하였습니다.<br>(ETL 클러스터의 [구체적인 리소스](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/spark/spark-defaults.conf))
+- 구성은 클라이언트 노드, 마스터 노드, 워커 노드로 각각 하나의 컨테이너로 배포하였습니다.<br>[스파크 클러스터 설정](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/spark/spark-defaults.conf))
 
 ### Batch Layer
 #### Spark Batch & Airflow
