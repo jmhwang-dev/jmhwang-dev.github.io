@@ -10,43 +10,92 @@ mermaid: true
 
 ## 프로젝트 개요
 
-1. 프로젝트 기간: 2025년 4월 ~
+- 목표: 실시간 배송 지연 모니터링 및 매출 대시보드 구축
+- 기간: 2025년 4월 ~
+- 사용 기술: kafka, confluent, spark, iceberg, minio, airflow, prometheus, grafana, superset
+- 사용 데이터: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
+    - 브라질 소상공인들에게 온라인 마켓플레이스를 제공하는 전자상거래 플랫폼인 `Olist`에서 제공한 캐글 데이터
 
-2. 사용 기술: kafka, confluent, spark, iceberg, minio, airflow, prometheus, grafana, superset
+## 프로젝트 목표 선정 배경
 
-3. 사용 데이터
-- 캐글: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
-    - 브라질 소상공인들에게 온라인 마켓플레이스를 제공하는 전자상거래 플랫폼인 `Olist`에서 제공
+- 비즈니스 모델 분석
+    - Olist는 오픈 마켓 특성상 판매 중개 수수료(Commission)가 핵심 수익원입니다.
+    - 따라서 **판매자의 매출 성장이 곧 플랫폼(Olist)의 매출 확대로 직결되는 '동반 성장 구조'**를 가지고 있습니다.
 
-<!--
-## 프로젝트 목표
--  실시간 배송 지연 모니터링 및 매출 대시보드 구축
-
-### 가상의 비즈니스 목표 설정
-- `Olist`의 주요 수익원은 판매자로부터 발생하는 수수료입니다.
-- 즉, 판매자가 매출이 높을수록 `Olist`의 수익도 증가하는 구조입니다.
-- 일반적인 비즈니스 목표인 `매출 증대`를 가상의 주제로 설정하고, EDA를 수행했습니다.
+- 가설 설정 및 목표
+    - 이에 따라 **'매출 증대'**를 최우선 비즈니스 목표로 가정하였습니다.
+    - 이 후, 데이터를 통해 그 **성장 동력(Growth Driver)**을 발굴하고자 EDA를 수행했습니다.
 
 ### EDA
-- `매출 증대의 원인`을 파악하기 위해 상품을 기준으로 EDA를 수행했습니다.
 
-#### 매출 기반 상품 포트폴리오 분석
-- 파레토 법칙으로 확인한 제품군들의 매출을 좀 더 세부적으로 파악하는 게 필요하다고 생각했습니다.
-- 그래서 분기별 매출를 기반으로 제품 군을 좀 더 세부적으로 나누어 매출 증대에 기여하는 특정 제품들의 세그먼트를 설정하였습니다.
-- 구체적으로 평균 판매액과 주문 수를 기준으로 상품군을 **Star Products, Niche Gems, Volume Drivers, Question Marks**로 구분했습니다.
+- `Olist` 플랫폼의 매출 성장을 저해하는 원인을 파악하기 위해, 리뷰에 대한 텍스트 마이닝(EDA)을 수행했습니다.
 
-#### 매출 비대칭의 원인 분석
-- `가장 많이 팔리는 제품 카테고리에서 왜 모든 제품이 잘 팔리지는 않을까?` 라는 질문으로 자연스럽게 이어졌습니다.
-- 그 원인은 거래 트랜잭션이 아닌 후행 지표인 리뷰에 있다고 생각했고 여기서 원인을 찾아보기로 했습니다.
-- 고객 리뷰 분석 결과, 평점 1-2점의 부정 리뷰에서 **배송 지연**이 주요 키워드로 나타났습니다.
-![img-description](../assets/img/portfolio/low_rate_review.png)
-_low_rate_review_
-- 평점 4-5점의 긍정 리뷰에서는 관련 언급이 적음을 워드클라우드를 통해 확인하였습니다.
-![img-description](../assets/img/portfolio/high_rate_review.png)
-_high_rate_review_
+- 리뷰 점수가 1-2점의 부정 리뷰에서는 상위 20개 키워드 중 `deliver`, `receive`, `didnt`, `wait` 등 **배송 관련 키워드가 60% 이상**을 차지함을 확인했습니다.
+    ![img-description](../assets/img/portfolio/eda/review_low_score.png)
+    _review_low_score_
+
+- 반면, 리뷰 점수가 4-5점의 긍정 리뷰에서도 배송 관련 키워드의 언급이 있었으나, 부정 리뷰 대비 `fast`라는 키워드가 존재했습니다. 
+    ![img-description](../assets/img/portfolio/eda/review_high_score.png)
+    _review_high_score_
+
+- 실제 데이터에서 리뷰 스코어의 그룹별 배송 지연 여부의 비율이 차이가 있었습니다.
+    ![img-description](../assets/img/portfolio/eda/late_delivery_rate.png)
+    _late_delivery_rate_
+
 - 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
--->
 
+<!-- ### 해결 전략: 하이브리드(Hybrid) 관제 시스템
+
+다음과 같은 3단계 계층 전략을 수립했습니다.
+
+    * **Analytical Layer (Batch):** 대용량 판매 이력을 분석하여 상품별 **비즈니스 등급(Tier)**을 산정합니다.
+    * **Operational Layer (Streaming):** 개별 주문의 배송 상태와 지연 여부를 **실시간으로 추적**합니다.
+    * **Serving Layer (Hybrid):** 위 두 정보를 결합하여, 운영자가 **핵심 상품(Star Product)의 지연**을 최우선으로 식별하고 조치할 수 있도록 지원합니다. -->
+
+### 핵심 분석 방법론: 상품 포트폴리오 매트릭스
+#### 도입 배경
+- 한정된 자원으로 모든 제품의 배송 지연을 관리하는 것은 운영 효율이 낮다는 문제점이 있습니다.
+- 단순히 배송 지연 현황을 나열하는 식 보다, 플랫폼내에서 비즈니스 영향력이 더 큰 제품에 대한 관리가 더 효율적입니다.
+- 따라서, `어떤 제품의 배송 지연이 비즈니스에 더 치명적인가?`를 판단하기 위해, 제품의 비즈니스 영향력 평가가 필요했습니다.
+- 제품 관리 기준을 마련하기 위해, 정통 BCG 매트릭스를 재정의하여 **내부 데이터 기반으로** `상품 포트폴리오 매트릭스`를 도입했습니다.
+- 재정의한 이유는 다음과 같습니다.
+    1. 데이터의 한계 (External Data Unavailable)
+        - 정통 BCG 매트릭스를 산출하려면 외부 시장 데이터가 필수적입니다.
+            - 시장 점유율 (Relative Market Share): 경쟁사의 매출 데이터가 없으므로, 우리 제품이 시장에서 몇 등인지 알 수 없습니다.
+            - 시장 성장률 (Market Growth Rate): 전체 시장 규모가 커지고 있는지 줄어들고 있는지 알 수 없습니다.
+        - `Olist` 데이터셋은 내부 트랜잭션 데이터뿐이므로 이를 구할 수 없었습니다.
+
+    2. 통계적 타당성 확보 (Independence of Variables)
+        - 단순히 내부 데이터를 쓴다고 해결되는 게 아니라, 축(Axis) 설정에 신중해야 했습니다.
+        - 초기에는 Y축을 '매출(Revenue)'로 잡았으나, 다중공선성 문제가 있었습니다.
+            - 문제: 매출 = 판매량 × 단가이므로, 판매량(X축)이 늘면 매출(Y축)도 같이 늘어나는 강한 상관관계가 발생합니다.
+            - 해결: 매출에 대한 독립 변수인 **판매량**과 **평균 단가(Unit Price)**를 Y축으로 채택하여, **"많이 팔리는가(Traffic)"**와 **"비싸게 팔리는가(Value)"**라는 서로 다른 두 가지 가치를 명확히 구분했습니다.
+
+            ![img-description](../assets/img/portfolio/eda/corr_heatmap_top16.png)
+        _corr_heatmap_top16_
+
+            ![img-description](../assets/img/portfolio/eda/corr_scatter_with_reg_top_16.png)
+        _corr_scatter_with_reg_top_16_
+
+    3. 통계적 보정: 롱테일 분포 해결
+        * **현상 분석:** 데이터 분석 결과, 전체 상품군 별 **50% 이상이 '월 판매량 1개'**에 집중된 심한 롱테일(Long-tail) 분포를 보였습니다.
+        * **보정 적용:** 중앙값을 그대로 적용할 경우 변별력이 상실되는 문제를 해결하기 위해, **성과 기준을 중앙값 초과(>1)로 상향 조정**하여 유의미한 4분면 분류를 도출했습니다.
+        ![img-description](../assets/img/portfolio/eda/long_tail_quantity_by_product.png)
+        _long_tail_quantity_by_product_
+
+#### 최종 분류 및 의미
+- 최종적으로 상품 포트폴리오 매트릭스는 아래와 같습니다.
+    * **X축 (인기도) - 판매량 (Sales Quantity):** 시장 점유율을 대체하는 지표로, 해당 상품이 플랫폼 내에서 점유하고 있는 트래픽과 수요의 규모를 측정합니다.
+    * **Y축 (기여도) - 평균 단가 (Mean Price):** 시장 성장률을 대체하는 지표로, 해당 상품이 비즈니스 수익 창출에 실질적으로 얼마나 기여하는지를 측정합니다.
+
+- 카테고리 내 상대적 위치를 파악하기 위해 각 축의 **중앙값(Median)**을 기준으로 4분면(Quadrant)을 구분하였으며, 상품군은 다음과 같이 분류됩니다.
+    * **Star Products (High Vol, High Rev):** 높은 인기와 매출을 모두 견인하는 **핵심 상품**입니다.
+    * **Volume Drivers (High Vol, Low Rev):** 객단가는 낮으나 압도적인 판매량으로 **트래픽을 유입**시키는 상품입니다.
+    * **Niche Gems (Low Vol, High Rev):** 판매량은 적으나 고단가로 **높은 마진**을 창출하는 틈새 상품입니다.
+    * **Question Marks (Low Vol, Low Rev):** 성과가 저조하여 판매 중단 혹은 **전략 수정**이 필요한 상품입니다.
+
+    ![img-description](../assets/img/portfolio/eda/product_portfolio_matrix_ex.png)
+        _example: product_portfolio_matrix for health_beauty_
 
 ## 데이터 준비
 
