@@ -292,175 +292,182 @@ _Physical view: Infrastructure Architecture_
 요약하자면, **"제어의 중앙화"**와 **"연산의 분산"**을 통해 시스템 안정성을 확보하고, **"데이터 로컬리티(Data Locality)의 극대화"**를 통해 핵심인 스트림 성능을 보장하는, 제한된 자원 하에서의 최적화된 구조입니다.
 
 
-### Ingestion Layer
+### 3. 구현 상세
 
-#### Confluent Schema Registry
-- CDC로 원천 데이터의 정합성을 보장하기 위해 도입했습니다.
-- 원천 데이터는 누락이 없이 수집되어야 하므로 메시지에 null 값이 포함돼도 발행되도록 스키마를 구성하였습니다.
+#### Ingestion Layer
 
-    ```jsonc
-    // null 포함 스키마 예시: `customer.avsc`
+- Confluent Schema Registry
+    - CDC로 원천 데이터의 정합성을 보장하기 위해 도입했습니다.
+    - 원천 데이터는 누락이 없이 수집되어야 하므로 메시지에 null 값이 포함돼도 발행되도록 스키마를 구성하였습니다.
 
-    {   
-        "namespace": "bronze",
-        "type": "record",
-        "name": "customer",
-        "fields": [
-            { "name": "zip_code", "type": ["null", "int"], "default": null },
-            {
-                "name": "ingest_time",
-                "type": [ "null", { "type": "long", "logicalType": "timestamp-millis" } ],
-                "default": null
-            }
-        ]
-    }
-    ```
-    
-- 메시지 발행 시, schema registry에 등록한 [Avro schema](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas)를 통해 [직렬화](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/service/producer/base/pandas.py)를 수행합니다.
+        ```jsonc
+        // null 포함 스키마 예시: `customer.avsc`
 
-#### Kafka cluster
-- 프로젝트 목표 중 `실시간 배송 지연 모니터링` 달성을 위해 Kafka를 사용했습니다.
-- Kafka cluster는 최소 3개의 노드로 구성해야 장애 대응에 안정적이므로 3개의 노드로 구성했습니다.
-- 전통적인 메타데이터 관리 방식인 ZooKeeper가 deprecated 될 예정이었으므로, KRaft 모드로 구성했습니다.
-- 데이터 주입 시, 개발 및 운영을 상황을 고려해서 동일 네트워크 및 외부 클라이언트가 주입할 수 있도록 [advertised.listeners](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/kafka/server1.properties)를 구성하였습니다.
-- 파티션 개수는 가용 코어 수를 고려하여, 단일 파티션으로 구성하였습니다.
-    - 총 토픽 개수 = 총 15개 (Bronze Topic 9개 + Silver Topic 6개)
-- 이 후, 가용 자원이 scale out 될 수 있는 상황을 고려하여, 파티션 수를 조절할 수 있도록 구현하엿습니다.
-    ```python
-    def create_topics(admin_client: AdminClient, topics_names_to_create: Iterable[str], num_partitions:int = 1, replication_factor:int = 2):
-        """
-        Asynchronously creates topics. The call returns a dict of futures.
-        We wait for each future to finish to check for errors.
-        """
-        new_topics = [NewTopic(topic, num_partitions=num_partitions, replication_factor=replication_factor) for topic in topics_names_to_create]
+        {   
+            "namespace": "bronze",
+            "type": "record",
+            "name": "customer",
+            "fields": [
+                { "name": "zip_code", "type": ["null", "int"], "default": null },
+                {
+                    "name": "ingest_time",
+                    "type": [ "null", { "type": "long", "logicalType": "timestamp-millis" } ],
+                    "default": null
+                }
+            ]
+        }
+        ```
         
-        # create_topics는 토픽 이름과 Future 객체를 담은 딕셔너리를 반환합니다.
-        fs = admin_client.create_topics(new_topics)
+    - 메시지 발행 시, schema registry에 등록한 [Avro schema](https://github.com/jmhwang-dev/e-commerce/tree/develop/infra/confluent/schemas)를 통해 [직렬화](https://github.com/jmhwang-dev/e-commerce/blob/develop/src/service/producer/base/pandas.py)를 수행합니다.
 
-        # 각 토픽의 Future 결과를 기다리며 성공/실패를 확인합니다.
-        for topic, f in fs.items():
-            try:
-                # f.result()를 호출하면 작업이 완료될 때까지 기다립니다.
-                # 성공하면 아무것도 반환하지 않습니다.
-                f.result()
-                print(f"Created topic: {topic}")
-            except KafkaException as e:
-                # f.result()에서 예외가 발생한 경우입니다.
-                # 에러 코드를 확인하여 이미 존재하는 토픽인지 확인합니다.
-                if e.args[0].code() == KafkaError.TOPIC_ALREADY_EXISTS:
-                    print(f"Topic {topic} already exists, skipping creation.")
-                else:
-                    # 그 외 다른 카프카 에러
-                    print(f"Failed to create topic {topic}: {e}")
-    ```
+- Kafka cluster
+    - 프로젝트 목표 중 `실시간 배송 지연 모니터링` 달성을 위해 Kafka를 사용했습니다.
+    - Kafka cluster는 최소 3개의 노드로 구성해야 장애 대응에 안정적이므로 3개의 노드로 구성했습니다.
+    - 전통적인 메타데이터 관리 방식인 ZooKeeper가 deprecated 될 예정이었으므로, KRaft 모드로 구성했습니다.
+    - 데이터 주입 시, 개발 및 운영을 상황을 고려해서 동일 네트워크 및 외부 클라이언트가 주입할 수 있도록 [advertised.listeners](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/kafka/server1.properties)를 구성하였습니다.
+    - 파티션 개수는 가용 코어 수를 고려하여, 단일 파티션으로 구성하였습니다.
+        - 총 토픽 개수 = 총 15개 (Bronze Topic 9개 + Silver Topic 6개)
+    - 이 후, 가용 자원이 scale out 될 수 있는 상황을 고려하여, 파티션 수를 조절할 수 있도록 구현하엿습니다.
+        ```python
+        def create_topics(admin_client: AdminClient, topics_names_to_create: Iterable[str], num_partitions:int = 1, replication_factor:int = 2):
+            """
+            Asynchronously creates topics. The call returns a dict of futures.
+            We wait for each future to finish to check for errors.
+            """
+            new_topics = [NewTopic(topic, num_partitions=num_partitions, replication_factor=replication_factor) for topic in topics_names_to_create]
+            
+            # create_topics는 토픽 이름과 Future 객체를 담은 딕셔너리를 반환합니다.
+            fs = admin_client.create_topics(new_topics)
 
-### Batch & Speed Layer
+            # 각 토픽의 Future 결과를 기다리며 성공/실패를 확인합니다.
+            for topic, f in fs.items():
+                try:
+                    # f.result()를 호출하면 작업이 완료될 때까지 기다립니다.
+                    # 성공하면 아무것도 반환하지 않습니다.
+                    f.result()
+                    print(f"Created topic: {topic}")
+                except KafkaException as e:
+                    # f.result()에서 예외가 발생한 경우입니다.
+                    # 에러 코드를 확인하여 이미 존재하는 토픽인지 확인합니다.
+                    if e.args[0].code() == KafkaError.TOPIC_ALREADY_EXISTS:
+                        print(f"Topic {topic} already exists, skipping creation.")
+                    else:
+                        # 그 외 다른 카프카 에러
+                        print(f"Failed to create topic {topic}: {e}")
+        ```
 
-#### 공통: Spark
-- 배치 처리와 스트림 처리를 모두 지원하는 통합 프레임워크로서 [Spark](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/spark/spark-defaults.conf)를 선택했습니다.
-    -
-- Spark 클러스터를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보했습니다.
-- 구성은 클라이언트 노드, 마스터 노드, 워커 노드를 각각 하나의 컨테이너로 배포하였습니다.
-    - 워워커 노드가 호스트 내 다른 프로세스에 영향을 주지 않도록 자원 사용량을 제한했습니다.
-    ```yaml
-        environment:
-            SPARK_WORKER_MEMORY: 16g  # upper limit of memory to use
-            SPARK_WORKER_CORES: 14    # upper limit of cores to use
-    ```
+#### Batch & Speed Layer
 
-![img-description](../assets/img/portfolio/dashboard/grafana.png)
+- [공통] Spark
+    - 배치 처리와 스트림 처리를 모두 지원하는 통합 프레임워크로서 [Spark](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/spark/spark-defaults.conf)를 선택했습니다.
+        -
+    - Spark 클러스터를 구축하여 대용량 데이터 처리의 성능과 확장성을 확보했습니다.
+    - 구성은 클라이언트 노드, 마스터 노드, 워커 노드를 각각 하나의 컨테이너로 배포하였습니다.
+        - 워워커 노드가 호스트 내 다른 프로세스에 영향을 주지 않도록 자원 사용량을 제한했습니다.
+        ```yaml
+            environment:
+                SPARK_WORKER_MEMORY: 16g  # upper limit of memory to use
+                SPARK_WORKER_CORES: 14    # upper limit of cores to use
+        ```
 
-#### [Batch Layer] Airflow
+    ![img-description](../assets/img/portfolio/dashboard/grafana.png)
 
-![img-description](../assets/img/portfolio/pipeline/airflow-dag.png)
-_dag diagram_
+- [Batch Layer] Airflow
 
-![img-description](../assets/img/portfolio/dashboard/airflow-gantt.png)
-_gantt chart_
+    ![img-description](../assets/img/portfolio/pipeline/airflow-dag.png)
+    _dag diagram_
 
-
-#### [Batch Layer] Iceberg & MinIO
-
--  Iceberg
-    - 테이블 형식은 Iceberg을 선정하였고 이유는 다음과 같습니다.
-        - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내재하고 있음
-        - ACID 트랜잭션 보장:  여러 데이터 작업이 동시에 테이블에 접근하더라도 데이터 정합성이 깨지지 않으며, 커밋(Commit)이 완료된 작업만 사용자에게 보여주어 데이터의 신뢰도를 보장
-        - 다양한 엔진과의 호환성 및 개방성: 엔진에 종속되지 않는 개방형 표준을 지향
-        - 시간 여행과 버전 롤백: 특정 시점의 스냅샷 ID나 타임스탬프를 지정하여 과거의 데이터를 조회 가능하고, 데이터 처리 작업에 오류가 발생했을 경우, 이전의 특정 스냅샷으로 되돌릴 수 있어 데이터 안정성을 크게 높여줌
-
-- MinIO
-    - 데이터 저장소로 를 사용하였습니다.
-        - 비용과 보안 이슈에 상대적으로 자유로운 on-premise 상황을 가정했습니다.
-        - 추후 클라우드로 이전할 수 있는 상황을 고려하여 s3 object storage의 api와 동일한 MinIO를 채택하였습니다.
-    - MinIO에 저장되는 데이터는 Medallion Layer 구조를 기반으로 데이터 처리와 목적에 따라 Bronze, Silver, Gold 레이어로 분류하여 적재합니다.
-
-
-#### [Batch Layer] Medallion Layer
-
-![img-description](../assets/img/portfolio/pipeline/medallion.png)
-_medallion architecture_
-
-- Bronze Layer
-![img-description](../assets/img/portfolio/schema/bronze.png)
-_bronze_layer_schema_
-
-    | 테이블 이름 | 설명 |
-    |---|---|
-    | `payment` | 주문 결제 수단 및 금액 정보 |
-    | `customer` | 고객 ID 및 우편번호 정보 |
-    | `geolocation` | 우편번호 기준 위도/경도 및 지역 정보 |
-    | `order_status` | 주문 ID 별 현재 상태 및 타임스탬프 |
-    | `order_item` | 주문에 포함된 상품 품목 및 배송비, 판매자 정보 |
-    | `seller` | 판매자 ID 및 위치 정보 |
-    | `product` | 상품 카테고리 및 규격(무게, 크기) 정보 |
-    | `estimated_delivery_date` | 주문 별 예상 배송일 정보 |
-    | `review` | 고객 리뷰 내용 및 평점, 작성 시간 |
-
-- Silver Layer
-![img-description](../assets/img/portfolio/schema/silver.png)
-_silver_layer_schema_
-
-    | 테이블 이름 | 설명 |
-    |---|---|
-    | `review_metadata` | 리뷰 점수 및 작성/답변 시간 등 메타데이터 |
-    | `customer_order` | 고객, 주문, 상품 정보를 결합한 트랜잭션 데이터 |
-    | `product_metadata` | 상품 카테고리 및 판매자 연결 정보 |
-    | `order_event` | 주문 처리 과정의 각종 이벤트 타임스탬프 기록 |
-    | `olist_user` | 사용자(고객/판매자 등) 통합 정보 및 위치 키 |
-    | `geo_coord` | 표준화된 지리 좌표(위도/경도) 정보 |
-    | `watermark` | 데이터 파이프라인 처리를 위한 상태/오프셋 기록 |
-
-- Gold Layer
-![img-description](../assets/img/portfolio/schema/gold.png)
-_gold_layer_schema_
-
-    | 테이블 이름 | 설명 |
-    |---|---|
-    | `fact_order_lead_days` | 주문 단계별 소요 시간(Lead Time) 분석 팩트 테이블 |
-    | `fact_order_detail` | 분석용으로 통합된 주문 상세 마스터 테이블 |
-    | `dim_user_location` | 사용자 위치 분석을 위한 차원 테이블 |
-    | `fact_review_answer_lead_days` | 리뷰 작성 후 답변까지 걸린 시간 분석 팩트 테이블 |
-    | `fact_monthly_sales_by_product` | 상품별 월간 판매량 및 매출 집계 테이블 |
-
-### Serving Layer
-#### Thrift Server
+    ![img-description](../assets/img/portfolio/dashboard/airflow-gantt.png)
+    _gantt chart_
 
 
-#### Superset
-- Superset을 활용하여 `매출 집계` 및 `실시간 배송지연 모니터링`을 확인할 수 있도록 인터랙티브하게 구성했습니다.
-    - `Sales Detail`
-        ![img-description](../assets/img/portfolio/dashboard/sales.png)
+- [Batch Layer] Iceberg & MinIO
 
-        - Rank by Category: 제품군 별 누적 매출 순위
-        - Rank by Product: 제품 별 누적 매출 순위
-        - Sales Quantity by Month: 월 별 판매 제품 개수
-        - Sales by Month: 월 별 매출 (제품군별, 제품별 확인 가능)
-        - Review Distribution: 매출 기준 4개 그룹의 리뷰 점수 분포
-        - Average Order Lead Days by Month: 월별 평균 배송 단계 소요 시간
+    -  Iceberg
+        - 테이블 형식은 Iceberg을 선정하였고 이유는 다음과 같습니다.
+            - 스키마와 파티션의 자유로운 변경: 현재는 CDC 데이터의 스키마가 고정되어 있지만, 추후 스키마가 변경될 수 있는 가능성을 내재하고 있음
+            - ACID 트랜잭션 보장:  여러 데이터 작업이 동시에 테이블에 접근하더라도 데이터 정합성이 깨지지 않으며, 커밋(Commit)이 완료된 작업만 사용자에게 보여주어 데이터의 신뢰도를 보장
+            - 다양한 엔진과의 호환성 및 개방성: 엔진에 종속되지 않는 개방형 표준을 지향
+            - 시간 여행과 버전 롤백: 특정 시점의 스냅샷 ID나 타임스탬프를 지정하여 과거의 데이터를 조회 가능하고, 데이터 처리 작업에 오류가 발생했을 경우, 이전의 특정 스냅샷으로 되돌릴 수 있어 데이터 안정성을 크게 높여줌
 
-    - `Delivery Monitor`
-        ![img-description](../assets/img/portfolio/dashboard/monitor.png)
+    - MinIO
+        - 데이터 저장소로 를 사용하였습니다.
+            - 비용과 보안 이슈에 상대적으로 자유로운 on-premise 상황을 가정했습니다.
+            - 추후 클라우드로 이전할 수 있는 상황을 고려하여 s3 object storage의 api와 동일한 MinIO를 채택하였습니다.
+        - MinIO에 저장되는 데이터는 Medallion Layer 구조를 기반으로 데이터 처리와 목적에 따라 Bronze, Silver, Gold 레이어로 분류하여 적재합니다.
 
-        - Delivery Status: 주문 상태별 타임스탬프와 배송사의 배송 소요일
-        - Order Detail: 주문 상세 (카테고리, 제품, 수량, 단가)
-        - Order Location: 주문 제품의 판매자와 구매자의 위치
+
+- [Batch Layer] Medallion Layer
+
+    ![img-description](../assets/img/portfolio/pipeline/medallion.png)
+    _medallion architecture_
+
+    - Bronze Layer
+    ![img-description](../assets/img/portfolio/schema/bronze.png)
+    _bronze_layer_schema_
+
+        | 테이블 이름 | 설명 |
+        |---|---|
+        | `payment` | 주문 결제 수단 및 금액 정보 |
+        | `customer` | 고객 ID 및 우편번호 정보 |
+        | `geolocation` | 우편번호 기준 위도/경도 및 지역 정보 |
+        | `order_status` | 주문 ID 별 현재 상태 및 타임스탬프 |
+        | `order_item` | 주문에 포함된 상품 품목 및 배송비, 판매자 정보 |
+        | `seller` | 판매자 ID 및 위치 정보 |
+        | `product` | 상품 카테고리 및 규격(무게, 크기) 정보 |
+        | `estimated_delivery_date` | 주문 별 예상 배송일 정보 |
+        | `review` | 고객 리뷰 내용 및 평점, 작성 시간 |
+
+    - Silver Layer
+    ![img-description](../assets/img/portfolio/schema/silver.png)
+    _silver_layer_schema_
+
+        | 테이블 이름 | 설명 |
+        |---|---|
+        | `review_metadata` | 리뷰 점수 및 작성/답변 시간 등 메타데이터 |
+        | `customer_order` | 고객, 주문, 상품 정보를 결합한 트랜잭션 데이터 |
+        | `product_metadata` | 상품 카테고리 및 판매자 연결 정보 |
+        | `order_event` | 주문 처리 과정의 각종 이벤트 타임스탬프 기록 |
+        | `olist_user` | 사용자(고객/판매자 등) 통합 정보 및 위치 키 |
+        | `geo_coord` | 표준화된 지리 좌표(위도/경도) 정보 |
+        | `watermark` | 데이터 파이프라인 처리를 위한 상태/오프셋 기록 |
+
+    - Gold Layer
+    ![img-description](../assets/img/portfolio/schema/gold.png)
+    _gold_layer_schema_
+
+        | 테이블 이름 | 설명 |
+        |---|---|
+        | `fact_order_lead_days` | 주문 단계별 소요 시간(Lead Time) 분석 팩트 테이블 |
+        | `fact_order_detail` | 분석용으로 통합된 주문 상세 마스터 테이블 |
+        | `dim_user_location` | 사용자 위치 분석을 위한 차원 테이블 |
+        | `fact_review_answer_lead_days` | 리뷰 작성 후 답변까지 걸린 시간 분석 팩트 테이블 |
+        | `fact_monthly_sales_by_product` | 상품별 월간 판매량 및 매출 집계 테이블 |
+
+#### Serving Layer & Monitoring
+
+- Superset
+    - Superset을 활용하여 `매출 집계` 및 `실시간 배송지연 모니터링`을 확인할 수 있도록 인터랙티브하게 구성했습니다.
+    - Multi-Tenant 상황을 가정하여, 쿼리에 특화된 `Spark Thrift Server`를 사용하였습니다.
+    - 대시보드의 구성은 아래와 같습니다.
+        - `Sales Detail`
+            ![img-description](../assets/img/portfolio/dashboard/sales.png)
+
+            - Rank by Category: 제품군 별 누적 매출 순위
+            - Rank by Product: 제품 별 누적 매출 순위
+            - Sales Quantity by Month: 월 별 판매 제품 개수
+            - Sales by Month: 월 별 매출 (제품군별, 제품별 확인 가능)
+            - Review Distribution: 매출 기준 4개 그룹의 리뷰 점수 분포
+            - Average Order Lead Days by Month: 월별 평균 배송 단계 소요 시간
+
+        - `Delivery Monitor`
+            ![img-description](../assets/img/portfolio/dashboard/monitor.png)
+
+            - Delivery Status: 주문 상태별 타임스탬프와 배송사의 배송 소요일
+            - Order Detail: 주문 상세 (카테고리, 제품, 수량, 단가)
+            - Order Location: 주문 제품의 판매자와 구매자의 위치
+- Grafana
+    - 실시간 스트림 관련 모니터링을 위해 프로메테우스로 메트릭을 수집하였습니다.
+    - Grafana를 사용하여 메트릭을 시각화 하였습니다.
+    - 시각화 결과는 다음과 같습니다.
+    ![img-description](../assets/img/portfolio/dashboard/grafana.png)
