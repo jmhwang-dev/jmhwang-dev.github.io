@@ -37,6 +37,7 @@ mermaid: true
 
 ### EDA
 - `Olist` 플랫폼의 매출 성장을 저해하는 원인을 파악하기 위해, 리뷰에 대한 텍스트 마이닝(EDA)을 수행했습니다.
+- 리뷰는 포르투갈어로 작성되어 있었기 때문에 이를 번역하는 작업을 먼저 수행했습니다.
 
 #### 번역 추론
 - 모델 선정
@@ -119,23 +120,23 @@ mermaid: true
     - 해결: 매출에 대한 독립 변수인 **판매량**과 **평균 단가(Unit Price)**를 Y축으로 채택하여, **"많이 팔리는가(Traffic)"**와 **"비싸게 팔리는가(Value)"**라는 서로 다른 두 가지 가치를 명확히 구분했습니다.
 
     ![img-description](../assets/img/portfolio/eda/corr_heatmap_top16.png)
-_corr_heatmap_top16_
+_상위 16개 제품군의 상관관계(heatmap)_
 
     ![img-description](../assets/img/portfolio/eda/corr_scatter_with_reg_top_16.png)
-_corr_scatter_with_reg_top_16_
+_상위 16개 제품군의 상관관계 (scatter plot with regression)_
 
 #### 통계적 보정: 롱테일 분포 해결
-* **현상 분석:** 데이터 분석 결과, 전체 상품군 별 **50% 이상이 '월 판매량 1개'**에 집중된 심한 롱테일(Long-tail) 분포를 보였습니다.
+* **현상 분석:** EDA 결과, 전체 상품군 별 **50% 이상이 월 판매량 1개**에 집중된 롱테일(Long-tail) 분포를 보였습니다.
 * **보정 적용:** 중앙값을 그대로 적용할 경우 변별력이 상실되는 문제를 해결하기 위해, **성과 기준을 중앙값 초과(>1)로 상향 조정**하여 유의미한 4분면 분류를 도출했습니다.
 ![img-description](../assets/img/portfolio/eda/long_tail_quantity_by_product.png)
 _long_tail_quantity_by_product_
 
 #### 최종 분류 및 의미
 - 최종적으로 상품 포트폴리오 매트릭스는 아래와 같습니다.
-    * **X축 (인기도) - 판매량 (Sales Quantity)**
+    * **X축 (인기도): 판매량 (Sales Quantity)**
         - 시장 점유율을 대체하는 지표
         - 해당 상품이 플랫폼 내에서 점유하고 있는 트래픽과 수요의 규모를 측정
-    * **Y축 (기여도) - 평균 단가 (Mean Price)**
+    * **Y축 (기여도): 평균 단가 (Mean Price)**
         - 시장 성장률을 대체하는 지표
         - 해당 상품이 비즈니스 수익 창출에 실질적으로 얼마나 기여하는지를 측정
 
@@ -146,7 +147,7 @@ _long_tail_quantity_by_product_
     * **Question Marks (Low Vol, Low Rev):** 성과가 저조하여 판매 중단 혹은 **전략 수정이 필요한 상품**
 
     ![img-description](../assets/img/portfolio/eda/product_portfolio_matrix_ex.png)
-        _example: product_portfolio_matrix for health_beauty_
+        _product_portfolio_matrix 예시: health_beauty 제품군_
 
 ## 데이터 준비
 
@@ -225,20 +226,71 @@ for i, order_status_series in order_status_df.iterrows():
         time.sleep(event_term.total_seconds())
 ```
 
+## 파이프라인
 
-## 파이프라인 구조: 하이브리드(Hybrid) 모니터링 시스템을 위한 Lambda 아키텍쳐
+### 1. 논리적 아키텍처: 하이브리드 모니터링을 위한 Lambda 구조
 
-- 프로젝트 목표로부터 아키텍처의 기본 요구사항은 아래와 같습니다.
-    1. 배송지연 모니터링을 위한 주문 상태 시간의 스트림 처리 필요
-    2. 상품 포트폴리오 매트릭스를 계산하기 위한 `평균 판매액`과 `주문 수` 배치 집계 필요
+본 프로젝트는 **실시간성(Latency)**과 **데이터의 정확성(Accuracy)**이라는 상충되는 두 가지 요구사항을 동시에 충족해야 했습니다.
 
-- 요구사항을 통해 파이프라인 아키텍처를 다음과 같이 설계했습니다.
-    * **Batch Layer**: 대용량 판매 이력을 분석하여 상품별 **비즈니스 등급(Tier)**을 산정
-    * **Speed Layer:**: 개별 주문의 배송 상태와 지연 여부를 **실시간으로 추적**
-    * **Serving Layer**: 위 두 정보를 결합하여, 운영자가 **핵심 상품(Star Product)의 지연**을 최우선으로 식별하고 조치할 수 있도록 지원
+1.  **실시간성:** 배송 지연과 같은 운영 이슈는 발생 즉시 감지하고 조치해야 하므로, 지연 없는 스트림 처리가 필수적입니다.
+2.  **정확성 및 종합 분석:** 상품의 가치(Tier)를 판단하기 위해서는 장기간 축적된 대용량 판매 데이터를 기반으로 한 정밀한 집계가 필요합니다.
 
-![img-description](../assets/img/portfolio/pipeline/arch.png)
-_Lambda Architecture_
+이러한 **이중 요구사항(Dual Requirements)**을 해결하기 위해, 배치 처리와 실시간 처리를 결합한 **람다 아키텍처(Lambda Architecture)**를 채택하여 파이프라인을 설계했습니다.
+
+![img-description](../assets/img/portfolio/pipeline/pipeline_logical.png)
+_Logical view: Lambda Architecture_
+
+**[계층별 상세 설계]**
+
+* **Batch Layer (배치 계층 - 정확성/대용량)**
+    * **역할:** 전체 마스터 데이터(Master Dataset)를 기반으로 상품의 **장기적인 판매 성과(평균 판매액, 누적 주문 수)**를 주기적으로 분석합니다.
+    * **산출물:** 대용량 이력을 정밀하게 집계하여 상품별 **비즈니스 등급(Tier)**을 산정하고, 이를 배치 뷰(Batch View)로 생성합니다.
+
+* **Speed Layer (스피드 계층 - 실시간성/저지연)**
+    * **역할:** 배치 주기가 도래하지 않은 **최근의 데이터(Recent Data)**를 처리하여 배치 계층의 시간적 공백(Latency Gap)을 메웁니다.
+    * **산출물:** 개별 주문의 상태 변경(CDC)을 실시간 스트림으로 수집하여, **현재 시점의 배송 상태와 지연 여부**를 즉각적으로 추적합니다.
+
+* **Serving Layer (서빙 계층 - 통합/인사이트)**
+    * **역할:** 배치 뷰(상품 등급)와 실시간 뷰(현재 배송 상태)를 병합(Merge)하여 사용자에게 제공합니다.
+    * **비즈니스 가치:** 단순히 배송이 지연된다는 사실을 넘어, **"현재 VIP 등급 상품(Star Product)의 배송이 지연되고 있음"**을 식별합니다. 이를 통해 운영자가 우선순위에 따라 장애를 조치할 수 있도록 **실행 가능한 인사이트(Actionable Insight)**를 제공합니다.
+
+
+### 2. 물리적 아키텍처: 인프라 설계 의도 및 핵심 전략
+
+- 위의 논리적 아키텍처를 구현함에 있어, **제한된 이기종 하드웨어 자원(Heterogeneous Hardware Resources)**을 효율적으로 활용하는 것이 핵심 과제였습니다.
+- 이를 위해 하드웨어 특성에 맞춰 워크로드를 최적화하는 전략을 수립했습니다.
+
+#### [안정성 & 격리] 제어 계층과 연산 계층의 물리적 분리
+* **설계:** **iMac**을 'Control Tower'로 정의하여 Kafka(데이터 버스), Spark Master(클러스터 매니저), Airflow(스케줄러) 등 핵심 관리 프로세스를 집중 배치했습니다.
+* **목적:** 연산을 수행하는 워커 노드(Desktop, Mini PC, R-Pi)에서 과부하(CPU/Memory 100%)나 장애(OOM)가 발생하더라도, 클러스터를 관리하는 제어 계층(Control Plane)은 영향을 받지 않도록 보호하여 **시스템 전체의 셧다운을 방지**했습니다.
+
+#### [지연 최적화] 실시간 스트림 처리 성능 최우선
+* **설계:** 클러스터 내 최고 성능인 **Desktop(16 Core)**에 'Stream Executor'와 'MinIO 스토리지'를 함께 배치했습니다.
+* **목적:** 비즈니스적으로 가장 중요한 실시간 파이프라인의 쓰기(Write) 작업이 네트워크를 경유하지 않고 **로컬 디스크 I/O(Local I/O)**를 통해 수행되도록 하여, 처리 지연(Latency)을 최소화하고 처리량(Throughput)을 극대화했습니다.
+
+#### [자원 효율성] 하드웨어 스펙에 따른 워크로드 최적 배치
+* 각 하드웨어의 물리적 특성에 맞춰 역할을 차등 분배했습니다. 스펙은 다음과 같습니다.
+
+    | 장비명 | 개수 | CPU (개별) | Memory (개별) |
+    | :--- | :--- | :--- | :--- |
+    | **iMac** | 1 | 6 Core | 32GB |
+    | **Desktop** | 1 | 16 Core | 32GB |
+    | **Raspberry Pi 5** | 2 | 4 Core | 8GB |
+    | **Mini PC** | 1 | 4 Core | 16GB |
+
+* **Desktop (High Performance):** 높은 연산/IO 성능이 필요한 스트림 처리 및 데이터 레이크 호스팅.
+* **R-Pi Cluster (Low Power):** 단순 데이터 수집 및 전송에 특화된 CDC(Change Data Capture) 워크로드.
+* **Mini PC (Mid Performance):** 실시간성이 덜 중요한 배치(Batch) 작업을 격리하여, 메인 스트림 파이프라인과의 리소스 경합(Resource Contention) 차단.
+
+#### [전략적 트레이드오프] 배치 처리의 네트워크 비용 수용
+* **설계:** 배치 작업을 수행하는 **Mini PC**와 데이터가 저장된 **Desktop(MinIO)**을 물리적으로 분리하여 네트워크 트래픽 발생을 허용했습니다.
+* **의도:** 스토리지 관리의 복잡성을 줄이고 데이터 레이크를 단일 노드에 통합 관리하기 위한 선택입니다. 배치 작업의 속도를 일부 희생하더라도, **스트림 처리의 안정성과 데이터 정합성을 확보하기 위한 전략적 결정**입니다.
+
+![img-description](../assets/img/portfolio/pipeline/pipeline_physical.png)
+_Physical view: Infrastructure Architecture_
+
+요약하자면, **"제어의 중앙화"**와 **"연산의 분산"**을 통해 시스템 안정성을 확보하고, **"데이터 로컬리티(Data Locality)의 극대화"**를 통해 핵심인 스트림 성능을 보장하는, 제한된 자원 하에서의 최적화된 구조입니다.
+
 
 ### Ingestion Layer
 
@@ -271,7 +323,9 @@ _Lambda Architecture_
 - Kafka cluster는 최소 3개의 노드로 구성해야 장애 대응에 안정적이므로 3개의 노드로 구성했습니다.
 - 전통적인 메타데이터 관리 방식인 ZooKeeper가 deprecated 될 예정이었으므로, KRaft 모드로 구성했습니다.
 - 데이터 주입 시, 개발 및 운영을 상황을 고려해서 동일 네트워크 및 외부 클라이언트가 주입할 수 있도록 [advertised.listeners](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/kafka/server1.properties)를 구성하였습니다.
-- 파티션 개수는 메시지의 시간 순서를 보장하고 구현을 단순화하기 위해 단일 파티션으로 구성하였지만, 파티션 수를 조절할 수 있도록 함수를 정의하였습니다.
+- 파티션 개수는 가용 코어 수를 고려하여, 단일 파티션으로 구성하였습니다.
+    - 총 토픽 개수 = 총 15개 (Bronze Topic 9개 + Silver Topic 6개)
+- 이 후, 가용 자원이 scale out 될 수 있는 상황을 고려하여, 파티션 수를 조절할 수 있도록 구현하엿습니다.
     ```python
     def create_topics(admin_client: AdminClient, topics_names_to_create: Iterable[str], num_partitions:int = 1, replication_factor:int = 2):
         """
