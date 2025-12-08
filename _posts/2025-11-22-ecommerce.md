@@ -93,26 +93,23 @@ mermaid: true
     ![배송 지연 비율](../assets/img/portfolio/eda/late_delivery_rate.png)
     _late_delivery_rate_
 
-- 위 결과를 통해 **배송 문제**가 핵심 제품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
+- 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
 
-## 제품 포트폴리오 매트릭스
+## 상품 포트폴리오 매트릭스
 ### 도입 배경
-- 한정된 자원으로 모든 제품의 배송 지연을 관리하는 것은 운영 효율이 낮다는 문제점이 있습니다.
-- 단순히 배송 지연 현황을 나열하기 보다 비즈니스 영향력이 더 큰 제품에 대한 관리가 더 효율적입니다.
-- 따라서, `어떤 제품의 배송 지연이 비즈니스에 더 치명적인가?`를 판단할 수 있는 기준이 필요했습니다.
-- BCG 매트릭스는 제품의 비즈니스 영향력을 평가하는 대표적인 방법입니다.
+- 한정된 자원으로 모든 상품의 배송 지연을 관리하는 것은 운영 효율이 낮다는 문제점이 있습니다.
+- 단순히 배송 지연 현황을 나열하기 보다 비즈니스 영향력이 더 큰 상품에 대한 관리가 더 효율적입니다.
+- 따라서, `어떤 상품의 배송 지연이 비즈니스에 더 치명적인가?`를 판단할 수 있는 기준이 필요했습니다.
+- BCG 매트릭스는 상품의 비즈니스 영향력을 평가하는 대표적인 방법입니다.
 
     > BCG 매트릭스(BCG Matrix)
     - 정의: 보스턴 컨설팅 그룹(Boston Consulting Group)이 개발한 전략 평가 도구
     - 목적: 자원을 어떻게 배분할지 결정할 때 사용
-    - 방법: 기업이 보유한 여러 사업이나 제품을 `시장 성장률`과 `상대적 시장 점유율` 두 가지 축을 기준으로 분류
+    - 방법: 기업이 보유한 여러 사업이나 상품을 '상대적 시장 점유율'과 '시장 성장률' 두 가지 축을 기준으로 분류
 
-- BCG 매트릭스를 산출하려면 다음과 같은 지표가 필요합니다.
-    - 시장 점유율 (Relative Market Share)
-    - 시장 성장률 (Market Growth Rate)
-
+- BCG 매트릭스를 산출하려면 **상대적 시장 점유율**과 **시장 성장률** 지표가 필요합니다.
 - 그러나, Olist 데이터셋은 내부 트랜잭션 데이터이므로 이를 구할 수 없었습니다.
-- 제품의 비즈니스 영향력을 평가하기 위해, BCG 매트릭스를 기반으로 `제품 포트폴리오 매트릭스`를 재정의했습니다.
+- 상품의 비즈니스 영향력을 평가하기 위해, BCG 매트릭스를 기반으로 `상품 포트폴리오 매트릭스`를 재정의했습니다.
 
 ### 정의 과정
 #### 통계적 타당성 확보
@@ -122,34 +119,34 @@ mermaid: true
     - 해결: 매출에 대한 독립 변수인 **판매량**과 **평균 단가**를 Y축으로 채택하여, **많이 팔리는가**와 **비싸게 팔리는가**라는 서로 다른 두 가지 가치를 명확히 구분했습니다.
 
     ![상관관계 히트맵](../assets/img/portfolio/eda/corr_heatmap_top16.png)
-    _상위 16개 제품군의 상관관계 (heatmap)_
+    _상위 16개 상품군의 상관관계 (heatmap)_
 
     ![상관관계 산점도](../assets/img/portfolio/eda/corr_scatter_with_reg_top_16.png)
-    _상위 16개 제품군의 상관관계 (scatter plot with regression)_
+    _상위 16개 상품군의 상관관계 (scatter plot with regression)_
 
 #### 통계적 보정: 롱테일 분포 해결
-- **현상 분석:** EDA 결과, 전체 제품군 별 **50% 이상이 월 판매량 1개**에 집중된 롱테일 분포를 보였습니다.
+- **현상 분석:** EDA 결과, 전체 상품군 별 **50% 이상이 월 판매량 1개**에 집중된 롱테일 분포를 보였습니다.
 - **보정 적용:** 중앙값을 그대로 적용할 경우 변별력이 상실되는 문제를 해결하기 위해, **성과 기준을 중앙값 초과(>1)로 상향 조정**하여 유의미한 4분면 분류를 도출했습니다.
 ![롱테일 분포 그래프](../assets/img/portfolio/eda/long_tail_quantity_by_product.png)
 _long_tail_quantity_by_product_
 
 #### 최종 분류 및 의미
-- 최종적으로 제품 포트폴리오 매트릭스는 아래와 같습니다.
+- 최종적으로 상품 포트폴리오 매트릭스는 아래와 같습니다.
 	- **X축 (인기도): 판매량**
         - 시장 점유율을 대체하는 지표
-        - 해당 제품이 플랫폼 내에서 점유하고 있는 트래픽과 수요의 규모를 측정
+        - 해당 상품이 플랫폼 내에서 점유하고 있는 트래픽과 수요의 규모를 측정
 	- **Y축 (기여도): 평균 단가**
         - 시장 성장률을 대체하는 지표
-        - 해당 제품이 비즈니스 수익 창출에 실질적으로 얼마나 기여하는지를 측정
+        - 해당 상품이 비즈니스 수익 창출에 실질적으로 얼마나 기여하는지를 측정
 
-- 카테고리 내 상대적 위치를 파악하기 위해 각 축의 **중앙값**을 기준으로 4분면을 구분하였으며, 제품군은 다음과 같이 분류됩니다.
-	- **Star Products (High Vol, High Rev):** 높은 인기와 매출을 모두 견인하는 **핵심 제품**
-	- **Volume Drivers (High Vol, Low Rev):** 객단가는 낮으나 압도적인 판매량으로 **트래픽을 유입시키는 제품**
-	- **Niche Gems (Low Vol, High Rev):** 판매량은 적으나 고단가로 **높은 마진을 창출하는 틈새 제품**
-	- **Question Marks (Low Vol, Low Rev):** 성과가 저조하여 판매 중단 혹은 **전략 수정이 필요한 제품**
+- 카테고리 내 상대적 위치를 파악하기 위해 각 축의 **중앙값**을 기준으로 4분면을 구분하였으며, 상품군은 다음과 같이 분류됩니다.
+	- **Star Products (High Vol, High Rev):** 높은 인기와 매출을 모두 견인하는 **핵심 상품**
+	- **Volume Drivers (High Vol, Low Rev):** 객단가는 낮으나 압도적인 판매량으로 **트래픽을 유입시키는 상품**
+	- **Niche Gems (Low Vol, High Rev):** 판매량은 적으나 고단가로 **높은 마진을 창출하는 틈새 상품**
+	- **Question Marks (Low Vol, Low Rev):** 성과가 저조하여 판매 중단 혹은 **전략 수정이 필요한 상품**
 
     ![매트릭스 예시](../assets/img/portfolio/eda/product_portfolio_matrix_ex.png)
-    _product_portfolio_matrix 예시: health_beauty 제품군_
+    _product_portfolio_matrix 예시: health_beauty 상품군_
 
 ## 데이터 준비
 
@@ -240,7 +237,7 @@ for i, order_status_series in order_status_df.iterrows():
 - 본 프로젝트는 두 가지 요구사항을 동시에 충족해야 했습니다.
 
     1.  **실시간성:** 배송 지연과 같은 운영 이슈는 발생 즉시 감지하고 조치해야 하므로, 지연 없는 스트림 처리가 필수
-    2.  **정확성 및 종합 분석:** 제품의 가치를 판단하기 위해, 축적된 대용량 판매 데이터 집계 필요
+    2.  **정확성 및 종합 분석:** 상품의 가치를 판단하기 위해, 축적된 대용량 판매 데이터 집계 필요
 
 - 이를 위해, 배치 처리와 실시간 처리를 결합한 **Lambda Architecture**를 채택하여 파이프라인을 설계했습니다.
 
@@ -248,16 +245,16 @@ for i, order_status_series in order_status_df.iterrows():
 _Logical view: Lambda Architecture_
 
 #### **Batch Layer**
-- 전체 마스터 데이터를 기반으로 제품의 **장기적인 판매 성과(평균 판매액, 누적 주문 수)**를 주기적으로 분석합니다.
-- 대용량 이력을 정밀하게 집계하여 제품별 **비즈니스 등급**을 산정하고, 이를 배치 뷰로 생성합니다.
+- 전체 마스터 데이터를 기반으로 상품의 **장기적인 판매 성과(평균 판매액, 누적 주문 수)**를 주기적으로 분석합니다.
+- 대용량 이력을 정밀하게 집계하여 상품별 **비즈니스 등급**을 산정하고, 이를 배치 뷰로 생성합니다.
 
 #### **Speed Layer**
 - 배치 주기가 도래하지 않은 **최근의 데이터**를 처리하여 배치 계층의 시간적 공백을 메웁니다.
 - 개별 주문의 상태 변경을 실시간 스트림으로 수집하여, **현재 시점의 배송 상태와 지연 여부**를 즉각적으로 추적합니다.
 
 #### **Serving Layer**
-- 배치 뷰(제품 등급)와 실시간 뷰(현재 배송 상태)를 병합하여 사용자에게 제공합니다.
-- 단순히 배송이 지연된다는 사실을 넘어, 중요 제품이 포함된 주문의 배송이 지연되고 있음을 식별합니다.
+- 배치 뷰(상품 등급)와 실시간 뷰(현재 배송 상태)를 병합하여 사용자에게 제공합니다.
+- 단순히 배송이 지연된다는 사실을 넘어, 중요 상품이 포함된 주문의 배송이 지연되고 있음을 식별합니다.
 - 이를 통해 운영자가 우선순위에 따라 장애를 조치할 수 있도록 **실행 가능한 인사이트**를 제공합니다.
 
 ### Infrastructure
@@ -322,9 +319,9 @@ _Physical view: Infrastructure Architecture_
     | `customer` | 고객 ID 및 우편번호 정보 |
     | `geolocation` | 우편번호 기준 위도/경도 및 지역 정보 |
     | `order_status` | 주문 ID 별 현재 상태 및 타임스탬프 |
-    | `order_item` | 주문에 포함된 제품 품목 및 배송비, 판매자 정보 |
+    | `order_item` | 주문에 포함된 상품 품목 및 배송비, 판매자 정보 |
     | `seller` | 판매자 ID 및 위치 정보 |
-    | `product` | 제품 카테고리 및 규격(무게, 크기) 정보 |
+    | `product` | 상품 카테고리 및 규격(무게, 크기) 정보 |
     | `estimated_delivery_date` | 주문 별 예상 배송일 정보 |
     | `review` | 고객 리뷰 내용 및 평점, 작성 시간 |
 
@@ -335,8 +332,8 @@ _Physical view: Infrastructure Architecture_
     | 테이블 이름 | 설명 |
     |---|---|
     | `review_metadata` | 리뷰 점수 및 작성/답변 시간 등 메타데이터 |
-    | `customer_order` | 고객, 주문, 제품 정보를 결합한 트랜잭션 데이터 |
-    | `product_metadata` | 제품 카테고리 및 판매자 연결 정보 |
+    | `customer_order` | 고객, 주문, 상품 정보를 결합한 트랜잭션 데이터 |
+    | `product_metadata` | 상품 카테고리 및 판매자 연결 정보 |
     | `order_event` | 주문 처리 과정의 각종 이벤트 타임스탬프 기록 |
     | `olist_user` | 사용자(고객/판매자 등) 통합 정보 및 위치 키 |
     | `geo_coord` | 표준화된 지리 좌표(위도/경도) 정보 |
@@ -352,7 +349,7 @@ _gold_layer_schema_
     | `fact_order_detail` | 분석용으로 통합된 주문 상세 마스터 테이블 |
     | `dim_user_location` | 사용자 위치 분석을 위한 차원 테이블 |
     | `fact_review_answer_lead_days` | 리뷰 작성 후 답변까지 걸린 시간 분석 팩트 테이블 |
-    | `fact_monthly_sales_by_product` | 제품별 월간 판매량 및 매출 집계 테이블 |
+    | `fact_monthly_sales_by_product` | 상품별 월간 판매량 및 매출 집계 테이블 |
 
 ## 구현 상세
 
@@ -474,8 +471,8 @@ _gold_layer_schema_
 
       - `purchase`: 구매자가 결제한 시간
       - `approve`: 판매자가 해당 주문을 배송하기 위해 승인한 시간
-      - `delivered_carrier`: 주문 제품이 배송사에 도착한 시간
-      - `delivered_customer`: 주문 제품이 구매자에게 도착한 시간
+      - `delivered_carrier`: 주문 상품이 배송사에 도착한 시간
+      - `delivered_customer`: 주문 상품이 구매자에게 도착한 시간
 
 - 배송 지연 시뮬레이션을 위해, 각 주문 상태의 리드타임을 갱신하는 [custom state](https://github.com/jmhwang-dev/e-commerce/blob/639b4cc1ff8888dda35b8da56dcb4f85daefb284/src/service/pipeline/stream/gold.py#L63-L150)를 구현하였습니다.
 
@@ -518,10 +515,10 @@ _gold_layer_schema_
     - **Sales Detail**
         ![img-description](../assets/img/portfolio/dashboard/sales.png)
 
-        - Rank by Category: 제품군 별 누적 매출 순위
-        - Rank by Product: 제품 별 누적 매출 순위
-        - Sales Quantity by Month: 월 별 판매 제품 개수
-        - Sales by Month: 월 별 매출 (제품군별, 제품별 확인 가능)
+        - Rank by Category: 상품군 별 누적 매출 순위
+        - Rank by Product: 상품 별 누적 매출 순위
+        - Sales Quantity by Month: 월 별 판매 상품 개수
+        - Sales by Month: 월 별 매출 (상품군별, 상품별 확인 가능)
         - Review Distribution: 매출 기준 4개 그룹의 리뷰 점수 분포
         - Average Order Lead Days by Month: 월별 평균 배송 단계 소요 시간
 
@@ -529,8 +526,8 @@ _gold_layer_schema_
         ![img-description](../assets/img/portfolio/dashboard/monitor.png)
 
         - Delivery Status: 주문 상태별 타임스탬프와 배송사의 배송 소요일
-        - Order Detail: 주문 상세 (카테고리, 제품, 수량, 단가)
-        - Order Location: 주문 제품의 판매자와 구매자의 위치
+        - Order Detail: 주문 상세 (카테고리, 상품, 수량, 단가)
+        - Order Location: 주문 상품의 판매자와 구매자의 위치
 
 #### 실시간 스트림 모니터링
 - 실시간 스트림 관련 모니터링을 위해 Prometheus로 메트릭을 수집하였습니다.
@@ -560,8 +557,8 @@ _gold_layer_schema_
 
 - **데이터 기반 의사결정 지원**
 
-    - 자체 개발한 ‘제품 포트폴리오 매트릭스’를 활용
-    - 운영자가 수익 기여도가 높은 핵심 제품의 배송 이슈를 우선 파악 가능한 환경 제공
+    - 자체 개발한 ‘상품 포트폴리오 매트릭스’를 활용
+    - 운영자가 수익 기여도가 높은 핵심 상품의 배송 이슈를 우선 파악 가능한 환경 제공
 
 - **운영 리스크 선제 대응**
 
