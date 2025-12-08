@@ -534,8 +534,20 @@ _gold_layer_schema_
         ![img-description](../assets/img/portfolio/dashboard/monitor.png)
 
 #### 실시간 스트림 모니터링
-- 실시간 스트림 관련 모니터링을 위해 Prometheus로 메트릭을 수집하였습니다.
-- Grafana를 사용하여 메트릭을 시각화하였습니다. 결과는 다음과 같습니다.
+- **Speed Layer(실시간 스트림 처리)**의 안정성을 모니터링하기 위해 Prometheus JMX Exporter를 도입했습니다.
+
+- 이를 활용하여 Kafka와 Spark의 핵심 메트릭을 수집하고 파이프라인 상태를 실시간으로 추적했습니다.
+
+- Grafana를 통해 시각화한 주요 [지표](https://github.com/jmhwang-dev/e-commerce/tree/develop/configs/jmx)는 다음과 같습니다.
+
+    |컴포넌트|지표 (Metric)|설명|
+    | :--- | :--- | :--- |
+    |Kafka|`kafka_server_brokertopicmetrics_MessagesInPerSec`|브론즈 및 실버 토픽으로 유입되는 초당 메시지 수|
+    |Spark Streaming|`spark_driver_streaming_latency`|하나의 마이크로 배치를 처리하는 데 소요되는 시간|
+    |Spark Streaming|`spark_driver_streaming_inputRate`|데이터 소스로부터 유입되는 초당 데이터(Row) 수|
+    |Spark Streaming|`spark_driver_streaming_processingRate`|스트리밍 쿼리가 초당 실제로 처리한 데이터(Row) 수|
+
+- 결과는 다음과 같습니다.
     ![img-description](../assets/img/portfolio/dashboard/grafana.png)
 
 ## 결론 및 성과
