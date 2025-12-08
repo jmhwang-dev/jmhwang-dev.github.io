@@ -505,16 +505,16 @@ _gold_layer_schema_
     ![gantt chart](../assets/img/portfolio/dashboard/airflow-gantt.png)
     _gantt chart_
 
-### Serving Layer & Monitoring
-
-#### 비즈니스 및 실시간 배송지연 대시보드
+### Serving Layer & Dashboard
 
 - Superset을 활용하여 **매출 집계** 및 **실시간 배송지연 모니터링**을 확인할 수 있도록 인터랙티브하게 구성했습니다.
-- Multi-Tenant 상황을 가정하여, 쿼리에 특화된 Spark Thrift Server를 사용하였습니다.
-- 대시보드의 구성은 아래와 같습니다.
-    - **Sales Detail**
-        ![img-description](../assets/img/portfolio/dashboard/sales.png)
+- 다수의 사용자가 쿼리를 요청하는 환경을 가정하여, Spark Thrift Server가 분산 처리하도록 구성했습니다.
+- 사용자는 SQL을 통해 논리적으로 통합된 데이터 뷰에 접근할 수 있습니다.
 
+#### 판매 성과 및 배송 현황 대시보드
+
+- 최종적으로 다음 지표들이 사용자에게 제공됩니다.
+    - Batch Layer
         - Rank by Category: 상품군 별 누적 매출 순위
         - Rank by Product: 상품 별 누적 매출 순위
         - Sales Quantity by Month: 월 별 판매 상품 개수
@@ -522,12 +522,16 @@ _gold_layer_schema_
         - Review Distribution: 매출 기준 4개 그룹의 리뷰 점수 분포
         - Average Order Lead Days by Month: 월별 평균 배송 단계 소요 시간
 
-    - **Delivery Monitor**
-        ![img-description](../assets/img/portfolio/dashboard/monitor.png)
-
+    - Speed Layer
         - Delivery Status: 주문 상태별 타임스탬프와 배송사의 배송 소요일
         - Order Detail: 주문 상세 (카테고리, 상품, 수량, 단가)
         - Order Location: 주문 상품의 판매자와 구매자의 위치
+
+- 대시보드의 결과는 아래와 같습니다.
+    - **Sales Detail**
+        ![img-description](../assets/img/portfolio/dashboard/sales.png)
+    - **Delivery Monitor**
+        ![img-description](../assets/img/portfolio/dashboard/monitor.png)
 
 #### 실시간 스트림 모니터링
 - 실시간 스트림 관련 모니터링을 위해 Prometheus로 메트릭을 수집하였습니다.
