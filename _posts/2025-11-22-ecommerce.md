@@ -13,7 +13,7 @@ mermaid: true
 - 목표: 실시간 배송 지연 모니터링 및 매출 대시보드 구축
 - 기간: 2025년 4월 ~
 - 사용 데이터: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
-    - 브라질 소상공인들에게 온라인 마켓플레이스를 제공하는 전자상거래 플랫폼인 `Olist`에서 제공한 캐글 데이터
+    - 브라질 소상공인들에게 온라인 마켓플레이스를 제공하는 전자상거래 플랫폼인 Olist에서 제공한 캐글 데이터
 - 사용 기술 및 버전
     - Kafka: `3.9.1`
     - Confluent: `7.6.1`
@@ -36,7 +36,7 @@ mermaid: true
 - 이후, 데이터를 통해 그 **성장 동력(Growth Driver)**을 발굴하고자 EDA를 수행했습니다.
 
 ### EDA
-- `Olist` 플랫폼의 매출 성장을 저해하는 원인을 파악하기 위해, 리뷰에 대한 텍스트 마이닝(EDA)을 수행했습니다.
+- Olist 플랫폼의 매출 성장을 저해하는 원인을 파악하기 위해, 리뷰에 대한 텍스트 마이닝(EDA)을 수행했습니다.
 - 리뷰는 포르투갈어로 작성되어 있었기 때문에 이를 번역하는 작업을 먼저 수행했습니다.
 
 #### 번역 추론
@@ -80,17 +80,17 @@ mermaid: true
 - 부정 리뷰 (리뷰 점수가 1~2점)
     - 상위 20개 키워드 중 `deliver`, `receive`, `wait` 등 **배송 관련 키워드가 60% 이상**을 차지함을 확인했습니다.
     - 이 중, `didnt`라는 키워드로 부정적인 의견이 있음을 확인했습니다.
-    ![img-description](../assets/img/portfolio/eda/review_low_score.png)
+    ![부정 리뷰 키워드 빈도수](../assets/img/portfolio/eda/review_low_score.png)
     _review_low_score_
 
 - 긍정 리뷰 (리뷰 점수가 4~5점)
     - 긍정 리뷰에서도 배송 관련 키워드의 언급이 있었으나, 부정 리뷰 대비 `fast`라는 키워드가 존재했습니다.
     - 반면, 1~2점 대 리뷰 대비 부정적인 키워드가 상위에 존재하지 않았습니다.
-    ![img-description](../assets/img/portfolio/eda/review_high_score.png)
+    ![긍정 리뷰 키워드 빈도수](../assets/img/portfolio/eda/review_high_score.png)
     _review_high_score_
 
 - 실제 데이터에서 리뷰 스코어의 그룹별 배송 지연 여부의 비율에서 현저한 차이가 있었습니다.
-    ![img-description](../assets/img/portfolio/eda/late_delivery_rate.png)
+    ![배송 지연 비율](../assets/img/portfolio/eda/late_delivery_rate.png)
     _late_delivery_rate_
 
 - 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
@@ -111,7 +111,7 @@ mermaid: true
     - 시장 점유율 (Relative Market Share)
     - 시장 성장률 (Market Growth Rate)
 
-- 그러나, `Olist` 데이터셋은 내부 트랜잭션 데이터이므로 이를 구할 수 없었습니다.
+- 그러나, Olist 데이터셋은 내부 트랜잭션 데이터이므로 이를 구할 수 없었습니다.
 - 제품의 비즈니스 영향력을 평가하기 위해, BCG 매트릭스를 기반으로 `상품 포트폴리오 매트릭스`를 재정의했습니다.
 
 ### 정의 과정
@@ -121,16 +121,16 @@ mermaid: true
     - 문제: 매출 = 판매량 × 단가이므로, 판매량(X축)이 늘면 매출(Y축)도 같이 늘어나는 강한 상관관계가 발생합니다.
     - 해결: 매출에 대한 독립 변수인 **판매량**과 **평균 단가(Unit Price)**를 Y축으로 채택하여, **"많이 팔리는가(Traffic)"**와 **"비싸게 팔리는가(Value)"**라는 서로 다른 두 가지 가치를 명확히 구분했습니다.
 
-    ![img-description](../assets/img/portfolio/eda/corr_heatmap_top16.png)
-_상위 16개 제품군의 상관관계(heatmap)_
+    ![상관관계 히트맵](../assets/img/portfolio/eda/corr_heatmap_top16.png)
+    _상위 16개 제품군의 상관관계(heatmap)_
 
-    ![img-description](../assets/img/portfolio/eda/corr_scatter_with_reg_top_16.png)
-_상위 16개 제품군의 상관관계 (scatter plot with regression)_
+    ![상관관계 산점도](../assets/img/portfolio/eda/corr_scatter_with_reg_top_16.png)
+    _상위 16개 제품군의 상관관계 (scatter plot with regression)_
 
 #### 통계적 보정: 롱테일 분포 해결
 - **현상 분석:** EDA 결과, 전체 상품군 별 **50% 이상이 월 판매량 1개**에 집중된 롱테일(Long-tail) 분포를 보였습니다.
 - **보정 적용:** 중앙값을 그대로 적용할 경우 변별력이 상실되는 문제를 해결하기 위해, **성과 기준을 중앙값 초과(>1)로 상향 조정**하여 유의미한 4분면 분류를 도출했습니다.
-![img-description](../assets/img/portfolio/eda/long_tail_quantity_by_product.png)
+![롱테일 분포 그래프](../assets/img/portfolio/eda/long_tail_quantity_by_product.png)
 _long_tail_quantity_by_product_
 
 #### 최종 분류 및 의미
@@ -148,13 +148,13 @@ _long_tail_quantity_by_product_
 	- **Niche Gems (Low Vol, High Rev):** 판매량은 적으나 고단가로 **높은 마진을 창출하는 틈새 상품**
 	- **Question Marks (Low Vol, Low Rev):** 성과가 저조하여 판매 중단 혹은 **전략 수정이 필요한 상품**
 
-    ![img-description](../assets/img/portfolio/eda/product_portfolio_matrix_ex.png)
-        _product_portfolio_matrix 예시: health_beauty 제품군_
+    ![매트릭스 예시](../assets/img/portfolio/eda/product_portfolio_matrix_ex.png)
+    _product_portfolio_matrix 예시: health_beauty 제품군_
 
 ## 데이터 준비
 
 ### 스키마 재설계
-- `원본 데이터는 레코드가 덮어쓰여지는 구조`로 인해 과거 이력을 추적할 수 없는 한계가 있었습니다.
+- 원본 데이터는 레코드가 덮어쓰여지는 구조로 인해 과거 이력을 추적할 수 없는 한계가 있었습니다.
 
 - 이를 해결하고 CDC 기반의 파이프라인을 구축하기 위해 다음과 같이 데이터를 재설계 했습니다.
     - 변경 이력 추적 확보
@@ -166,11 +166,11 @@ _long_tail_quantity_by_product_
 - 이를 위해 원본 데이터를 [전처리](https://github.com/jmhwang-dev/e-commerce/tree/develop/scripts/olist_redefined)하여 스트리밍을 모방했습니다.
 
 - 생성된 `tsv` 파일의 이름은 총 9개로, CDC에서 아래 요소들을 정의할 때 사용됩니다.
-    - `Bronze Layer`의 테이블 이름
-    - `Bronze Topic`의 토픽 이름
-- `테이블 변경 전 후` 변경 내용은 다음과 같습니다.
+    - **Bronze Layer**의 테이블 이름
+    - **Bronze Topic**의 토픽 이름
+- 테이블 변경 전 후 내용은 다음과 같습니다.
 
-![img-description](../assets/img/portfolio/schema/prep_small.png)
+![스키마 변경 전후](../assets/img/portfolio/schema/prep_small.png)
 _테이블 변경 전 후_
 
 ### 데이터 주입 시간 추가
@@ -235,7 +235,6 @@ for i, order_status_series in order_status_df.iterrows():
 
 ## 아키텍처 및 저장소 설계
 
-<!-- ### 논리적 아키텍처 -->
 ### Lambda Architecture
 
 - 본 프로젝트는 두 가지 요구사항을 동시에 충족해야 했습니다.
@@ -243,7 +242,7 @@ for i, order_status_series in order_status_df.iterrows():
     1.  **실시간성:** 배송 지연과 같은 운영 이슈는 발생 즉시 감지하고 조치해야 하므로, 지연 없는 스트림 처리가 필수
     2.  **정확성 및 종합 분석:** 상품의 가치(Tier)를 판단하기 위해, 축적된 대용량 판매 데이터 집계 필요
 
-- 이를 위해, 배치 처리와 실시간 처리를 결합한 `Lambda Architecture`를 채택하여 파이프라인을 설계했습니다.
+- 이를 위해, 배치 처리와 실시간 처리를 결합한 **Lambda Architecture**를 채택하여 파이프라인을 설계했습니다.
 
 ![img-description](../assets/img/portfolio/pipeline/pipeline_logical.png)
 _Logical view: Lambda Architecture_
@@ -260,7 +259,6 @@ _Logical view: Lambda Architecture_
 - 배치 뷰(상품 등급)와 실시간 뷰(현재 배송 상태)를 병합(Merge)하여 사용자에게 제공합니다.
 - 단순히 배송이 지연된다는 사실을 넘어, 중요 제품이 포함된 주문의 배송이 지연되고 있음을 식별합니다.
 - 이를 통해 운영자가 우선순위에 따라 장애를 조치할 수 있도록 **실행 가능한 인사이트**를 제공합니다.
-
 
 ### Infrastructure
 
@@ -356,37 +354,32 @@ _gold_layer_schema_
     | `fact_review_answer_lead_days` | 리뷰 작성 후 답변까지 걸린 시간 분석 팩트 테이블 |
     | `fact_monthly_sales_by_product` | 상품별 월간 판매량 및 매출 집계 테이블 |
 
-<!-- - 스트림 처리시, 워커 노드가 호스트 내 시스템에 영향을 주지 않도록 자원 사용량을 제한했습니다.
-
-    ```.env
-    SPARK_WORKER_CORES=15
-    SPARK_WORKER_MEMORY=24g
-    ``` -->
-
 ## 구현 상세
 
 ### CDC (Change Data Capture)
 
 #### 이벤트 기반 데이터 발행 로직
+
 - 상태 의존 데이터
-    - append-only 형태의 주문 상태 변경 이벤트가 발생하면, 해당 상태와 연관된 마스터 데이터들을 선별하여 카프카로 발행합니다.
+
+    - append-only 형태의 주문 상태 변경 이벤트가 발생하면, 해당 상태와 연관된 마스터 데이터들을 선별하여 Kafka로 발행합니다.
 
 - 독립 데이터
-    - `review` 데이터는 주문 상태 변경 프로세스와 독립적인 생명주기를 가집니다.
-    - 따라서 상태 트리거 방식 대신, 시간 윈도우(Time Window) 방식을 적용하여 직전 이벤트와 현재 이벤트 시점 사이에 생성된 리뷰를 취합해 발행했습니다.
+
+      - `review` 데이터는 주문 상태 변경 프로세스와 독립적인 생명주기를 가집니다.
+      - 따라서 상태 트리거 방식 대신, 시간 윈도우(Time Window) 방식을 적용하여 직전 이벤트와 현재 이벤트 시점 사이에 생성된 리뷰를 취합해 발행했습니다.
 
 - 주문 상태별 발행되는 데이터를 정리하면 다음과 같습니다.
 
     |주문 상태 값| 의미 | 발행 대상 (Topics) |
     |---|---|---|
-    |purchase| 결제 완료 |order_status( == 'purchase')<br>payment<br>order_item<br>product<br>seller<br>customer<br>geolocation |
-    |approved| 판매자 승인 완료 | order_status( == 'approved')<br>estimated_delivery_date |
-    |delivered_carrier| 배송사 전달 완료 | order_status( == 'delivered_carrier') |
-    |delivered_customer | 고객 배송 완료 | order_status( == 'delivered_customer') |
-    |N/A (Time Window)| - |review |
+    |`purchase`| 결제 완료 | `order_status`( == 'purchase')<br>`payment`<br>`order_item`<br>`product`<br>`seller`<br>`customer`<br>`geolocation` |
+    |`approved`| 판매자 승인 완료 | `order_status`( == 'approved')<br>`estimated_delivery_date` |
+    |`delivered_carrier`| 배송사 전달 완료 | `order_status`( == 'delivered_carrier') |
+    |`delivered_customer` | 고객 배송 완료 | `order_status`( == 'delivered_customer') |
+    |N/A (Time Window)| - |`review` |
 
-
-- 이를 통해 단일 트랜잭션이 여러 주제(Topic)로 전파(Fan-out)되는 과정을 `Pandas`로 [구현](https://github.com/jmhwang-dev/e-commerce/blob/develop/simulator/run.py#L22)했습니다.
+- 이를 통해 단일 트랜잭션이 여러 주제(Topic)로 전파(Fan-out)되는 과정을 Pandas로 [구현](https://www.google.com/search?q=https://github.com/jmhwang-dev/e-commerce/blob/develop/simulator/run.py%23L22)했습니다.
 
     ```python
     # 주문 상태에 따른 토픽 발행 분기 로직 일부
@@ -461,9 +454,9 @@ _gold_layer_schema_
 
 - 초기에는 각 토픽별로 개별적인 스트리밍 쿼리를 실행하도록 설계했습니다.
 - 그러나 클러스터의 가용 코어(CPU Cores) 부족으로 인해 모든 쿼리를 동시에 안정적으로 유지하기 어려운 한계가 있었습니다.
-- 이로 인해, 개별 쿼리 실행 방식 대신, 토픽을 논리적 그룹으로 묶어 foreachBatch를 활용하는 방식으로 구조를 변경했습니다.
+- 이로 인해, 개별 쿼리 실행 방식 대신, 토픽을 논리적 그룹으로 묶어 `foreachBatch`를 활용하는 방식으로 구조를 변경했습니다.
 
-- 이를 통해 단일 스트리밍 쿼리 내에서 여러 토픽의 데이터를 처리하고 Iceberg 테이블로 Sink함으로써, 컨텍스트 스위칭 오버헤드를 줄이고 제한된 자원을 효율적으로 사용했습니다.
+  - 이를 통해 단일 스트리밍 쿼리 내에서 여러 토픽의 데이터를 처리하고 Iceberg 테이블로 Sink함으로써, 컨텍스트 스위칭 오버헤드를 줄이고 제한된 자원을 효율적으로 사용했습니다.
 
 #### 실행 모드의 유연성
 
@@ -478,15 +471,17 @@ _gold_layer_schema_
 
 - 배치 처리와 스트림 처리를 모두 지원하는 통합 프레임워크로서 [Spark](https://github.com/jmhwang-dev/e-commerce/blob/develop/configs/spark/spark-defaults.conf)를 선택했습니다.
 
-- 주문 상태는 총 4개로 구분할 수 있습니다.
-    - purchase: 구매자가 결제한 시간
-    - approve: 판매자가 해당 주문을 배송하기 위해 승인한 시간
-    - delivered_carrier: 주문 제품이 배송사에 도착한 시간
-    - delivered_customer: 주문 제품이 구매자에게 도착한 시간
+  - 주문 상태는 총 4개로 구분할 수 있습니다.
+
+      - `purchase`: 구매자가 결제한 시간
+      - `approve`: 판매자가 해당 주문을 배송하기 위해 승인한 시간
+      - `delivered_carrier`: 주문 제품이 배송사에 도착한 시간
+      - `delivered_customer`: 주문 제품이 구매자에게 도착한 시간
 
 - 배송 지연 시뮬레이션을 위해, 각 주문 상태의 리드타임을 갱신하는 [custom state](https://github.com/jmhwang-dev/e-commerce/blob/639b4cc1ff8888dda35b8da56dcb4f85daefb284/src/service/pipeline/stream/gold.py#L63-L150)를 구현하였습니다.
 
 - 각 주문 상태의 리드타임은 최종 리드타임이 계산되기 전까지 다음과 같이 계산됩니다.
+
     - 최종 리드타임 값이 존재한다면, 누적 리드타임 계산에서 제외
     - 최종 리드타임 값이 없는 경우, 1초 타임 아웃을 기준으로 `mock_lead_time` 누적
         ```python
@@ -508,19 +503,20 @@ _gold_layer_schema_
     
     - Airflow의 재실행이나 Backfill 시에도 Snapshot을 기준으로 태스크가 실행되므로, 데이터 처리의 일관성을 보장
 
-    ![img-description](../assets/img/portfolio/pipeline/airflow-dag.png)
+    ![dag diagram](../assets/img/portfolio/pipeline/airflow-dag.png)
     _dag diagram_
 
-    ![img-description](../assets/img/portfolio/dashboard/airflow-gantt.png)
+    ![gantt chart](../assets/img/portfolio/dashboard/airflow-gantt.png)
     _gantt chart_
 
 ### Serving Layer & Monitoring
 
 #### 비즈니스 및 실시간 배송지연 대시보드
-- Superset을 활용하여 `매출 집계` 및 `실시간 배송지연 모니터링`을 확인할 수 있도록 인터랙티브하게 구성했습니다.
-- Multi-Tenant 상황을 가정하여, 쿼리에 특화된 `Spark Thrift Server`를 사용하였습니다.
+
+- Superset을 활용하여 **매출 집계** 및 **실시간 배송지연 모니터링**을 확인할 수 있도록 인터랙티브하게 구성했습니다.
+- Multi-Tenant 상황을 가정하여, 쿼리에 특화된 Spark Thrift Server를 사용하였습니다.
 - 대시보드의 구성은 아래와 같습니다.
-    - `Sales Detail`
+    - **Sales Detail**
         ![img-description](../assets/img/portfolio/dashboard/sales.png)
 
         - Rank by Category: 제품군 별 누적 매출 순위
@@ -530,7 +526,7 @@ _gold_layer_schema_
         - Review Distribution: 매출 기준 4개 그룹의 리뷰 점수 분포
         - Average Order Lead Days by Month: 월별 평균 배송 단계 소요 시간
 
-    - `Delivery Monitor`
+    - **Delivery Monitor**
         ![img-description](../assets/img/portfolio/dashboard/monitor.png)
 
         - Delivery Status: 주문 상태별 타임스탬프와 배송사의 배송 소요일
@@ -538,7 +534,7 @@ _gold_layer_schema_
         - Order Location: 주문 제품의 판매자와 구매자의 위치
 
 #### 실시간 스트림 모니터링
-- 실시간 스트림 관련 모니터링을 위해 프로메테우스로 메트릭을 수집하였습니다.
+- 실시간 스트림 관련 모니터링을 위해 Prometheus로 메트릭을 수집하였습니다.
 - Grafana를 사용하여 메트릭을 시각화하였습니다. 결과는 다음과 같습니다.
     ![img-description](../assets/img/portfolio/dashboard/grafana.png)
 
@@ -547,38 +543,45 @@ _gold_layer_schema_
 ### 기술적 성과
 
 - **저비용 고효율 아키텍처**
-	- 제한된 하드웨어 자원(Mini PC, Desktop)을 역할별로 물리적 분리
-	- 온프레미스 환경에서 엔터프라이즈급 Lambda 아키텍처 구현
+
+    - 제한된 하드웨어 자원(Mini PC, Desktop)을 역할별로 물리적 분리
+    - 온프레미스 환경에서 엔터프라이즈급 Lambda 아키텍처 구현
 
 - **파이프라인 최적화**
-	- Iceberg 스냅샷 기반의 증분 처리(Incremental Processing) 도입
-	- 배치 처리 시 불필요한 I/O를 획기적으로 줄이고 네트워크 병목 현상 해결
+
+    - Iceberg 스냅샷 기반의 증분 처리(Incremental Processing) 도입
+    - 배치 처리 시 불필요한 I/O를 획기적으로 줄이고 네트워크 병목 현상 해결
 
 - **데이터 정합성 보장**
-	- Airflow 재실행에 의존하지 않고, 데이터 자체의 형상(Snapshot)을 추적
-	- 멱등성(Idempotency)이 보장된 견고한 파이프라인 구축
+
+    - Airflow 재실행에 의존하지 않고, 데이터 자체의 형상(Snapshot)을 추적
+    - 멱등성(Idempotency)이 보장된 견고한 파이프라인 구축
 
 ### 비즈니스 기대 효과
 
 - **데이터 기반 의사결정 지원**
-	- 자체 개발한 ‘상품 포트폴리오 매트릭스’를 활용
-	- 운영자가 수익 기여도가 높은 핵심 상품의 배송 이슈를 우선 파악 가능한 환경 제공
+
+    - 자체 개발한 ‘상품 포트폴리오 매트릭스’를 활용
+    - 운영자가 수익 기여도가 높은 핵심 상품의 배송 이슈를 우선 파악 가능한 환경 제공
 
 - **운영 리스크 선제 대응**
-	- 실시간 대시보드를 통해 배송 지연 징후를 조기에 포착
-	- 고객 컴플레인 및 이탈률을 감소시킬 수 있는 모니터링 체계 마련
 
+    - 실시간 대시보드를 통해 배송 지연 징후를 조기에 포착
+    - 고객 컴플레인 및 이탈률을 감소시킬 수 있는 모니터링 체계 마련
 
 ## 향후 계획
 
 - **인프라 확장성 및 고가용성(HA) 확보**
+
     - Docker Compose 기반의 단일 환경을 Kubernetes(K8s) 클러스터로 마이그레이션
     - 오토스케일링(HPA) 및 자가 치유(Self-healing) 메커니즘을 도입하여 운영 안정성 강화
 
 - **데이터 품질 관리(Data Quality) 자동화**
+
     - Great Expectations와 같은 검증 도구를 데이터 파이프라인(Ingestion/Processing) 단계에 통합
     - 스키마 불일치나 이상치(Outlier) 발생 시 파이프라인을 조기 차단하여 데이터 신뢰성 확보
 
 - **CI/CD 파이프라인 구축**
+
     - GitHub Actions를 활용하여 코드 변경 사항에 대한 자동 테스트 및 배포 프로세스 정립
     - 수동 배포로 인한 휴먼 에러 방지 및 개발 생산성 증대
