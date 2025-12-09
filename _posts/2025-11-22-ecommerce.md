@@ -10,7 +10,7 @@ mermaid: true
 
 ## 프로젝트 개요
 
-- 목표: 실시간 배송 지연 모니터링 및 매출 대시보드 구축
+- 목표: 실시간 배송 현황 모니터링 및 판매 성과 대시보드
 - 기간: 2025년 4월 ~
 - 사용 데이터: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
     - 브라질 소상공인들에게 온라인 마켓플레이스를 제공하는 전자상거래 플랫폼인 Olist에서 제공한 캐글 데이터
@@ -511,7 +511,7 @@ _gold_layer_schema_
 - 다수의 사용자가 쿼리를 요청하는 환경을 가정하여, Spark Thrift Server가 분산 처리하도록 구성했습니다.
 - 사용자는 SQL을 통해 논리적으로 통합된 데이터 뷰에 접근할 수 있습니다.
 
-#### 판매 성과 및 배송 현황 대시보드
+#### 실시간 배송 현황 모니터링 및 판매 성과 대시보드
 
 - 최종적으로 다음 지표들이 사용자에게 제공됩니다.
     - Batch Layer
