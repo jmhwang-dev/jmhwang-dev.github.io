@@ -15,15 +15,21 @@ mermaid: true
 - 사용 데이터: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
     - 브라질 소상공인들에게 온라인 마켓플레이스를 제공하는 전자상거래 플랫폼인 Olist에서 제공한 캐글 데이터
 - 사용 기술 및 버전
-    - Kafka: `3.9.1`
-    - Confluent: `7.6.1`
-    - Spark: `3.5.6`
-    - Iceberg: `1.9.1`
-    - MinIO: `RELEASE.2025-06-13T11-33-47Z`
-    - Airflow: `3.0.6`
-    - Prometheus: `3.5.0`
-    - Grafana: `12.2.0`
-    - Superset: `5.0.0`
+    - **Data Ingestion & Streaming**
+        - Kafka: `3.9.1`
+        - Confluent: `7.6.1`
+    - **Data Processing**
+        - Spark: `3.5.6`
+    - **Data Lake & Storage**
+        - Iceberg: `1.9.1`
+        - MinIO: `RELEASE.2025-06-13T11-33-47Z`
+    - **Workflow Orchestration**
+        - Airflow: `3.0.6`
+    - **Monitoring & Observability**
+        - Prometheus: `3.5.0`
+        - Grafana: `12.2.0`
+    - **BI & Analytics**
+        - Superset: `5.0.0`
 
 ## 프로젝트 목표 선정 배경
 
@@ -32,7 +38,7 @@ mermaid: true
 - 따라서 **판매자의 매출 성장이 곧 플랫폼(Olist)의 매출 확대로 직결되는 동반 성장 구조**를 가지고 있습니다.
 
 ### 가설 설정 및 목표
-- 이에 따라 **'매출 증대'**를 최우선 비즈니스 목표로 가정하였습니다.
+- 이에 따라 **매출 증대**를 최우선 비즈니스 목표로 가정하였습니다.
 - 이후, 데이터를 통해 그 **성장 동력**을 발굴하고자 EDA를 수행했습니다.
 
 ### EDA
@@ -93,7 +99,7 @@ mermaid: true
     ![배송 지연 비율](../assets/img/portfolio/eda/late_delivery_rate.png)
     _late_delivery_rate_
 
-- 위 결과를 통해 **배송 문제**가 핵심 상품의 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
+- 위 결과를 통해 **배송 문제**가 매출 성장을 저해하는 주요 원인 중 하나임을 도출하였습니다.
 
 ## 상품 포트폴리오 매트릭스
 ### 도입 배경
@@ -267,10 +273,10 @@ _Logical view: Lambda Architecture_
 
 | 장비명 | 수량 | CPU | Memory | 역할 |
 | :--- | :--- | :--- | :--- | :--- |
-| **iMac** | 1 | 6 Core | 32GB | Control Plane: 클러스터 관리 및 스케줄링
-| **Desktop** | 1 | 16 Core | 32GB | Main Workload: 스트림 연산 및 데이터 웨어하우스 호스팅
-| **Raspberry Pi 5** | 2 | 4 Core | 8GB | Batch Job: 실시간성이 낮은 배치 작업 격리 수행
-| **Mini PC** | 1 | 4 Core | 16GB | Source: 단순 데이터 수집 및 전송 (Low Power)
+| **iMac** | 1 | 6 cores / 12 threads | 32GB | Control Plane: 클러스터 관리 및 스케줄링
+| **Desktop** | 1 | 10 cores / 16 threads | 32GB | Main Workload: 스트림 연산 및 데이터 웨어하우스 호스팅
+| **Raspberry Pi 5** | 2 | 2 cores / 4 threads | 8GB | Batch Job: 실시간성이 낮은 배치 작업 격리 수행
+| **Mini PC** | 1 | 1 core / 4 threads | 16GB | Source: 단순 데이터 수집 및 전송 (Low Power)
 
 ![img-description](../assets/img/portfolio/pipeline/pipeline_physical.png)
 _Physical view: Infrastructure Architecture_
