@@ -55,21 +55,199 @@ order: 4
 > Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
 {: .prompt-tip }
 
-### Place
+---
+
+# Work Experience
+
+## [휴톰](https://hutom.io/ko)
 {:.mt-4 .mb-0}
-desciption
+AI 수술 내비게이션 및 환자 토탈 케어 플랫폼 기업
 {:.text-muted .small .mb-4}
 
 <div class="row">
   <div class="col-lg-4">
-    <div class="fw-bold">Postion1 &<br>Postion2</div>
-    <div class="text-muted small">2015.01 - 2016.01</div>
+    <div class="fw-bold">Data Engineer</div>
+    <div class="text-muted small">2024.09 - 2025.01 (5개월)</div>
   </div>
 
   <div class="col-lg-8">
     <ul class="ps-3">
-      <li>contribution1</li>
-      <li>contribution1</li>
+      <li>임상 데이터 분석을 위한 OLAP 설계</li>
+      <li>데이터 흐름(Lineage) 및 스토리지 체계화</li>
+      <li>데이터 정합성 리스크 식별 및 공유</li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4">
+    <div class="fw-bold">MLOps Engineer</div>
+    <div class="text-muted small">2024.04 - 2024.08 (5개월)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>폐쇄망 환경 내 ML 추론 파이프라인 구축 및 기술 검증</li>
+      <li>서비스 배포 파이프라인과의 호환성을 고려한 분석 환경 통합</li>
+    </ul>
+  </div>
+</div>
+
+## [이마고웍스](https://dentbird.kr)
+{:.mt-4 .mb-0}
+웹 기반 AI 치과 CAD 솔루션 기업
+{:.text-muted .small .mb-4}
+
+<div class="row">
+  <div class="col-lg-4">
+    <div class="fw-bold">Team Lead</div>
+    <div class="text-muted small">2022.09 - 2023.06 (10개월)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>조직의 역할을 엔지니어링 중심 구조로 개편</li>
+      <li>사내 데이터 프로덕트 개발 관련 의사결정 수행</li>
+      <li>데이터 수집 매뉴얼 표준화</li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4">
+    <div class="fw-bold">Data Engineer</div>
+    <div class="text-muted small">2022.04 - 2023.06 (1년 3개월)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>3D 치아 스캔 데이터 ETL 파이프라인 설계</li>
+      <li>임상 허용 오차 기반 품질 검증 자동화</li>
+      <li>엣지 케이스 격리 자동화</li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4">
+    <div class="fw-bold">AI Engineer</div>
+    <div class="text-muted small">2020.07 - 2022.03 (1년 9개월)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>병렬 처리 기반 대규모 학습 데이터셋 생성 가속화</li>
+      <li>Computer Vision 리서치 (Segmentation, GAN)</li>
+    </ul>
+  </div>
+</div>
+
+## [포항공과대학교 인공지능연구원](https://piai.postech.ac.kr)
+{:.mt-4 .mb-0}
+(구) 정보통신연구소
+{:.text-muted .small .mb-4}
+
+<div class="row">
+  <div class="col-lg-4">
+    <div class="fw-bold">인턴 연구원</div>
+    <div class="text-muted small">2019.04 - 2019.06 (2개월)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>실시간 영상 인식 기반 자율주행 시스템 개발</li>
+    </ul>
+  </div>
+</div>
+
+---
+
+# Project
+<br>
+<div class="row">
+  <div class="col-lg-4">
+    <a href="https://jmhwang-dev.github.io/posts/ecommerce">
+      <div class="fw-bold">E2E 파이프라인 설계 및 개발</div>
+    </a>
+    <div class="text-muted small">개인 프로젝트</div>
+    <div class="text-muted small">2025.04 - 2025.11 (8개월)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>람다 아키텍쳐 기반 데이터 파이프라인 구축</li>
+      <li>배송 현황 및 판매 성과 대시보드 구성</li>
+      <li>시스템 모니터링 대시보드 구축</li>
+      <li>홈랩 클러스터 구성 (Mini-PC, Desktop, iMac, Raspberry Pi 5 * 2)</li>
+    </ul>
+    <!-- [SKILL]<br>
+    Spark, Airflow, Iceberg, Kafka, Confluent, Grafana, Prometheus, Superset -->
+  </div>
+</div>
+
+---
+
+# Education
+<br>
+<div class="row">
+  <div class="col-lg-4">
+    <div class="fw-bold">세종대학교 일반대확원 (석사)</div>
+    <div class="text-muted small">2014.09 - 2017.02 (졸업)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>전공: 컴퓨터 그래픽스</li>
+      <li>학점: 4.47 / 4.5</li>
+      <li>석사학위논문: 3차원 형태 특징의 다중 사전을 이용한 기하 복원</li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4">
+    <div class="fw-bold">세종대학교</div>
+    <div class="text-muted small">2008.03 - 2014.08 (졸업)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>전공: 컴퓨터공학과</li>
+    </ul>
+  </div>
+</div>
+
+---
+
+# Etc.
+<br>
+
+<div class="row">
+  <div class="col-lg-4">
+      <div class="fw-bold">ADsP (데이터분석 준전문가)</div>
+    <div class="text-muted small">2019.12 (취득)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>한국데이터산업진흥원에서 주관하는 국가공인 자격증</li>
+    </ul>
+  </div>
+</div>
+
+<br>
+
+<div class="row">
+  <div class="col-lg-4">
+      <a href="https://youth.posco.com/posco/edu/index.php?mod=academy&pag=aca01#khwhat">
+      <div class="fw-bold">포스코 청년 AI·Big Data 아카데미</div>
+    </a>
+    <div class="text-muted small">2019.01 - 2019.04 (수료)</div>
+  </div>
+
+  <div class="col-lg-8">
+    <ul class="ps-3">
+      <li>포스코가 주관하는 AI 및 빅데이터 전문가 양성 교육 프로그램</li>
     </ul>
   </div>
 </div>
