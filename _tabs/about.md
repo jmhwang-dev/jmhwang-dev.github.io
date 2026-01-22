@@ -6,20 +6,26 @@ order: 4
 
 <style>
 @media print {
-  /* 1. 페이지 여백 설정 */
+  /* [핵심 1] Box-Sizing 초기화: 패딩이 너비를 망치지 않도록 고정 */
+  *, *:before, *:after {
+    box-sizing: border-box !important;
+  }
+
+  /* [핵심 2] 페이지 여백 조정: 좌우 0.8cm로 안정적인 대칭 확보 */
   @page {
-    margin: 1.2cm 1.0cm 2.5cm 1.0cm !important;
+    /* 상 0.8cm, 좌우 0.8cm, 하 1.5cm */
+    margin: 0.8cm 0.8cm 1.5cm 0.8cm !important;
     size: A4;
   }
 
-  /* 2. 불필요한 요소 숨기기 */
+  /* 불필요한 요소 숨기기 */
   body > *:not(#main-wrapper),
   #sidebar, #topbar, #panel-wrapper, #tail-wrapper, 
   footer, .post-navigation, .prompt-tip {
     display: none !important;
   }
 
-  /* 3. 기본 폰트 및 컬러 설정 */
+  /* 기본 폰트 및 컬러 설정 */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -28,11 +34,11 @@ order: 4
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
-    font-size: 9pt !important; 
-    line-height: 1.4 !important;
+    font-size: 8.5pt !important; 
+    line-height: 1.35 !important;
   }
 
-  /* 4. 컨테이너 너비 제한 해제 */
+  /* 컨테이너 너비 제한 해제 */
   #main-wrapper, .container, .content, article, .row {
     width: 100% !important;
     max-width: 100% !important;
@@ -40,10 +46,10 @@ order: 4
     padding: 0 !important;
   }
 
-  /* 5. 제목 스타일 */
+  /* 제목 스타일 */
   .dynamic-title, h1 {
     display: block !important;
-    font-size: 12pt !important;  
+    font-size: 10.5pt !important;  
     font-weight: 900 !important; 
     color: #000 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
@@ -51,81 +57,79 @@ order: 4
     border-bottom: 2px solid #000 !important;
     border-top: none !important; 
     
-    margin-bottom: 0.3cm !important;
-    padding-bottom: 3px !important;
+    margin-bottom: 0.25cm !important;
+    padding-bottom: 2px !important;
     line-height: 1.2 !important;
     letter-spacing: normal !important;
   }
   
-  .dynamic-title { margin-top: -30px !important; }
-  h1 { margin-top: 0.5cm !important; }
+  .dynamic-title { margin-top: -35px !important; }
+  h1 { margin-top: 0.4cm !important; }
 
-  /* 6. 회사명(h2) 스타일 */
+  /* 회사명(h2) 스타일 */
   h2 { 
-    font-size: 10pt !important; 
+    font-size: 9.5pt !important; 
     font-weight: 700 !important;
-    /* [수정] 회사 간 구분을 위해 위쪽 여백을 조금 더 줌 */
-    margin-top: 0.5cm !important; 
-    margin-bottom: 3px !important;
+    margin-top: 0.35cm !important; 
+    margin-bottom: 2px !important;
     border-bottom: none !important; 
     border-top: none !important;   
   }
   
-  /* 첫 번째 회사는 굳이 여백을 많이 줄 필요 없음 */
-  h1 + h2 { margin-top: 0.3cm !important; }
+  h1 + h2 { margin-top: 0.2cm !important; }
 
-  /* 7. 링크 스타일 */
+  /* 링크 스타일 */
   a, a:hover, h2 a { 
     text-decoration: none !important;
     border: none !important;
     box-shadow: none !important;
   }
 
-  /* 8. 유틸리티 클래스 */
+  /* 유틸리티 클래스 */
   .text-muted { color: #6c757d !important; }
-  .small { font-size: 8pt !important; }
+  .small { font-size: 7.5pt !important; }
   .fw-bold { font-weight: 700 !important; }
 
-  /* 9. 레이아웃 */
+  /* [핵심 3] 레이아웃 비율 조정 (30:70) */
   .row {
     display: table !important;
     table-layout: fixed !important;
     border-spacing: 0 !important;
-    margin-bottom: 6px !important;
+    width: 100% !important;
+    margin-bottom: 5px !important;
   }
 
   .col-lg-4 { 
     display: table-cell !important; 
-    width: 30% !important; 
+    width: 30% !important; /* 30%로 복구하여 안정감 확보 */
     vertical-align: top !important;
     padding-right: 15px !important;
   }
 
   .col-lg-8 { 
     display: table-cell !important; 
-    width: 70% !important; 
+    width: 70% !important; /* 나머지 70% */
     vertical-align: top !important;
     padding: 0 !important;
   }
 
-  /* 10. 리스트 및 텍스트 정렬 */
+  /* 리스트 정렬 */
   ul { 
     margin: 0 !important; 
     padding-left: 0 !important; 
     list-style-position: inside !important; 
   }
   
-  li { margin-bottom: 0px !important; line-height: 1.4 !important; }
+  li { margin-bottom: 0px !important; line-height: 1.35 !important; }
 
   .job-summary {
     margin-bottom: 2px !important;
-    line-height: 1.4 !important;
+    line-height: 1.35 !important;
     padding-left: 0 !important; 
     font-weight: 400 !important;
     color: #000 !important;
   }
 
-  /* [추가] 마크다운 구분선(---)이 혹시 남아있더라도 인쇄 시에는 숨김 처리 */
   hr { display: none !important; }
 }
 </style>
@@ -144,9 +148,6 @@ AI 수술 내비게이션 및 환자 토탈 케어 플랫폼 기업
   </div>
 
   <div class="col-lg-8">
-    <!-- <div class="job-summary">
-      주요 성과
-    </div> -->
     <ul class="ps-3">
       <li>임상 데이터 분석을 위한 OLAP 설계</li>
       <li>데이터 흐름(Lineage) 및 스토리지 체계화</li>
@@ -260,7 +261,7 @@ AI 수술 내비게이션 및 환자 토탈 케어 플랫폼 기업
 # Education
 <div class="row">
   <div class="col-lg-4">
-    <div class="fw-bold">세종대학교 일반대확원 (석사)</div>
+    <div class="fw-bold">세종대학교 일반대학원 (석사)</div>
     <div class="text-muted small">2014.09 - 2017.02 (졸업)</div>
   </div>
 
@@ -310,7 +311,7 @@ AI 수술 내비게이션 및 환자 토탈 케어 플랫폼 기업
 
   <div class="col-lg-8">
     <ul class="ps-3">
-      <li>포스코가 주관하는 AI 및 빅데이터 전문가 양성 교육 프로그램</li>
+      <li>포스코 주관 AI 및 빅데이터 전문가 양성 교육 프로그램</li>
     </ul>
   </div>
 </div>
