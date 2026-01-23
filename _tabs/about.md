@@ -5,70 +5,111 @@ order: 4
 ---
 
 <style>
-/* [폰트 로드] Pretendard */
+/* [0. 폰트 로드] Pretendard */
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 @media print {
-  /* [1. 페이지 공통 여백] */
-  @page { 
-    margin: 1.2cm; 
-    size: A4; 
+  /* =========================================
+     [1. 글로벌 설정 변수 (여기만 수정하면 됨)]
+     ========================================= */
+  :root {
+    --font-main: "Pretendard", "Apple SD Gothic Neo", sans-serif;
+    --color-black: #000000;
+    
+    /* 레이아웃 사이즈 */
+    --page-padding: 0.6cm;      /* 페이지 상하좌우 여백 */
+    --font-size-base: 8.8pt;    /* 본문 폰트 크기 */
+    --line-height-base: 1.25;   /* 본문 줄 간격 */
+    
+    /* 제목 사이즈 */
+    --font-size-h1: 20pt;       /* 이름 크기 */
+    --font-size-h2: 9.5pt;      /* 섹션 헤더 크기 */
+    --header-margin-top: -2.3cm; /* 테마 여백 상쇄용 (이름 위로 끌어올리기) */
   }
+
+  /* =========================================
+     [2. 페이지 및 컨테이너 초기화 (Nuclear Reset)]
+     ========================================= */
+  @page { margin: 0; size: A4; }
   
-  /* [2. 테마 간섭 완전 초기화] */
-  html, body, #main-wrapper, .container, article, .row {
-    margin: 0 !important;
+  html, body {
+    margin: 0 auto !important;
     padding: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 210mm !important;
+    height: 100% !important;
     background: #fff !important;
+  }
+
+  /* 메인 래퍼: 실제 여백과 폰트 설정 */
+  #main-wrapper {
+    margin: 0 auto !important;
+    padding: var(--page-padding) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
     border: none !important;
-    box-shadow: none !important;
-    top: 0 !important;
-  }
-
-  /* [3. 숨김 처리] */
-  .dynamic-title, .post-title, .page-heading, .post-heading, 
-  #sidebar, #topbar, #panel-wrapper, #tail-wrapper, 
-  footer, .post-navigation, .prompt-tip, .back-to-top { 
-    display: none !important; 
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* [4. 폰트 설정] */
-  body {
-    font-family: "Pretendard", "Apple SD Gothic Neo", sans-serif !important;
-    font-size: 10pt !important;
-    line-height: 1.35 !important;
-    color: #333 !important;
+    
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-base) !important;
+    line-height: var(--line-height-base) !important;
+    color: var(--color-black) !important;
     letter-spacing: -0.02em !important;
   }
 
-  /* [5. 1페이지 레이아웃 조정 (사용자 설정 값: -2.3cm)] */
+  /* 테마 간섭 요소 초기화 */
+  .container, .row, article {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* =========================================
+     [3. 숨김 처리 (Display None)]
+     ========================================= */
+  /* 테마 UI, 네비게이션, 투명 문단(p) 등 불필요 요소 제거 */
+  .dynamic-title, .post-title, .page-heading, .post-heading, 
+  header.post-header, h1.dynamic-title,
+  #sidebar, #topbar, #panel-wrapper, #tail-wrapper, 
+  footer, .post-navigation, .prompt-tip, 
+  #back-to-top, .back-to-top, i.fas.fa-arrow-up,
+  .post-tail-wrapper, .post-tags, .post-meta, .share-wrapper,
+  p { 
+    display: none !important; 
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+  }
+
+  /* =========================================
+     [4. 타이포그래피 (Typography)]
+     ========================================= */
+  /* 공통: 검정색 & 굵기 설정 */
+  h1, h2, b, strong, .org-name, .date-right, .job-title-main {
+    color: var(--color-black) !important;
+    font-weight: 600 !important;
+  }
+
+  /* H1: 이름 영역 */
   h1 {
-    margin-top: -2.3cm !important; /* 레이아웃 잡힌 값 적용 */
-    
-    font-size: 24pt !important;
-    font-weight: 800 !important;
-    color: #2b7a8e !important;
+    margin-top: var(--header-margin-top) !important; /* 상단 여백 상쇄 */
+    font-size: var(--font-size-h1) !important;
     text-transform: none !important;
     border: none !important;
-    margin-bottom: 5px !important;
+    margin-bottom: 2px !important;
     padding: 0 !important;
     line-height: 1.1 !important;
     display: block !important;
   }
 
-  /* [H2: 섹션 헤더] */
+  /* H2: 섹션 헤더 */
   h2 {
-    font-size: 11.5pt !important;
-    font-weight: 800 !important;
-    color: #2b7a8e !important;
+    font-size: var(--font-size-h2) !important;
     text-transform: uppercase !important;
-    border-bottom: 1px solid #2b7a8e !important;
-    margin-top: 18px !important;
+    border-bottom: 1px solid var(--color-black) !important;
+    margin-top: 16px !important;    
     margin-bottom: 10px !important;
     padding-bottom: 2px !important;
     letter-spacing: 0.5px !important;
@@ -76,71 +117,68 @@ order: 4
     page-break-after: avoid; 
   }
 
-  /* [레이아웃 & 텍스트 스타일] */
+  /* 상단 정보 (직무, 연락처) */
   .job-title-main {
-    font-size: 11pt !important;
-    font-weight: 600 !important;
-    color: #555 !important;
-    margin-bottom: 5px !important;
+    font-size: 9.5pt !important;
+    margin-bottom: 2px !important;
   }
   
   .contact-info {
-    font-size: 9pt !important;
-    color: #666 !important;
-    margin-bottom: 20px !important;
+    font-size: 8.5pt !important;
+    margin-bottom: 12px !important;
   }
 
+  /* 회사명 */
+  .org-name {
+    font-size: 9pt !important;
+  }
+
+  /* 날짜/기간 (우측 정렬) */
+  .date-right {
+    text-align: right !important;
+    white-space: nowrap !important;
+    font-size: 8.8pt !important;
+  }
+
+  /* 직무명 (Italic & Normal Weight) */
+  .role-row {
+    font-size: 8.8pt !important;
+    font-weight: 400 !important;
+    font-style: italic !important;
+    color: var(--color-black) !important;
+    margin: 1px 0 !important;
+  }
+
+  /* =========================================
+     [5. 레이아웃 & 리스트]
+     ========================================= */
+  /* 항목 컨테이너 */
   .entry-container { 
-    margin-bottom: 10px !important;
+    margin-bottom: 6px !important;
+    margin-top: 0 !important;
     page-break-inside: avoid; 
   }
 
+  /* 헤더 행 (Flexbox) */
   .header-row {
     display: flex !important;
     justify-content: space-between !important;
     align-items: baseline !important;
     width: 100% !important;
-    margin-bottom: 2px !important;
+    margin-bottom: 1px !important;
   }
 
-  .org-name {
-    font-size: 10.5pt !important;
-    font-weight: 700 !important;
-    color: #000 !important;
-  }
-
-  .org-desc {
-    font-size: 10pt !important;
-    font-weight: 400 !important;
-    color: #444 !important;
-  }
-
-  .date-right {
-    font-weight: 700 !important;
-    text-align: right !important;
-    white-space: nowrap !important;
-    color: #000 !important;
-    font-size: 10pt !important;
-  }
-
-  .role-row {
-    font-size: 10pt !important;
-    font-weight: 400 !important;
-    font-style: italic !important;
-    color: #222 !important;
-    margin: 2px 0 !important;
-  }
-
+  /* 리스트 스타일 */
   ul {
-    margin: 2px 0 6px 0 !important;
-    padding-left: 26px !important;
+    margin: 1px 0 3px 0 !important;
+    padding-left: 18px !important;
   }
   
   li {
-    margin-bottom: 1px !important;
-    line-height: 1.35 !important;
-    color: #333 !important;
-    font-size: 10pt !important;
+    margin-bottom: 0px !important;
+    line-height: var(--line-height-base) !important;
+    font-size: var(--font-size-base) !important;
+    color: var(--color-black) !important;
     list-style-type: disc !important;
   }
   
@@ -154,20 +192,16 @@ order: 4
   Seoul, Korea &bull; +82-10-XXXX-XXXX &bull; email@example.com &bull; github.com/jmhwang-dev
 </div>
 
-## Relevant Work Experience
-
+## Work Experience
 <div class="entry-container">
   <div class="header-row">
-    <div>
-      <span class="org-name">Hutom (휴톰)</span>, 
-      <span class="org-desc">AI 수술 내비게이션 플랫폼</span>
-    </div>
+    <span class="org-name">휴톰 (AI 수술 내비게이션 플랫폼)</span>
     <div class="date-right">2024.04 – 2025.01, 10개월</div>
   </div>
 
   <div class="role-row">Data Engineer (2024.09 – 2025.01, 5개월)</div>
   <ul>
-    <li>임상 데이터 분석을 위한 OLAP 설계 및 데이터 흐름(Lineage) 스토리지 체계화</li>
+    <li>임상 데이터 분석을 위한 OLAP 설계 및 데이터 Lineage, 스토리지 체계화</li>
     <li>데이터 정합성 리스크 식별 및 공유 프로세스 수립</li>
   </ul>
 
@@ -180,10 +214,7 @@ order: 4
 
 <div class="entry-container">
   <div class="header-row">
-    <div>
-      <span class="org-name">Imagoworks (이마고웍스)</span>, 
-      <span class="org-desc">AI 치과 CAD 솔루션</span>
-    </div>
+    <span class="org-name">이마고웍스 (AI 치과 CAD 솔루션)</span>
     <div class="date-right">2020.07 – 2023.06, 3년</div>
   </div>
 
@@ -208,9 +239,7 @@ order: 4
 
 <div class="entry-container">
   <div class="header-row">
-    <div>
-      <span class="org-name">POSTECH AI Research (포항공대 인공지능연구원)</span>
-    </div>
+    <span class="org-name">포항공대 인공지능연구원 (구 정보통신연구소)</span>
     <div class="date-right">2019.04 – 2019.06, 3개월</div>
   </div>
   <div class="role-row">인턴 연구원</div>
@@ -220,7 +249,6 @@ order: 4
 </div>
 
 ## Project
-
 <div class="entry-container">
   <div class="header-row">
     <span class="org-name">E2E Data Pipeline Design & Dev</span>
@@ -234,10 +262,9 @@ order: 4
 </div>
 
 ## Education
-
 <div class="entry-container">
   <div class="header-row">
-    <span class="org-name">Sejong University (세종대학교 일반대학원)</span>
+    <span class="org-name">세종대학교 일반대학원</span>
     <div class="date-right">2014.09 – 2017.02</div>
   </div>
   <div class="role-row">M.S. in Computer Graphics (GPA: 4.47 / 4.5)</div>
@@ -248,14 +275,13 @@ order: 4
 
 <div class="entry-container">
   <div class="header-row">
-    <span class="org-name">Sejong University (세종대학교)</span>
+    <span class="org-name">세종대학교</span>
     <div class="date-right">2008.03 – 2014.08</div>
   </div>
   <div class="role-row">B.S. in Computer Engineering</div>
 </div>
 
 ## Skills & Etc.
-
 <div class="entry-container">
   <div class="header-row">
     <span class="org-name">Certifications & Training</span>
