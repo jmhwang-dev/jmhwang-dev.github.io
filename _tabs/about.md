@@ -9,7 +9,7 @@ order: 4
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 @media print {
-  /* [1. 페이지 공통 여백] - 1, 2페이지 모두 물리적 여백 1.2cm 적용 */
+  /* [1. 페이지 공통 여백] */
   @page { 
     margin: 1.2cm; 
     size: A4; 
@@ -18,7 +18,7 @@ order: 4
   /* [2. 테마 간섭 완전 초기화] */
   html, body, #main-wrapper, .container, article, .row {
     margin: 0 !important;
-    padding: 0 !important; /* 상단 패딩 제거 */
+    padding: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
     background: #fff !important;
@@ -46,11 +46,9 @@ order: 4
     letter-spacing: -0.02em !important;
   }
 
-  /* [5. 핵심! 1페이지 강제 조절] */
-  /* 이름(H1)을 위로 강제로 끌어올립니다. */
-  /* 만약 여백이 여전히 넓으면 -0.5cm를 -1.0cm 등으로 숫자를 더 키우세요 */
+  /* [5. 1페이지 레이아웃 조정 (사용자 설정 값: -2.3cm)] */
   h1 {
-    margin-top: -1.5cm !important; /* 여기를 조절해서 위로 올리세요 */
+    margin-top: -2.3cm !important; /* 레이아웃 잡힌 값 적용 */
     
     font-size: 24pt !important;
     font-weight: 800 !important;
@@ -156,7 +154,7 @@ order: 4
   Seoul, Korea &bull; +82-10-XXXX-XXXX &bull; email@example.com &bull; github.com/jmhwang-dev
 </div>
 
-## Work Experience
+## Relevant Work Experience
 
 <div class="entry-container">
   <div class="header-row">
@@ -164,16 +162,16 @@ order: 4
       <span class="org-name">Hutom (휴톰)</span>, 
       <span class="org-desc">AI 수술 내비게이션 플랫폼</span>
     </div>
-    <div class="date-right">2024.04 – 2025.01</div>
+    <div class="date-right">2024.04 – 2025.01, 10개월</div>
   </div>
 
-  <div class="role-row">Data Engineer (2024.09 – 2025.01)</div>
+  <div class="role-row">Data Engineer (2024.09 – 2025.01, 5개월)</div>
   <ul>
     <li>임상 데이터 분석을 위한 OLAP 설계 및 데이터 흐름(Lineage) 스토리지 체계화</li>
     <li>데이터 정합성 리스크 식별 및 공유 프로세스 수립</li>
   </ul>
 
-  <div class="role-row">MLOps Engineer (2024.04 – 2024.08)</div>
+  <div class="role-row">MLOps Engineer (2024.04 – 2024.08, 5개월)</div>
   <ul>
     <li>폐쇄망 환경 내 ML 추론 파이프라인 구축 및 기술 검증</li>
     <li>서비스 배포 파이프라인과의 호환성을 고려한 분석 환경 통합</li>
@@ -186,22 +184,22 @@ order: 4
       <span class="org-name">Imagoworks (이마고웍스)</span>, 
       <span class="org-desc">AI 치과 CAD 솔루션</span>
     </div>
-    <div class="date-right">2020.07 – 2023.06</div>
+    <div class="date-right">2020.07 – 2023.06, 3년</div>
   </div>
 
-  <div class="role-row">Team Lead (2022.09 – 2023.06)</div>
+  <div class="role-row">Team Lead (2022.09 – 2023.06, 10개월)</div>
   <ul>
     <li>조직의 역할을 엔지니어링 중심 구조로 개편 및 데이터 수집 매뉴얼 표준화</li>
     <li>사내 데이터 프로덕트 개발 관련 주요 의사결정 수행</li>
   </ul>
 
-  <div class="role-row">Data Engineer (2022.04 – 2023.06)</div>
+  <div class="role-row">Data Engineer (2022.04 – 2023.06, 1년 3개월)</div>
   <ul>
     <li>3D 치아 스캔 데이터 ETL 파이프라인 설계 및 임상 허용 오차 기반 품질 검증 자동화</li>
     <li>엣지 케이스 격리 자동화 시스템 구축</li>
   </ul>
 
-  <div class="role-row">AI Engineer (2020.07 – 2022.03)</div>
+  <div class="role-row">AI Engineer (2020.07 – 2022.03, 1년 9개월)</div>
   <ul>
     <li>병렬 처리 기반 대규모 학습 데이터셋 생성 가속화</li>
     <li>Computer Vision 리서치 (Segmentation, GAN) 수행</li>
@@ -213,7 +211,7 @@ order: 4
     <div>
       <span class="org-name">POSTECH AI Research (포항공대 인공지능연구원)</span>
     </div>
-    <div class="date-right">2019.04 – 2019.06</div>
+    <div class="date-right">2019.04 – 2019.06, 3개월</div>
   </div>
   <div class="role-row">인턴 연구원</div>
   <ul>
@@ -226,7 +224,7 @@ order: 4
 <div class="entry-container">
   <div class="header-row">
     <span class="org-name">E2E Data Pipeline Design & Dev</span>
-    <div class="date-right">2025.04 – 2025.11</div>
+    <div class="date-right">2025.04 – 2025.11, 8개월</div>
   </div>
   <div class="role-row">Personal Project</div>
   <ul>
