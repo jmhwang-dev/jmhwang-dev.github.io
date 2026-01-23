@@ -226,8 +226,11 @@ order: 4
 
   <div class="role-row">Data Engineer (2022.04 – 2023.06, 1년 3개월)</div>
   <ul>
-    <li>3D 치아 스캔 데이터 ETL 파이프라인 설계 및 임상 허용 오차 기반 품질 검증 자동화</li>
-    <li>엣지 케이스 격리 자동화 시스템 구축</li>
+    <li>치과용 CAD 소프트웨어를 통한 GUI 수동 작업을 Polling 기반 워크플로우로 전환하여 Annotation-ready Dataset 공급 자동화</li>
+    <li>신규 데이터 감지용 Custom Sensor 구현을 통한 비정형 데이터 처리의 비동기적 안정성 확보</li>
+    <li>의료 데이터 보안을 위한 On-premise 환경 내 XCom 병목 해결을 위한 Path-passing 방식 적용</li>
+    <li>계층형 저장 구조 설계 및 파일명 표준화 기반의 데이터 일관성 및 멱등성 보장 체계 구축</li>
+    <li>Clinical Acceptance 미달 데이터 자동 격리 및 커스텀 상태 코드 체계 구축을 통한 품질 관리 가시성 확보</li>
   </ul>
 
   <div class="role-row">AI Engineer (2020.07 – 2022.03, 1년 9개월)</div>
