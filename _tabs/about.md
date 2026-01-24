@@ -255,8 +255,9 @@ order: 4
 
   <div class="role-row">AI Engineer (2020.07 – 2022.03, 1년 9개월)</div>
   <ul>
-    <li>병렬 처리 기반 대규모 학습 데이터셋 생성 가속화</li>
-    <li>Computer Vision 리서치 (Segmentation, GAN) 수행</li>
+    <li>Python Multi-processing 기반 대규모 Dataset 변환 로직 고도화</li>
+    <li>EDA를 통한 Trainin Dataset 품질 진단 및 원천 데이터의 특성 분석</li>
+    <li>Computer Vision 리서치 (Segmentation, GAN)</li>
   </ul>
 </div>
 
