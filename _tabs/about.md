@@ -280,8 +280,11 @@ order: 4
   </div>
   <div class="role-row">Personal Project</div>
   <ul>
-    <li>람다 아키텍쳐 기반 데이터 파이프라인 구축 및 홈랩 클러스터 구성 (Mini-PC, Pi 5)</li>
-    <li>배송 현황/판매 성과 대시보드 및 시스템 모니터링 환경 구축</li>
+    <li>이기종 하드웨어 기반 5-Node 홈랩 클러스터 구축 및 계층 분리를 통한 가동 안정성 확보</li>
+    <li>Kafka, Spark, Iceberg 기반 람다 아키텍처 설계로 실시간 및 대용량 분석 파이프라인 구현</li>
+    <li>Spark foreachBatch 및 증분 처리 적용을 통해 리소스 제약 환경 내 연산 성능 최적화</li>
+    <li>Prometheus/Grafana 연동으로 파이프라인 핵심 메트릭(Latency, TPS) 실시간 모니터링 체계 구축</li>
+    <li>LLM 기반 비정형 데이터 처리 자동화 및 동적 배칭을 통한 리뷰 데이터 3.6만 건 자산화</li>
   </ul>
 </div>
 
