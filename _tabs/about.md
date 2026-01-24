@@ -223,16 +223,12 @@ order: 4
     <div class="date-right">2024.04 – 2025.01, 10개월</div>
   </div>
 
-  <div class="role-row">Data Engineer (2024.09 – 2025.01, 5개월)</div>
+  <div class="role-row">Data Engineer (2024.04 – 2025.01, 10개월)</div>
   <ul>
-    <li>임상 데이터 분석을 위한 OLAP 설계 및 데이터 Lineage, 스토리지 체계화</li>
-    <li>데이터 정합성 리스크 식별 및 공유 프로세스 수립</li>
-  </ul>
-
-  <div class="role-row">MLOps Engineer (2024.04 – 2024.08, 5개월)</div>
-  <ul>
-    <li>폐쇄망 환경 내 ML 추론 파이프라인 구축 및 기술 검증</li>
-    <li>서비스 배포 파이프라인과의 호환성을 고려한 분석 환경 통합</li>
+    <li>전사 마스터 테이블 구축을 위한 데이터 전수 조사 및 이원화된 식별자 체계의 매핑 리스크 식별을 통한 중앙 집중식 관리 가이드라인 수립</li>
+    <li>데이터 변환 히스토리 문서 부재 해결을 위한 리니지 시각화 및 대용량 데이터 병합 시 발생하는 기술적 병목 진단</li>
+    <li>Pre-op 임상 데이터의 비정기 시계열 특성을 반영하여, 다중 검사 항목에 산재된 지표를 구조화하고 분석용 데이터 모델 설계</li>
+    <li>REST API 기반 External Trigger를 활용한 비동기 Airflow 워크플로우 구축으로 병원 폐쇄망 내 서비스 PoC 수행 및 기술 검증</li>
   </ul>
 </div>
 
