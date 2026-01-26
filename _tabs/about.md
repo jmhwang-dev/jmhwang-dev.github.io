@@ -232,7 +232,7 @@ order: 4
   <ul>
     <li>전사 데이터 정비를 위해 다종 의료 데이터의 식별자 구조와 변환 흐름을 점검하고, 리니지를 문서화하여 <strong>초기 데이터 거버넌스 체계의 기반을 마련</strong></li>
     <li>수술 전 임상 데이터의 비정기적 시계열 특성에 맞춰 검사 항목을 구조화하고, <strong>PostgreSQL 기반 분석용 데이터 모델링 및 스키마 설계</strong></li>
-    <li>폐쇄망 제약을 고려한 <strong>Docker 기반 추론 환경과 Airflow 비동기 ML 추론 워크플로우 개발</strong></li>
+    <li>폐쇄망 제약을 고려한 <strong>Docker 기반 추론 환경과 Airflow 비동기 ML 추론 워크플로우 구축</strong></li>
   </ul>
 </div>
 
