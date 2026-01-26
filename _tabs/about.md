@@ -118,7 +118,7 @@ order: 4
   
   .contact-info {
     font-size: 8.5pt !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 6px !important;
   }
 
   .org-name {
@@ -207,6 +207,15 @@ order: 4
     /* color: #666666 !important; */
     content: "-" !important;
   }
+
+  .key-skills {
+    font-size: 8.5pt !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    /* margin-top: 4px !important; */
+    /* border-top: 1px solid #eee; */
+    /* padding-top: 4px; */
+  }
 }
 </style>
 
@@ -214,6 +223,11 @@ order: 4
 <div class="job-title-main">Data Engineer</div>
 <div class="contact-info">
   Seoul, Korea &bull; +82-10-XXXX-XXXX &bull; email@example.com &bull; github.com/jmhwang-dev
+</div>
+
+<!-- <div class="job-title-main"></div> -->
+<div class="key-skills">
+  Skills: Python | SQL | Apache Spark | Kafka (Confluent) | Airflow | PostgeSQL | Iceberg | MinIO | Docker | Grafana | Prometheus 
 </div>
 
 ## Work Experience
@@ -269,7 +283,7 @@ order: 4
   </div>
   <div class="role-row">인턴 연구원</div>
   <ul>
-    <li>실시간 영상 인식 기반 자율주행 시스템 개발 참여</li>
+    <li>YOLOv5 기반 실시간 객체 인식 및 서버 통신 연동을 통한 자율주행 RC카 추론 시스템 개발</li>
   </ul>
 </div>
 
@@ -309,7 +323,7 @@ order: 4
   <div class="role-row">B.S. in Computer Engineering</div>
 </div>
 
-## Skills & Etc.
+## Etc.
 <div class="entry-container">
   <div class="header-row">
     <span class="org-name">Certifications & Training</span>
