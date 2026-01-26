@@ -210,7 +210,7 @@ order: 4
 
   .key-skills {
     font-size: 8.5pt !important;
-    font-weight: 600 !important;
+    /* font-weight: 600 !important; */
     color: #333 !important;
     /* margin-top: 4px !important; */
     /* border-top: 1px solid #eee; */
@@ -225,9 +225,8 @@ order: 4
   Seoul, Korea &bull; +82-10-XXXX-XXXX &bull; email@example.com &bull; github.com/jmhwang-dev
 </div>
 
-<!-- <div class="job-title-main"></div> -->
 <div class="key-skills">
-  Skills: Python | SQL | Apache Spark | Kafka (Confluent) | Airflow | PostgeSQL | Iceberg | MinIO | Docker | Grafana | Prometheus 
+  Skills: | Python | SQL | Apache Spark | Kafka (Confluent) | Airflow | PostgeSQL | Iceberg | MinIO | Docker | Grafana | Prometheus |
 </div>
 
 ## Work Experience
@@ -239,10 +238,10 @@ order: 4
 
   <div class="role-row">Data Engineer (2024.04 – 2025.01, 10개월)</div>
   <ul>
-    <li>전사 마스터 테이블 구축을 위한 데이터 전수 조사 및 이원화된 식별자 체계의 매핑 리스크 식별을 통한 중앙 집중식 관리 가이드라인 수립</li>
-    <li>데이터 변환 히스토리 문서 부재 해결을 위한 리니지 시각화 및 대용량 데이터 병합 시 발생하는 기술적 병목 진단</li>
-    <li>Pre-op 임상 데이터의 비정기 시계열 특성을 반영하여, 다중 검사 항목에 산재된 지표를 구조화하고 분석용 데이터 모델 설계</li>
-    <li>REST API 기반 External Trigger를 활용한 비동기 Airflow 워크플로우 구축으로 병원 폐쇄망 내 서비스 PoC 수행 및 기술 검증</li>
+    <li>전사 마스터 테이블 구축을 위한 <strong>데이터 전수 조사</strong> 및 <strong>중앙 집중식 관리 가이드라인 수립</strong></li>
+    <li>데이터 변환 히스토리 문서 부재 해결을 위한 <strong>리니지 시각화</strong> 및 <strong>기술적 병목 진단</strong></li>
+    <li>Pre-op 임상 데이터의 비정기 시계열 특성을 반영하여, <strong>다중 검사 항목 구조화</strong> 및 <strong>분석용 데이터 모델 설계</strong></li>
+    <li>REST API 기반 External Trigger를 활용한 <strong>Airflow 기반 비동기 ML 추론 워크플로우 구축</strong>으로 서비스 PoC 수행</li>
   </ul>
 </div>
 
@@ -254,24 +253,24 @@ order: 4
 
   <div class="role-row">Data Engineer (2022.04 – 2023.06, 1년 3개월)</div>
   <ul>
-    <li>치과용 CAD 소프트웨어를 통한 GUI 수동 작업을 Polling 기반 워크플로우로 전환하여 Annotation-ready Dataset 공급 자동화</li>
-    <li>신규 데이터 감지용 Custom Sensor 구현을 통한 비정형 데이터 처리의 비동기적 안정성 확보</li>
-    <li>의료 데이터 보안을 위한 On-premise 환경 내 XCom 병목 해결을 위한 Path-passing 방식 적용</li>
-    <li>계층형 저장 구조 설계 및 파일명 표준화 기반의 데이터 일관성 및 멱등성 보장 체계 구축</li>
-    <li>Clinical Acceptance 미달 데이터 자동 격리 및 커스텀 상태 코드 체계 구축을 통한 품질 관리 가시성 확보</li>
+    <li>치과용 CAD 소프트웨어 GUI 수동 작업을 <strong>Polling 기반 워크플로우로 전환</strong>하여 Annotation-ready Dataset 공급 자동화</li>
+    <li>신규 데이터 감지용 <strong>Custom Sensor 구현</strong>을 통한 비정형 데이터 처리의 <strong>비동기적 안정성 확보</strong></li>
+    <li>의료 데이터 보안을 위한 On-premise 환경 내 <strong>XCom 병목 해결</strong>을 위한 Path-passing 방식 적용</li>
+    <li>계층형 저장 구조 설계 및 파일명 표준화 기반의 <strong>데이터 일관성 및 멱등성 보장 체계</strong> 구축</li>
+    <li>Clinical Acceptance 미달 데이터 자동 격리 및 <strong>품질 관리 가시성 확보</strong></li>
   </ul>
 
   <div class="role-row sub-experience-title">Team Lead (2022.09 – 2023.06, 10개월)</div>
   <ul class="sub-experience-list">
-    <li>비주기적, 오프라인 데이터 인입 환경에서 기존 자동화 데이터 처리 흐름의 병목을 개선하고, 다양한 케이스를 대응할 수 있도록 적용 범위를 확장</li>
-    <li>도메인 전문가 참여 기반의 학습 데이터 구성과 검증 흐름을 정비하고, Pseudo-label을 활용한 검증 중심 접근으로 인적 개입 병목 완화 방향성 제시</li>
-    <li>글로벌 전시회 기술 데모 수행 및 글로벌 고객 대상 기술 Q&A 지원 (IDS 2023, 독일 쾰른)</li>
+    <li>비주기적, 오프라인 데이터 인입 환경에서 기존 <strong>자동화 데이터 처리 흐름의 병목 개선</strong></li>
+    <li>도메인 전문가 참여 기반의 학습 데이터 구성과 <strong>검증 흐름 정비</strong> 및 Pseudo-label 활용으로 인적 개입 최소화</li>
+    <li>글로벌 전시회 기술 데모 수행 및 <strong>글로벌 고객 대상 기술 Q&A 지원</strong> (IDS 2023, 독일 쾰른)</li>
   </ul>
 
   <div class="role-row">AI Engineer (2020.07 – 2022.03, 1년 9개월)</div>
   <ul>
-    <li>Python Multi-processing 기반 대규모 Dataset 변환 로직 고도화</li>
-    <li>EDA를 통한 Trainin Dataset 품질 진단 및 원천 데이터의 특성 분석</li>
+    <li>Python Multi-processing 기반 <strong>대규모 Dataset 변환 로직 고도화</strong></li>
+    <li>EDA를 통한 <strong>Training Dataset 품질 진단</strong> 및 원천 데이터의 특성 분석</li>
     <li>Computer Vision 리서치 (Segmentation, GAN)</li>
   </ul>
 </div>
@@ -295,11 +294,11 @@ order: 4
   </div>
   <div class="role-row">Personal Project</div>
   <ul>
-    <li>이기종 하드웨어 기반 5-Node 홈랩 클러스터 구축 및 계층 분리를 통한 가동 안정성 확보</li>
-    <li>Kafka, Spark, Iceberg 기반 람다 아키텍처 설계로 실시간 및 대용량 분석 파이프라인 구현</li>
-    <li>Spark foreachBatch 및 증분 처리 적용을 통해 리소스 제약 환경 내 연산 성능 최적화</li>
-    <li>Prometheus/Grafana 연동으로 파이프라인 핵심 메트릭(Latency, TPS) 실시간 모니터링 체계 구축</li>
-    <li>LLM 기반 비정형 데이터 처리 자동화 및 동적 배칭을 통한 리뷰 데이터 3.6만 건 자산화</li>
+    <li>이기종 하드웨어 기반 <strong>5-Node 홈랩 클러스터 구축</strong> 및 계층 분리를 통한 가동 안정성 확보</li>
+    <li>Kafka, Spark, Iceberg 기반 <strong>람다 아키텍처 설계</strong>로 실시간 및 대용량 분석 파이프라인 구현</li>
+    <li>Spark foreachBatch 및 증분 처리 적용을 통해 리소스 제약 환경 내 <strong>연산 성능 최적화</strong></li>
+    <li>Prometheus, Grafana 연동으로 파이프라인 <strong>핵심 메트릭(Latency, TPS) 실시간 모니터링</strong></li>
+    <li>LLM 기반 비정형 데이터 처리 자동화 및 <strong>동적 배칭</strong>을 통한 리뷰 데이터 3.6만 건 자산화</li>
   </ul>
 </div>
 
