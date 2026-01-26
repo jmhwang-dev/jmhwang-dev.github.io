@@ -230,8 +230,8 @@ order: 4
 
   <div class="role-row">Data Engineer (2024.04 – 2025.01, 10개월)</div>
   <ul>
-    <li>전사 데이터 정비를 위해 다종 의료 데이터의 식별자 구조와 변환 흐름을 점검하고, 리니지를 문서화하고 <strong>초기 데이터 거버넌스 체계의 기반을 마련</strong></li>
-    <li>수술 전 임상 데이터의 비정기적 시계열 특성을 고려한 검사 항목들을 구조화하고, <strong>PostgreSQL 기반 분석용 데이터 모델링 및 스키마 설계</strong></li>
+    <li>전사 데이터 정비를 위해 다종 의료 데이터의 식별자 구조와 변환 흐름을 점검하고, 리니지를 문서화하여 <strong>초기 데이터 거버넌스 체계의 기반을 마련</strong></li>
+    <li>수술 전 임상 데이터의 비정기적 시계열 특성에 맞춰 검사 항목을 구조화하고, <strong>PostgreSQL 기반 분석용 데이터 모델링 및 스키마 설계</strong></li>
     <li>폐쇄망 제약을 고려한 <strong>Docker 기반 추론 환경과 Airflow 비동기 ML 추론 워크플로우 개발</strong></li>
   </ul>
 </div>
@@ -245,7 +245,7 @@ order: 4
   <div class="role-row">Data Engineer (2022.04 – 2023.06, 1년 3개월)</div>
   <ul>
     <li>GUI 기반 수동 작업을 Airflow Polling 기반 워크플로우로 전환하여 <strong>Annotation-ready Dataset 공급 자동화 (평균 20초/건)</strong></li>
-    <li>Clinical Acceptance 미달 데이터 자동 격리 및 커스텀 Status Code 기반 <strong>품질 관리 체계 확보</strong></li>
+    <li>커스텀 Status Code를 도입 및 Clinical Acceptance 미달 데이터 자동 분리를 통한 <strong>품질 관리 체계 확보</strong></li>
     <li>데이터 처리 단계별 계층형 저장 구조 설계 및 파일명 표준화 기반의 <strong>데이터 일관성 및 멱등성 보장 체계 구축</strong></li>
   </ul>
 
