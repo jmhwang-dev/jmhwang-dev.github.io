@@ -135,7 +135,7 @@ order: 4
     font-size: 8.8pt !important;
     font-style: italic !important;
     color: var(--color-black) !important;
-    margin: 1px 0 1px 10px !important;
+    margin: 1px 0 1px 0 !important; 
   }
 
   /* =========================================
@@ -157,7 +157,7 @@ order: 4
 
   ul {
     margin: 1px 0 3px 0 !important;
-    margin-left: 20px !important;
+    margin-left: 5px !important; 
     padding-left: 0 !important;
   }
   
@@ -182,39 +182,31 @@ order: 4
 
   .sub-experience-title {
     font-size: 7.5pt !important;
-    /* color: #666666 !important; */
     margin-top: 6px !important;
     margin-bottom: 1px !important;
-    margin-left: 20px !important;     
+    margin-left: 10px !important;     
     font-style: italic !important;
-    /* font-weight: 600 !important; */
   }
 
   .sub-experience-list {
-    /* 제목보다 살짝 더 안쪽으로 들여쓰기 */
-    margin-left: 32px !important; 
+    margin-left: 20px !important; 
     margin-bottom: 6px !important;
   }
 
   .sub-experience-list li {
     font-size: 7.2pt !important;
-    /* color: #666666 !important; */
     line-height: 1.5 !important;
   }
   
-  /* 하위 리스트 불렛 */
   .sub-experience-list li::before {
-    /* color: #666666 !important; */
     content: "-" !important;
   }
 
   .key-skills {
     font-size: 8.5pt !important;
-    /* font-weight: 600 !important; */
+    font-size: 8.8pt;
+    font-weight: 600 !important;
     color: #333 !important;
-    /* margin-top: 4px !important; */
-    /* border-top: 1px solid #eee; */
-    /* padding-top: 4px; */
   }
 }
 </style>
@@ -226,7 +218,7 @@ order: 4
 </div>
 
 <div class="key-skills">
-  Skills: | Python | SQL | Apache Spark | Kafka (Confluent) | Airflow | PostgeSQL | Iceberg | MinIO | Docker | Grafana | Prometheus |
+  Skills: | Python | SQL | Apache Spark | Kafka (Confluent) | Airflow | PostgeSQL | Iceberg | MinIO | Docker | Grafana | Prometheus | PyTorch |
 </div>
 
 ## Work Experience
@@ -238,10 +230,9 @@ order: 4
 
   <div class="role-row">Data Engineer (2024.04 – 2025.01, 10개월)</div>
   <ul>
-    <li>전사 마스터 테이블 구축을 위한 <strong>데이터 전수 조사</strong> 및 <strong>중앙 집중식 관리 가이드라인 수립</strong></li>
-    <li>데이터 변환 히스토리 문서 부재 해결을 위한 <strong>리니지 시각화</strong> 및 <strong>기술적 병목 진단</strong></li>
-    <li>Pre-op 임상 데이터의 비정기 시계열 특성을 반영하여, <strong>다중 검사 항목 구조화</strong> 및 <strong>분석용 데이터 모델 설계</strong></li>
-    <li>REST API 기반 External Trigger를 활용한 <strong>Airflow 기반 비동기 ML 추론 워크플로우 구축</strong>으로 서비스 PoC 수행</li>
+    <li>전사 데이터 정비를 위해 다종 의료 데이터의 식별자 구조와 변환 흐름을 점검하고, 리니지를 문서화하고 <strong>초기 데이터 거버넌스 체계의 기반을 마련</strong></li>
+    <li>수술 전 임상 데이터의 비정기적 시계열 특성을 고려한 검사 항목들을 구조화하고, PostgreSQL 기반 <strong>분석용 데이터 모델링 및 스키마 설계</strong></li>
+    <li>폐쇄망 제약을 고려한 Docker 기반 추론 환경과 Airflow 비동기 ML 추론 워크플로우 개발</li>
   </ul>
 </div>
 
@@ -253,17 +244,14 @@ order: 4
 
   <div class="role-row">Data Engineer (2022.04 – 2023.06, 1년 3개월)</div>
   <ul>
-    <li>치과용 CAD 소프트웨어 GUI 수동 작업을 <strong>Polling 기반 워크플로우로 전환</strong>하여 Annotation-ready Dataset 공급 자동화</li>
-    <li>신규 데이터 감지용 <strong>Custom Sensor 구현</strong>을 통한 비정형 데이터 처리의 <strong>비동기적 안정성 확보</strong></li>
-    <li>의료 데이터 보안을 위한 On-premise 환경 내 <strong>XCom 병목 해결</strong>을 위한 Path-passing 방식 적용</li>
-    <li>계층형 저장 구조 설계 및 파일명 표준화 기반의 <strong>데이터 일관성 및 멱등성 보장 체계</strong> 구축</li>
-    <li>Clinical Acceptance 미달 데이터 자동 격리 및 <strong>품질 관리 가시성 확보</strong></li>
+    <li>GUI 기반 수동 작업을 Airflow Polling 기반 워크플로우로 전환하여 <strong>Annotation-ready Dataset 공급 자동화 (평균 20초/건)</strong></li>
+    <li>Clinical Acceptance 미달 데이터 자동 격리 및 커스텀 Status Code 기반 <strong>품질 관리 체계 확보</strong></li>
+    <li>데이터 처리 단계별 계층형 저장 구조 설계 및 파일명 표준화 기반의 <strong>데이터 일관성 및 멱등성 보장 체계 구축</strong></li>
   </ul>
 
   <div class="role-row sub-experience-title">Team Lead (2022.09 – 2023.06, 10개월)</div>
   <ul class="sub-experience-list">
-    <li>비주기적, 오프라인 데이터 인입 환경에서 기존 <strong>자동화 데이터 처리 흐름의 병목 개선</strong></li>
-    <li>도메인 전문가 참여 기반의 학습 데이터 구성과 <strong>검증 흐름 정비</strong> 및 Pseudo-label 활용으로 인적 개입 최소화</li>
+    <li>Human-in-the-loop 기반 레이블 생성 프로세스의 병목 완화를 위해, Pseudo-label을 활용한 <strong>검증 중심 파이프라인 설계</strong></li>
     <li>글로벌 전시회 기술 데모 수행 및 <strong>글로벌 고객 대상 기술 Q&A 지원</strong> (IDS 2023, 독일 쾰른)</li>
   </ul>
 
@@ -298,7 +286,7 @@ order: 4
     <li>Kafka, Spark, Iceberg 기반 <strong>람다 아키텍처 설계</strong>로 실시간 및 대용량 분석 파이프라인 구현</li>
     <li>Spark foreachBatch 및 증분 처리 적용을 통해 리소스 제약 환경 내 <strong>연산 성능 최적화</strong></li>
     <li>Prometheus, Grafana 연동으로 파이프라인 <strong>핵심 메트릭(Latency, TPS) 실시간 모니터링</strong></li>
-    <li>LLM 기반 비정형 데이터 처리 자동화 및 <strong>동적 배칭</strong>을 통한 리뷰 데이터 3.6만 건 자산화</li>
+    <li><strong>동적 배칭</strong>을 통한 LLM 번역 추론 효율 개선</li>
   </ul>
 </div>
 
