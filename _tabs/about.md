@@ -232,7 +232,7 @@ order: 4
   <ul>
     <li>전사 데이터 정비를 위해 다종 의료 데이터의 식별자 구조와 변환 흐름을 점검하고, 리니지를 문서화하여 <strong>초기 데이터 거버넌스 체계의 기반을 마련</strong></li>
     <li>수술 전 임상 데이터의 비정기적 시계열 특성에 맞춰 검사 항목을 구조화하고, <strong>PostgreSQL 기반 분석용 데이터 모델링 및 스키마 설계</strong></li>
-    <li>폐쇄망 제약을 고려한 <strong>Docker 기반 추론 환경과 Airflow 비동기 ML 추론 워크플로우 구축</strong></li>
+    <li>폐쇄망 제약을 고려한 <strong>Docker 기반 추론 환경 구성 및 Airflow 비동기 ML 추론 워크플로우 개발</strong></li>
   </ul>
 </div>
 
@@ -285,11 +285,11 @@ order: 4
     <a href="https://jmhwang-dev.github.io/posts/ecommerce/" target="_blank" class="project-link">[상세 링크]</a>
   </div>
   <ul>
-    <li>이기종 하드웨어 기반 <strong>5-Node 홈랩 클러스터 구축</strong></li>
-    <li>Kafka(Confluent), Spark, Airflow 기반 <strong>람다 아키텍처 설계 및 실시간 분석 파이프라인 구축</strong></li>
-    <li>Iceberg 기반 <strong>메달리온 아키텍처</strong>를 설계하여 데이터 신뢰성과 확장성 확보</li>
-    <li>Prometheus, Grafana 연동을 통해 파이프라인 <strong>핵심 메트릭(Latency, TPS) 실시간 모니터링</strong></li>
-    <li><strong>동적 배칭</strong> 적용으로 LLM 번역 추론 효율 개선</li>
+    <li>이기종 하드웨어 기반 <strong>5-Node 홈랩 클러스터 구성</strong></li>
+    <li>Kafka(Confluent), Spark, Airflow 기반 <strong>람다 아키텍처 설계 및 실시간 분석 파이프라인 구현</strong></li>
+    <li>Iceberg를 활용해 <strong>메달리온 아키텍처</strong>를 구성하고, 데이터의 정제 수준과 사용 목적을 구분하는 저장 구조 설계</li>
+    <li>Prometheus, Grafana 연동으로 파이프라인 <strong>핵심 메트릭(Latency, TPS) 실시간 모니터링</strong></li>
+    <li><strong>동적 배칭 및 멀티 프로세싱 기반 LLM 추론 로직 구현</strong>을 통해 3.6만 건의 리뷰 데이터 번역 효율 극대화</li>
   </ul>
 </div>
 
