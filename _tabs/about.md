@@ -232,7 +232,7 @@ order: 4
   <ul>
     <li>약 11k 환자의 수술 전 <strong>다중 검사 항목별 1:N 시계열 데이터 모델링 및 PostgreSQL 기반 스키마 설계</strong></li>
     <li>8종 의료 데이터 및 CV feature의 식별자 체계를 정리하고 변환 흐름을 분석하여, <strong>데이터 리니지 가시성 확보 및 거버넌스 체계 정립의 기틀 마련</strong></li>
-    <li>폐쇄망 환경을 고려한 <strong>Docker 기반 추론 환경 구성 및 Airflow 비동기 ML 추론 워크플로우 개발</strong></li>
+    <li>폐쇄망 환경을 고려한 <strong>Docker 기반 추론 환경 구성 및 Airflow 비동기 ML 추론 워크플로우 개발</strong> 및 기술 검토</li>
   </ul>
 </div>
 
