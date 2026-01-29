@@ -266,9 +266,9 @@ order: 4
 <div class="entry-container">
   <div class="header-row">
     <span class="org-name">포항공대 인공지능연구원 (구 정보통신연구소)</span>
-    <div class="date-right">2019.04 – 2019.06, 3개월</div>
+    <div class="date-right">2019.04 – 2019.06, 2개월</div>
   </div>
-  <div class="role-row">인턴 연구원</div>
+  <div class="role-row">인턴 연구원 (2019.04 – 2019.06, 2개월)</div>
   <ul>
     <li>YOLOv5 기반 실시간 객체 인식 및 서버 통신 연동을 통한 자율주행 RC카 추론 시스템 개발</li>
   </ul>
