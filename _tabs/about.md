@@ -244,7 +244,7 @@ order: 4
 
   <div class="role-row">Data Engineer (2022.04 – 2023.06, 1년 3개월)</div>
   <ul>
-    <li>GUI 기반 수동 작업을 Airflow Polling 기반 워크플로우로 전환하여 <strong>약 20k 케이스의 Annotation-ready Dataset 공급 자동화 (평균 20초/건)</strong></li>
+    <li>GUI 기반 수동 작업을 Airflow 기반 워크플로우로 전환하여 <strong>Annotation-ready Dataset 공급 자동화 (약 20k 케이스 기준, 100일에서 3일로 97% 단축)</strong></li>
     <li>Clinical Acceptance 기준 미충족 데이터의 자동 격리 및 Custom Status Code 기반의 변환 실패 원인 식별을 통해 <strong>품질 관리 체계 확보</strong></li>
     <li>데이터 처리 단계별 계층형 저장 구조 설계 및 파일명 표준화 기반의 <strong>데이터 일관성 및 멱등성 보장 체계 구축</strong></li>
   </ul>
