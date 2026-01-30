@@ -214,7 +214,7 @@ order: 4
 # jmhwang
 <div class="job-title-main">Data Engineer</div>
 <div class="contact-info">
-  Seoul, Korea &bull; +82-10-XXXX-XXXX &bull; email@example.com &bull; github.com/jmhwang-dev
+  Seoul, Korea &bull; +82-10-XXXX-XXXX &bull; jungmin.hwang.dev@gmail.com &bull; github.com/jmhwang-dev
 </div>
 
 <div class="key-skills">
