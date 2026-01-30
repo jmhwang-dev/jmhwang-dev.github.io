@@ -238,7 +238,7 @@ order: 4
 
 <div class="entry-container">
   <div class="header-row">
-    <span class="org-name">이마고웍스 (AI 치과 CAD 솔루션)</span>
+    <span class="org-name">이마고웍스 (AI 치과 웹 CAD 솔루션)</span>
     <div class="date-right">2020.07 – 2023.06, 3년</div>
   </div>
 
