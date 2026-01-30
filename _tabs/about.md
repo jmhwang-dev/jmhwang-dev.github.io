@@ -230,10 +230,10 @@ order: 4
 
   <div class="role-row">Data Engineer (2024.04 – 2025.01, 10개월)</div>
   <ul>
-    <li>파일(xlsx, csv) 형태로 분산, 중복 관리되던 8종 의료 데이터를 중앙 관리 체계로 전환하고, 주요 데이터의 <strong>리니지 가시화 및 운영 가이드라인 문서화</strong></li>
-    <li><strong>다기관 수집 대응을 위한 파이프라인 구조 공통화</strong> 및 이를 기반으로 사내 핵심 임상 데이터의 PostgreSQL 통합 적재</li>
+    <li>파일(xlsx, csv) 형태로 분산 및 중복 관리되던 8종 의료 데이터를 중앙 관리 체계로 전환하고, 주요 데이터의 <strong>리니지 가시화 및 운영 가이드라인 문서화</strong></li>
+    <li><strong>다기관 수집 대응을 위한 파이프라인 구조 공통화</strong> 및 이를 활용한 사내 핵심 임상 데이터의 PostgreSQL 통합 적재</li>
     <li>약 11k 환자의 <strong>다중 검사 항목별 1:N 시계열 데이터에 대한 PostgreSQL 기반 Silver Layer 설계 (46 tables, 136 columns)</strong></li>
-    <li>폐쇄망 환경을 고려한 <strong>Docker 기반 추론 환경 구성 및 Airflow 비동기 ML 추론 워크플로우 개발</strong></li>
+    <li>폐쇄망 환경을 고려한 <strong>Docker 기반 추론 환경 구축 및 Airflow 비동기 ML 추론 워크플로우 개발</strong></li>
   </ul>
 </div>
 
