@@ -9,8 +9,7 @@ mermaid: true
 ---
 
 ## 프로젝트 개요
-
-- 목표: 실시간 배송 현황 모니터링 및 판매 성과 대시보드 구축
+- 목표: 실시간 배송 현황 모니터링 및 판매 성과 대시보드 구축 ([github](https://github.com/jmhwang-dev/e-commerce))
 - 기간: 2025년 4월 ~
 - 사용 데이터: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
     - 브라질 소상공인들에게 온라인 마켓플레이스를 제공하는 전자상거래 플랫폼인 Olist에서 제공한 캐글 데이터
